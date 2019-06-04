@@ -5,11 +5,13 @@ import fontSize from './fontSize';
 const palette = {
   heading: {
     color: colors.title,
-    fontSize: 20,
+    fontSize: fontSize.heading,
+    fontFamily: fonts.text,
   },
   text: {
     color: colors.text,
-    fontSize: 12,
+    fontSize: fontSize.text,
+    fontFamily: fonts.text,
   },
   header: {
     backgroundColor: '#333333',

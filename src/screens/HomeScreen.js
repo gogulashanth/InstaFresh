@@ -1,33 +1,51 @@
+/* eslint-disable react/prefer-stateless-function */
+/* eslint-disable keyword-spacing */
+/* eslint-disable react/no-multi-comp */
 import React from 'react';
 import {
-  StyleSheet, View, Text, Image, FlatList,
+  StyleSheet, View, Text, FlatList,
 } from 'react-native';
 import colors from 'res/colors';
 import ItemSummary from 'library/components/ItemSummary';
-import InstaFreshHeader from 'library/components/InstaFreshHeader';
+import AddItemCard from 'library/components/AddItemCard';
 import { SearchBar } from 'react-native-elements';
 import dataInstance from 'model/Data';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: colors.darkerLogoBack,
-  },
-});
+import { AddButton, HeaderLogo, MenuButton } from 'library/components/HeaderItems';
+import palette from 'res/palette';
 
 export default class HomeScreen extends React.Component {
+  static navigationOptions = ({ navigation }) => ({
+    headerTitle: <HeaderLogo />,
+    headerRight: <AddButton handleManualAddClick={navigation.getParam('handleManualAdd')} />,
+    headerLeft: <MenuButton onPress={navigation.getParam('handleMenuButtonClick')} />,
+  });
+
   constructor(props) {
     super(props);
-    this.state = { selected: (new Map(): Map<string, boolean>), search: '', data: [], filteredData: [] };
+    this.addItemCardRef = React.createRef();
+    this.onPressItem = this.onPressItem.bind(this);
+    this.state = {
+      selected: (new Map(): Map<string, boolean>), search: '', data: [], filteredData: [],
+    };
   }
 
   async componentWillMount() {
     await dataInstance.loadData();
     dataInstance.registerListener(this.onDataUpdate);
     const d = dataInstance.getItemsArray();
-    this.setState({ data: d, filteredData: d});
+    this.setState({ data: d, filteredData: d });
+  }
+
+  componentDidMount() {
+    const { navigation } = this.props;
+    navigation.setParams({
+      handleManualAdd: this.handleManualAddClick,
+      handleMenuButtonClick: this.handleMenuButtonClick,
+    });
+  }
+
+  componentWillUnmount() {
+    dataInstance.unregisterListener(this.onDataUpdate);
   }
 
   onDataUpdate = (() => {
@@ -35,19 +53,25 @@ export default class HomeScreen extends React.Component {
     this.setState({ data: d, filteredData: d });
   });
 
+  onPressItem(id) {
+    const { navigation } = this.props;
+    // updater functions are preferred for transactional updates
+    navigation.navigate('Item', { itemID: id, title: dataInstance.getItem(id).name });
+  }
+
   keyExtractor = (item, index) => item.id;
 
-  onPressItem = (id: string) => {
-    // updater functions are preferred for transactional updates
-    this.setState((state) => {
-      // copy the map rather than modifying state.
-      const selected = new Map(state.selected);
-      selected.set(id, !selected.get(id)); // toggle
-      return { selected };
-    });
-  };
+  handleManualAddClick = (() => {
+    this.addItemCardRef.current.show();
+  });
+
+  handleMenuButtonClick = (() => {
+    const { navigation } = this.props;
+    navigation.toggleDrawer();
+  });
 
   _listEmptyComponent = () => (
+    // TODO: create empty comp.
     <View>
       <Text>Hello</Text>
     </View>
@@ -56,6 +80,10 @@ export default class HomeScreen extends React.Component {
   updateSearch = ((search) => {
     this.setState({ search });
     this.filterItems(search);
+  });
+
+  handleAddItem = ((item) => {
+    dataInstance.addItem(item);
   });
 
   filterItems = ((text) => {
@@ -109,25 +137,38 @@ export default class HomeScreen extends React.Component {
   render() {
     const { search, filteredData } = this.state;
     return (
-      <InstaFreshHeader style={styles.container} screenName="home">
-        <View style={{ flex: 0, height: '90%', width: '100%' }}>
-          <SearchBar
-            platform="default"
-            round
-            placeholder="Type Here..."
-            onChangeText={this.updateSearch}
-            value={search}
-          />
-          <FlatList
-            style={{ flex: 1 }}
-            contentContainerStyle={{ alignItems: 'center', marginTop: 10 }}
-            data={filteredData}
-            keyExtractor={this.keyExtractor}
-            renderItem={this.renderItem}
-            ListEmptyComponent={this._listEmptyComponent}
-          />
-        </View>
-      </InstaFreshHeader>
+      <View style={styles.container}>
+        <AddItemCard
+          ref={this.addItemCardRef}
+          visible={false}
+          onSave={this.handleAddItem}
+        />
+        <SearchBar
+          platform="default"
+          round
+          placeholder="Search for an item or pantry..."
+          onChangeText={this.updateSearch}
+          value={search}
+          containerStyle={{ backgroundColor: colors.lighterLogoBack }}
+          inputContainerStyle={{ backgroundColor: colors.logoBack, height: 32 }}
+          inputStyle={palette.text}
+        />
+        <FlatList
+          style={{ flex: 1 }}
+          contentContainerStyle={{ alignItems: 'center', marginTop: 10 }}
+          data={filteredData}
+          keyExtractor={this.keyExtractor}
+          renderItem={this.renderItem}
+          ListEmptyComponent={this._listEmptyComponent}
+        />
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.darkerLogoBack,
+  },
+});

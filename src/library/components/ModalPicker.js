@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  StyleSheet, View, Text, Modal, Picker, Button,
+  StyleSheet, View, Picker, Button,
 } from 'react-native';
 import colors from 'res/colors';
 

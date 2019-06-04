@@ -13,7 +13,9 @@ class Data {
   constructor() {
     AsyncStorage.removeItem('@instaFreshData');
     this._data = {};
-    this.dataListener = noop;
+    this.dataListener = [];
+    this.itemsArray = [];
+    this.itemsObject = {};
   }
 
   loadData = (async () => {
@@ -59,6 +61,7 @@ class Data {
         }
 
         this._data = parsedValue;
+        await this._save();
       // eslint-disable-next-line no-else-return
       } else {
         // need to create a default pantry
@@ -66,9 +69,11 @@ class Data {
         const dat = new Date();
 
 
-        const img = 'https://brain-images-ssl.cdn.dixons.com/9/4/10164049/l_10164049_008.jpg';
+        const img = 'https://images-prod.healthline.com/hlcmsresource/images/topic_centers/Do_Apples_Affect_Diabetes_and_Blood_Sugar_Levels-732x549-thumbnail.jpg';
         const pantry = new Pantry('Fridge', img, {});
-        pantry.addItem(new Item('Apple', dat, img, 'na', 2, pantry.id));
+        const item = new Item('Apple', dat, img, 'na', '2', pantry.id);
+        pantry.items[item.id] = item;
+        // pantry.addItem(new Item('Apple', dat, img, 'na', '2', pantry.id));
 
         const startingData = { [pantry.id]: pantry };
 
@@ -88,11 +93,14 @@ class Data {
   });
 
   registerListener(callback) {
-    this.dataListener = callback;
+    this.dataListener.push(callback);
+  }
+
+  unregisterListener(callback) {
+    this.dataListener = this.dataListener.filter(subscriber => subscriber !== callback);
   }
 
   _save = (async () => {
-    this.dataListener();
     const dataToSave = JSON.stringify(this._data);
     try {
       await AsyncStorage.setItem('@instaFreshData', dataToSave);
@@ -100,6 +108,11 @@ class Data {
       // saving error
       console.log('Error encountered in _save in Data.js');
     }
+
+    for (let i = 0; i < this.dataListener.length; i++) {
+      this.dataListener[i]();
+    }
+    // this.dataListener();
   });
 
   addPantry = ((pantry) => {
@@ -117,18 +130,20 @@ class Data {
     this._save();
   });
 
-  addItem = ((item, pantryID) => {
-    this._data[pantryID].addItem(item);
+  addItem = ((item) => {
+    this._data[item.pantryID].items[item.id] = item;
     this._save();
   });
 
-  deleteItem = ((itemID, pantryID) => {
-    this._data[pantryID].deleteItem(itemID);
+  deleteItem = ((itemID) => {
+    const { pantryID } = this.getItem(itemID);
+    delete this._data[pantryID].items[itemID];
     this._save();
   });
 
-  editItem = ((itemID, pantryID, itemData) => {
-    this._data[pantryID].editItem(itemID, itemData);
+  editItem = ((itemID, itemData) => {
+    const { pantryID } = this.getItem(itemID);
+    this._data[pantryID].items[itemID] = itemData;
     this._save();
   });
 
@@ -138,20 +153,35 @@ class Data {
     return returnItem;
   });
 
-  getItemsArray = (() => {
-    let returnItem = [];
+  getPantry = ((pantryID) => this._data[pantryID])
+
+  getItem = ((itemID) => {
+    const items = this.getItemsObject();
+    return items[itemID];
+  });
+
+  getItemsObject = (() => {
+    let itemsObject = {};
     const keys = Object.keys(this._data);
 
     for (const key of keys) {
       const { items } = this._data[key];
-
-      const itemKeys = Object.keys(items);
-      for (const itemKey of itemKeys) {
-        returnItem = returnItem.concat(items[itemKey]);
-      }
+      itemsObject = { ...this.itemsObject, ...items };
     }
 
-    return returnItem;
+    return itemsObject;
+  });
+
+  getItemsArray = (() => {
+    let itemsArray = [];
+    const itemsObject = this.getItemsObject();
+
+    const itemKeys = Object.keys(itemsObject);
+    for (const itemKey of itemKeys) {
+      itemsArray = itemsArray.concat(itemsObject[itemKey]);
+    }
+
+    return itemsArray;
   });
 }
 

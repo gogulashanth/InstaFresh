@@ -1,5 +1,5 @@
 const fonts = {
-  title: 'Arial',
-  text: 'SanFrancisco',
+  title: 'Helvetica',
+  text: 'Helvetica Neue',
 };
 export default fonts;

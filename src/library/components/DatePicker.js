@@ -2,6 +2,7 @@ import React from 'react';
 import {
   StyleSheet, Animated, View, Text, DatePickerIOS, TouchableOpacity,
 } from 'react-native';
+import colors from 'res/colors';
 
 export default class DatePicker extends React.Component {
   constructor(props) {
@@ -26,14 +27,14 @@ export default class DatePicker extends React.Component {
     } = this.state;
 
     this.setState({ expanded: true });
-    Animated.parallel([
+    Animated.sequence([
       Animated.timing(height, {
         toValue: 220,
-        duration: 400,
+        duration: 200,
       }),
       Animated.timing(opacity, {
         toValue: 1,
-        duration: 400,
+        duration: 1,
       }),
     ]).start();
   });
@@ -43,21 +44,16 @@ export default class DatePicker extends React.Component {
       height, opacity,
     } = this.state;
     this.setState({ expanded: false });
-    Animated.parallel([
-      Animated.timing(height, {
-        toValue: this.closedHeight,
-        duration: 400,
-      }),
+    Animated.sequence([
       Animated.timing(opacity, {
         toValue: 0,
-        duration: 400,
+        duration: 1,
+      }),
+      Animated.timing(height, {
+        toValue: this.closedHeight,
+        duration: 200,
       }),
     ]).start();
-  });
-
-  handleTextBlur = (() => {
-    console.log('hello');
-    
   });
 
   render() {
@@ -104,7 +100,7 @@ const styles = StyleSheet.create({
   text: {
     alignSelf: 'flex-start',
     fontSize: 18,
-    color: 'black',
+    color: colors.logoBack,
     marginTop: 5,
   },
 });

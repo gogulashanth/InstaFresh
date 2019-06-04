@@ -135,8 +135,6 @@ export default class InstaFreshHeader extends React.Component {
         <AddItemCard
           ref={this.addItemCardRef}
           visible={false}
-          // visible={this.state.addItemVisible}
-          // onBackdropPress={() => this.setState({ addItemVisible: false })}
           onSave={this.handleAddItem}
         />
         <View style={[styles.container]}>

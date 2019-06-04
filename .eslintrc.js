@@ -19,9 +19,21 @@ module.exports = {
     "plugins": [
         "react"
     ],
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "paths": ["library"],
+            }
+        }
+    },
     "rules": {
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "no-underscore-dangle": [2, { "allowAfterThis": true }],
+        "react/prefer-stateless-function": "off",
+        "react/no-multi-comp": "off",
+        "no-else-return": "off",
+        "no-use-before-define": ["error", { "variables": false }],
+        "import/no-unresolved": "off",
     },
     
 };

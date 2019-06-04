@@ -2,19 +2,31 @@ import React from 'react';
 import {
   StyleSheet, Animated, View, Text, Picker, TouchableOpacity,
 } from 'react-native';
+import colors from 'res/colors';
 
 export default class CustomPicker extends React.Component {
+  static defaultProps = {
+    chosenIndex: 0,
+  }
+
   constructor(props) {
     super(props);
-    const { data } = this.props;
+    const { data, chosenID } = this.props;
     this.closedHeight = 35;
+
+    const initialInd = data.map((e) => { return e.id; }).indexOf(chosenID);
+
     this.state = {
-      chosenVal: data[0], height: new Animated.Value(this.closedHeight), opacity: new Animated.Value(0), expanded: false,
+      chosenIndex: initialInd, height: new Animated.Value(this.closedHeight), opacity: new Animated.Value(0), expanded: false,
     };
   }
 
   handlePickerValueChange = ((itemValue, itemIndex) => {
-    this.setState({ chosenVal: itemValue });
+    const { data } = this.props;
+    const { onPickerChange } = this.props;
+
+    this.setState({ chosenIndex: itemIndex });
+    onPickerChange(data[itemIndex].id);
   });
 
   openPicker = (() => {
@@ -23,14 +35,14 @@ export default class CustomPicker extends React.Component {
     } = this.state;
 
     this.setState({ expanded: true });
-    Animated.parallel([
+    Animated.sequence([
       Animated.timing(height, {
         toValue: 140,
-        duration: 400,
+        duration: 200,
       }),
       Animated.timing(opacity, {
         toValue: 1,
-        duration: 400,
+        duration: 1,
       }),
     ]).start();
   });
@@ -40,21 +52,21 @@ export default class CustomPicker extends React.Component {
       height, opacity,
     } = this.state;
     this.setState({ expanded: false });
-    Animated.parallel([
-      Animated.timing(height, {
-        toValue: this.closedHeight,
-        duration: 400,
-      }),
+    Animated.sequence([
       Animated.timing(opacity, {
         toValue: 0,
-        duration: 400,
+        duration: 1,
+      }),
+      Animated.timing(height, {
+        toValue: this.closedHeight,
+        duration: 200,
       }),
     ]).start();
   });
 
   render() {
     const {
-      height, opacity, chosenVal, expanded,
+      height, opacity, chosenIndex, expanded,
     } = this.state;
 
     const { data, onFocus } = this.props;
@@ -70,7 +82,7 @@ export default class CustomPicker extends React.Component {
         }}
         >
           <Text style={styles.text}>
-            {chosenVal}
+            {data[chosenIndex].name}
           </Text>
         </TouchableOpacity>
 
@@ -78,12 +90,12 @@ export default class CustomPicker extends React.Component {
           <Picker
             style={{ flex: 1, height: 120 }}
             itemStyle={{height:120}}
-            selectedValue={chosenVal}
+            selectedValue={data[chosenIndex].id}
             onValueChange={this.handlePickerValueChange}
           >
             {data.map(((currentValue, index) => {
               return (
-                <Picker.Item label={currentValue} value={currentValue} key={index} />
+                <Picker.Item label={currentValue.name} value={currentValue.id} key={currentValue.id} />
               );
             }))}
           </Picker>
@@ -97,7 +109,7 @@ const styles = StyleSheet.create({
   text: {
     alignSelf: 'flex-start',
     fontSize: 18,
-    color: 'black',
+    color: colors.logoBack,
     marginTop: 5,
   },
 });
