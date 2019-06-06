@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     paddingLeft: 2,
     paddingRight: 2,
+    maxWidth: 350* widthConversion,
   },
   heading: {
     fontFamily: 'Helvetica',

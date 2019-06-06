@@ -126,7 +126,8 @@ class Data {
   });
 
   editPantry = ((pantryID, pantryData) => {
-    this._data[pantryID] = pantryData;
+    this._data[pantryID].name = pantryData.name;
+    this._data[pantryID].imageURI = pantryData.imageURI;
     this._save();
   });
 
@@ -166,7 +167,7 @@ class Data {
 
     for (const key of keys) {
       const { items } = this._data[key];
-      itemsObject = { ...this.itemsObject, ...items };
+      itemsObject = { ...itemsObject, ...items };
     }
 
     return itemsObject;

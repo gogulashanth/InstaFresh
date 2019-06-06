@@ -8,14 +8,15 @@ import {
 import colors from 'res/colors';
 import ItemSummary from 'library/components/ItemSummary';
 import AddItemCard from 'library/components/AddItemCard';
-import { SearchBar } from 'react-native-elements';
+import { SearchBar, ListItem, ThemeProvider } from 'react-native-elements';
 import dataInstance from 'model/Data';
 import { AddButton, HeaderLogo, MenuButton } from 'library/components/HeaderItems';
 import palette from 'res/palette';
+import themes from 'res/themes';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    headerTitle: <HeaderLogo />,
+    title: 'Home',
     headerRight: <AddButton handleManualAddClick={navigation.getParam('handleManualAdd')} />,
     headerLeft: <MenuButton onPress={navigation.getParam('handleMenuButtonClick')} />,
   });
@@ -59,7 +60,7 @@ export default class HomeScreen extends React.Component {
     navigation.navigate('Item', { itemID: id, title: dataInstance.getItem(id).name });
   }
 
-  keyExtractor = (item, index) => item.id;
+  keyExtractor = ((item, index) => item.id);
 
   handleManualAddClick = (() => {
     this.addItemCardRef.current.show();
@@ -107,29 +108,29 @@ export default class HomeScreen extends React.Component {
 
     if (numDaysLeft < 0) {
       expiryComp = 'Expired!';
-      style = { color: 'red' };
+      style = { color: colors.red };
     } else if (numDaysLeft <= 1) {
       expiryComp = 'Expires today!';
-      style = { color: 'red' };
+      style = { color: colors.red };
     } else if (numDaysLeft <= 2) {
       expiryComp = 'Expires in two days!';
-      style = { color: 'red' };
+      style = { color: colors.red };
     } else {
       expiryComp = `Expires in ${numDaysLeft} days`;
-      style = null;
+      style = {};
     }
 
     return (
-      <ItemSummary
-        id={dataItem.id}
+      <ListItem
+        leftAvatar={{ source: { uri: dataItem.imageURI }, size: 'medium' }}
         title={`${dataItem.name} - ${dataItem.quantity}`}
-        imageURI={dataItem.imageURI}
-        description1={expiryComp}
-        description1Style={style}
-        description2={dataInstance._data[dataItem.pantryID].name}
-        description2Style={null}
-        onPressItem={this.onPressItem}
-        selected={!!selected.get(dataItem.id)}
+        subtitle={expiryComp}
+        subsubTitle={dataInstance._data[dataItem.pantryID].name}
+        subsubStyle={{ color: colors.text }}
+        chevron
+        containerStyle={{ marginTop: 5 }}
+        subtitleStyle={style}
+        onPress={() => this.onPressItem(dataItem.id)}
       />
     );
   });
@@ -149,13 +150,9 @@ export default class HomeScreen extends React.Component {
           placeholder="Search for an item or pantry..."
           onChangeText={this.updateSearch}
           value={search}
-          containerStyle={{ backgroundColor: colors.lighterLogoBack }}
-          inputContainerStyle={{ backgroundColor: colors.logoBack, height: 32 }}
-          inputStyle={palette.text}
         />
         <FlatList
-          style={{ flex: 1 }}
-          contentContainerStyle={{ alignItems: 'center', marginTop: 10 }}
+          contentContainerStyle={{ marginTop: 10 }}
           data={filteredData}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}

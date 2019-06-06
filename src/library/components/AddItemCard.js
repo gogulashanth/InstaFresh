@@ -191,7 +191,7 @@ export default class AddItemCard extends React.Component {
       nameComponent = null;
       deleteButton = (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Button title="Delete" buttonStyle={[styles.buttonStyle, { backgroundColor: 'red' }]} onPress={this.handleDeleteButtonPress} />
+          <Button title="Delete" buttonStyle={{...styles.buttonStyle, backgroundColor: colors.red }} onPress={this.handleDeleteButtonPress} />
         </View>
       );
     }
@@ -313,7 +313,5 @@ const inputStyle = {
 const styles = StyleSheet.create({
   buttonStyle: {
     width: 100,
-    backgroundColor: colors.logo,
-    borderRadius: 20,
   },
 });

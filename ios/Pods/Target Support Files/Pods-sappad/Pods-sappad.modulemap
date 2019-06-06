@@ -1,0 +1,6 @@
+framework module Pods_sappad {
+  umbrella header "Pods-sappad-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,19 +1,19 @@
 import React from 'react';
 import {
- View, Text, StyleSheet, FlatList 
+ View, StyleSheet, FlatList 
 } from 'react-native';
 import { MenuButton, PantryAddButton } from 'library/components/HeaderItems';
 import colors from 'res/colors';
 import PropTypes from 'prop-types';
-import ItemSummary from 'library/components/ItemSummary';
-import { SearchBar } from 'react-native-elements';
+import { SearchBar, ListItem, Text } from 'react-native-elements';
 import palette from 'res/palette';
 import dataInstance from 'model/Data';
+import AddPantryCard from 'library/components/AddPantryCard';
 
 export default class PantriesScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: 'Pantries',
-    headerRight: <PantryAddButton handleManualAddClick={navigation.getParam('handleManualAdd')} />,
+    headerRight: <PantryAddButton onPress={navigation.getParam('handleManualAdd')} />,
     headerLeft: <MenuButton onPress={navigation.getParam('handleMenuButtonClick')} />,
   });
 
@@ -23,6 +23,7 @@ export default class PantriesScreen extends React.Component {
     this.state = {
       search: '', data: [], filteredData: [],
     };
+    this.addPantryCardRef = React.createRef();
   }
 
   async componentWillMount() {
@@ -54,12 +55,17 @@ export default class PantriesScreen extends React.Component {
     navigation.navigate('PantryDetail', { pantryID, title: dataInstance.getPantry(pantryID).name });
   }
 
+  handleAddPantry = ((pantry) => {
+    dataInstance.addPantry(pantry);
+  });
+
   handleMenuButtonClick = (() => {
     const { navigation } = this.props;
     navigation.toggleDrawer();
   });
 
   handleManualAdd = (() => {
+    this.addPantryCardRef.current.show();
   });
 
   updateSearch = ((search) => {
@@ -87,12 +93,13 @@ export default class PantriesScreen extends React.Component {
     }
 
     return (
-      <ItemSummary
-        id={dataItem.id}
+      <ListItem
+        leftAvatar={{ source: { uri: dataItem.imageURI }, size: 'medium' }}
         title={`${dataItem.name}`}
-        imageURI={dataItem.imageURI}
-        description1={`${numItems} ${itemWord}`}
-        onPressItem={this.onPressItem}
+        subtitle={`${numItems} ${itemWord}`}
+        chevron
+        containerStyle={{marginTop: 5}}
+        onPress={() => this.onPressItem(dataItem.id)}
       />
     );
   });
@@ -101,19 +108,21 @@ export default class PantriesScreen extends React.Component {
     const { search, filteredData } = this.state;
     return (
       <View style={styles.container}>
+        
+        <AddPantryCard
+          ref={this.addPantryCardRef}
+          visible={false}
+          onSave={this.handleAddPantry}
+        />
         <SearchBar
           platform="default"
           round
           placeholder="Search for an item or pantry..."
           onChangeText={this.updateSearch}
           value={search}
-          containerStyle={{ backgroundColor: colors.lighterLogoBack }}
-          inputContainerStyle={{ backgroundColor: colors.logoBack, height: 32 }}
-          inputStyle={palette.text}
         />
         <FlatList
-          style={{ flex: 1 }}
-          contentContainerStyle={{ alignItems: 'center', marginTop: 10 }}
+          contentContainerStyle={{ marginTop: 10 }}
           data={filteredData}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}

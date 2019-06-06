@@ -1,11 +1,12 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, Image, Button, SafeAreaView,
+  View, StyleSheet, Image, Button, SafeAreaView,
 } from 'react-native';
 import colors from 'res/colors';
+import themes from 'res/themes';
 import palette from 'res/palette';
 import dataInstance from 'model/Data';
-import { Button as RNEButton, Icon } from 'react-native-elements';
+import { Button as RNEButton, Icon, Text } from 'react-native-elements';
 import NutritionInfo from 'library/components/NutritionInfo';
 import { widthConversion } from 'res/fontSize';
 import AddItemCard from 'library/components/AddItemCard';
@@ -21,6 +22,7 @@ export default class ItemScreen extends React.Component {
         title="Edit"
         onPress={navigation.getParam('handleEditPress')}
       />,
+      drawerLockMode: 'locked-closed',
     };
   };
 
@@ -58,7 +60,7 @@ export default class ItemScreen extends React.Component {
   render() {
     const { item, pantry } = this.state;
     const { navigation } = this.props;
-    
+
     return (
       <SafeAreaView style={styles.container}>
         <AddItemCard
@@ -74,7 +76,7 @@ export default class ItemScreen extends React.Component {
 
 
             <View style={styles.containerText}>
-              <ItemDescription iconName="add-to-list" iconType="entypo" name="Quantity" value={item.quantity} />
+              <ItemDescription iconName="list" iconType="entypo" name="Quantity" value={item.quantity} />
               <ItemDescription iconName="ios-archive" iconType="ionicon" name="Pantry" value={pantry.name} />
               <ItemDescription iconName="calendar" iconType="entypo" name="Expiry Date" value={item.expiryDate.toLocaleDateString('en-US', this.dateFormat)} />
             </View>
@@ -84,7 +86,7 @@ export default class ItemScreen extends React.Component {
             <NutritionInfo />
           </View>
           <View style={styles.buttonContainer}>
-            <RNEButton title="Wasted" buttonStyle={[styles.buttonStyle, { backgroundColor: 'red' }]} onPress={() => {}} />
+            <RNEButton title="Wasted" buttonStyle={{ ...styles.buttonStyle,backgroundColor: colors.red }} onPress={() => {}} />
             <RNEButton title="Consumed" buttonStyle={styles.buttonStyle} onPress={() => {}} />
           </View>
         </View>
@@ -112,8 +114,8 @@ class ItemDescription extends React.Component {
           flex: 2, flexDirection: 'column', alignItems: 'flex-start', paddingLeft: 10,
         }}
         >
-          <Text style={[palette.heading, styles.heading]}>{this.props.name}</Text>
-          <Text style={[palette.text, styles.subheading]}>{this.props.value}</Text>
+          <Text h3>{this.props.name}</Text>
+          <Text h4>{this.props.value}</Text>
         </View>
       </View>
     );
@@ -143,16 +145,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   nutrition: {
-    flex: 0,
-    flexDirection: 'column',
+    flex: 2,
+    flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
     flexBasis: 'auto',
     paddingTop: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
   },
   buttonStyle: {
-    height: 40,
-    width: 110,
-    borderRadius: 18,
-    backgroundColor: colors.logo,
+    width: 130,
+    borderRadius:20,
   },
 });

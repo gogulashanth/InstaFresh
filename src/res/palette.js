@@ -25,5 +25,23 @@ const palette = {
     width: '100%',
     flexDirection: 'column',
   },
+  themeDark: {
+    Text: {
+      h6Style: {
+        color: 'white',
+      },
+    },
+  },
+  theme: {
+    Button: {
+      titleStyle: {
+        color: colors.logo,
+      },
+      containerStyle: {
+        backgroundColor: colors.logo,
+      },
+    },
+
+  }
 };
 export default palette;

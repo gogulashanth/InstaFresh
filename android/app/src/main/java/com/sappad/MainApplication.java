@@ -3,6 +3,10 @@ package com.sappad;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.storage.ReactNativeFirebaseStoragePackage;
+import io.invertase.firebase.ReactNativeFirebaseAppPackage;
+import com.horcrux.svg.SvgPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.beefe.picker.PickerViewPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
@@ -29,6 +33,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFirebasePackage(),
+            new ReactNativeFirebaseStoragePackage(),
+            new ReactNativeFirebaseAppPackage(),
+            new SvgPackage(),
             new ImagePickerPackage(),
             new PickerViewPackage(),
             new AsyncStoragePackage(),

@@ -8,5 +8,7 @@ const fontSize = {
   subHeading: 15*widthConversion,
   heading: 20*widthConversion,
   text: 15*widthConversion,
+  h3: 20*widthConversion,
+  h4: 15*widthConversion,
 };
 export default fontSize;
