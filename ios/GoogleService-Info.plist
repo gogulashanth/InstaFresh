@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>484710608683-52getl3t5943m54jrgat3q9jqg2omrp9.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.484710608683-52getl3t5943m54jrgat3q9jqg2omrp9</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDknP8AJHkROoKhoXQbNglG-uKw2uFc4RM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>484710608683</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.reactjs.native.example.sappad</string>
+	<key>PROJECT_ID</key>
+	<string>instafresh-92127</string>
+	<key>STORAGE_BUCKET</key>
+	<string>instafresh-92127.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:484710608683:ios:62692f8369e245d2</string>
+	<key>DATABASE_URL</key>
+	<string>https://instafresh-92127.firebaseio.com</string>
+</dict>
+</plist>
