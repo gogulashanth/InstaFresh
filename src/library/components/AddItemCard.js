@@ -124,6 +124,13 @@ export default class AddItemCard extends React.Component {
         this.datePicker.current.input.closePicker();
       }
     }
+    if (comp === 'name') {
+      // close modal 
+      this.setState({ visibleOption: false });
+      // Go to search screen
+      const { navigation } = this.props;
+      navigation.navigate('ItemSearch');
+    }
   });
 
   handleDeleteButtonPress = (() => {

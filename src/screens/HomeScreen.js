@@ -137,12 +137,14 @@ export default class HomeScreen extends React.Component {
 
   render() {
     const { search, filteredData } = this.state;
+    const { navigation } = this.props;
     return (
       <View style={styles.container}>
         <AddItemCard
           ref={this.addItemCardRef}
           visible={false}
           onSave={this.handleAddItem}
+          navigation={navigation}
         />
         <SearchBar
           platform="default"

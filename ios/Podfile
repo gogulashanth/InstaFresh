@@ -1,22 +1,48 @@
 # Uncomment the next line to define a global platform for your project
-# platform :ios, '9.0'
+platform :ios, '9.0'
 
 target 'sappad' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
   # Pods for sappad
-  pod 'Firebase/Core'
+  pod 'Firebase/Core', '~> 5.20.2'
+  pod 'Firebase/Firestore', '~> 5.20.2'
+  pod 'Firebase/Auth', '~> 5.20.2'
+
+end
+
+target 'sappad-tvOS' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for sappad-tvOS
 
   target 'sappad-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end
 
-  target 'sappadTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
 end
 
+post_install do |installer|
+#  installer.pods_project.targets.each do |target|
+#    if target.name == "React"
+#      target.remove_from_project
+#    end
+
+    # The following is needed to ensure the "archive" step works in XCode.
+    # It removes React & Yoga from the Pods project, as it is already included in the main project.
+    # Without this, you'd see errors when you archive like:
+    # "Multiple commands produce ... libReact.a"
+    # "Multiple commands produce ... libyoga.a"
+    # FIXME real fix is like so: https://stackoverflow.com/a/55328241/9910298 (remove duplicate refs)
+#    targets_to_ignore = %w(React yoga)
+#    if targets_to_ignore.include? target.name
+#      target.remove_from_project
+#    end
+#  end
+
+  # This fixes the problems with headers not found
+  system("mkdir -p Pods/Headers/Public/FirebaseCore && cp Pods/FirebaseCore/Firebase/Core/Public/* Pods/Headers/Public/FirebaseCore/")
+end

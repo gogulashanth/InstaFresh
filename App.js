@@ -20,6 +20,8 @@ import DisclaimerScreen from 'screens/DisclaimerScreen';
 import RecipesScreen from 'screens/RecipesScreen';
 import SettingsScreen from 'screens/SettingsScreen';
 import InstaScoreScreen from 'screens/InstaScoreScreen';
+import ItemSearchScreen from 'screens/ItemSearchScreen';
+import firebase from 'react-native-firebase';
 
 const defaultStackNavigationOptions = {
   headerStyle: {
@@ -27,12 +29,13 @@ const defaultStackNavigationOptions = {
     borderBottomColor: 'transparent',
   },
   headerTintColor: colors.logo,
-  headerTitleStyle: {color: colors.text},
+  headerTitleStyle: { color: colors.text },
 };
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
   Item: ItemScreen,
+  ItemSearch: ItemSearchScreen,
 }, {
   defaultNavigationOptions: defaultStackNavigationOptions,
 });
@@ -119,6 +122,10 @@ const AppNavigator = createDrawerNavigator({
 const AppCont = createAppContainer(AppNavigator);
 
 class App extends React.PureComponent {
+  componentDidMount() {
+    firebase.auth().signInAnonymously();
+  }
+
   render() {
     return (
       <ThemeProvider theme={themes.dark}>
