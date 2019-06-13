@@ -9,6 +9,7 @@ import { SearchBar, ListItem, Text } from 'react-native-elements';
 import palette from 'res/palette';
 import dataInstance from 'model/Data';
 import AddPantryCard from 'library/components/AddPantryCard';
+import CustomListItem from 'library/components/CustomListItem';
 
 export default class PantriesScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -93,11 +94,10 @@ export default class PantriesScreen extends React.Component {
     }
 
     return (
-      <ListItem
+      <CustomListItem
         leftAvatar={{ source: { uri: dataItem.imageURI }, size: 'medium' }}
         title={`${dataItem.name}`}
         subtitle={`${numItems} ${itemWord}`}
-        chevron
         containerStyle={{marginTop: 5}}
         onPress={() => this.onPressItem(dataItem.id)}
       />

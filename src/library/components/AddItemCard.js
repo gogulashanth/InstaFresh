@@ -7,6 +7,7 @@ import {
   Image,
   TouchableHighlight,
   ScrollView,
+  TextInput,
   KeyboardAvoidingView,
 } from 'react-native';
 import colors from 'res/colors';
@@ -18,20 +19,12 @@ import DatePicker from 'library/components/DatePicker';
 import CustomPicker from 'library/components/CustomPicker';
 import ImagePicker from 'react-native-image-picker';
 import PropTypes from 'prop-types';
+import ItemSearchInput from 'library/components/ItemSearchInput';
 
 // TODO: Create a defaults file with images and options
 // TODO: Refactor class
 
 export default class AddItemCard extends React.Component {
-  static defaultValues = {
-    imageURI: 'https://cnet4.cbsistatic.com/img/Gu0ly_clVsc-EHnRAea7i0GUhRI=/1600x900/2019/03/14/2609b0eb-1263-43e2-9380-c1f8cbced873/gettyimages-1089101352.jpg',
-    pantryID: '',
-    name: '',
-    expiryDate: new Date(),
-    quantity: '',
-    id: '',
-  }
-
   constructor(props) {
     super(props);
     this.datePicker = React.createRef();
@@ -49,11 +42,12 @@ export default class AddItemCard extends React.Component {
     const { visible } = this.props;
 
     this.state = {
-      imageURI: AddItemCard.defaultValues.imageURI,
-      pantryID: AddItemCard.defaultValues.pantryID,
-      name: AddItemCard.defaultValues.name,
-      expiryDate: AddItemCard.defaultValues.expiryDate,
-      quantity: AddItemCard.defaultValues.quantity,
+      imageURI: Item.defaults.imageURI,
+      pantryID: Item.defaults.pantryID,
+      name: Item.defaults.name,
+      expiryDate: new Date(),
+      quantity: Item.defaults.quantity,
+      nutrition: Item.defaults.nutrition,
       visibleOption: visible,
       pantryPickerData: [],
     };
@@ -74,20 +68,22 @@ export default class AddItemCard extends React.Component {
 
   handleCancelButtonPress = (() => {
     this.setState({ visibleOption: false });
+    const { onCancel } = this.props;
+    onCancel();
   });
 
   handleSaveButtonPress = (() => {
     const {
-      name, quantity, imageURI, pantryID, expiryDate, id,
+      name, quantity, imageURI, pantryID, expiryDate, id, nutrition,
     } = this.state;
-    const { onSave } = this.props;
+    const { onSave, editMode } = this.props;
 
     // TODO: Add nutrition item info
     let item = null;
-    if (id === AddItemCard.defaultValues.id) {
-      item = new Item(name, expiryDate, imageURI, 'na', quantity, pantryID);
+    if (!editMode) {
+      item = new Item(name, expiryDate, imageURI, nutrition, quantity, pantryID);
     } else {
-      item = new Item(name, expiryDate, imageURI, 'na', quantity, pantryID, id);
+      item = new Item(name, expiryDate, imageURI, nutrition, quantity, pantryID, id);
     }
 
     onSave(item);
@@ -124,13 +120,6 @@ export default class AddItemCard extends React.Component {
         this.datePicker.current.input.closePicker();
       }
     }
-    if (comp === 'name') {
-      // close modal 
-      this.setState({ visibleOption: false });
-      // Go to search screen
-      const { navigation } = this.props;
-      navigation.navigate('ItemSearch');
-    }
   });
 
   handleDeleteButtonPress = (() => {
@@ -142,10 +131,26 @@ export default class AddItemCard extends React.Component {
     navigation.popToTop();
   });
 
+  nameDropDownSelected = ((item) => {
+    if (typeof item === 'object') {
+      this.setState({
+        name: item.name,
+        imageURI: item.imageURI,
+        expiryDate: item.expiryDate,
+        nutrition: item.nutrition,
+      });
+    } else if (typeof item === 'string') {
+      this.setState({ name: item });
+    }
+  });
+
   show(item = '') {
     let {
-      name, imageURI, quantity, expiryDate, id, pantryID,
-    } = AddItemCard.defaultValues;
+      name, imageURI, quantity, pantryID,
+    } = Item.defaults;
+    let id = '';
+    let expiryDate = new Date();
+    const { editMode } = this.props;
 
     if (item !== '') {
       ({
@@ -155,9 +160,8 @@ export default class AddItemCard extends React.Component {
 
     const pantriesData = dataInstance.getPantriesArray();
 
-    let pID = pantryID;
-    if (pantryID === AddItemCard.defaultValues.pantryID) {
-      pID = pantriesData[0].id;
+    if (!editMode) {
+      pantryID = pantriesData[0].id;
     }
 
     this.setState({
@@ -166,11 +170,12 @@ export default class AddItemCard extends React.Component {
       quantity,
       expiryDate,
       id,
+      pantryID,
       pantryPickerData: pantriesData,
-      pantryID: pID,
       visibleOption: true,
     });
   }
+
 
   render() {
     const { onBackdropPress, editMode } = this.props;
@@ -179,17 +184,17 @@ export default class AddItemCard extends React.Component {
     } = this.state;
 
     let nameComponent = (
-      <Input
-        label="Name"
-        placeholder="Enter the name of the item"
-        inputContainerStyle={inputStyle.container}
-        labelStyle={inputStyle.label}
-        inputStyle={inputStyle.input}
-        onChangeText={text => this.setState({ name: text })}
-        value={name}
-        onFocus={() => this.handleFocusChange('name')}
-        selectTextOnFocus
-      />
+      <View style={{ flex: 1, zIndex: 1 }}>
+        <Input
+          label="Name"
+          inputComponent={ItemSearchInput}
+          inputContainerStyle={inputStyle.container}
+          labelStyle={inputStyle.label}
+          onFocus={() => this.handleFocusChange('name')}
+          inputTextStyle={inputStyle.input}
+          onSelect={this.nameDropDownSelected}
+        />
+      </View>
     );
 
     let deleteButton = null;
@@ -198,7 +203,7 @@ export default class AddItemCard extends React.Component {
       nameComponent = null;
       deleteButton = (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Button title="Delete" buttonStyle={{...styles.buttonStyle, backgroundColor: colors.red }} onPress={this.handleDeleteButtonPress} />
+          <Button title="Delete" buttonStyle={{ ...styles.buttonStyle, backgroundColor: colors.red }} onPress={this.handleDeleteButtonPress} />
         </View>
       );
     }
@@ -221,6 +226,7 @@ export default class AddItemCard extends React.Component {
               contentContainerStyle={{ flex: 0 }}
               ref={this.scrollView}
               scrollEnabled={false}
+              keyboardShouldPersistTaps="handled"
             >
               <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={-90}>
                 <View style={{ flex: 1, flexDirection: 'column' }}>
@@ -255,6 +261,7 @@ export default class AddItemCard extends React.Component {
                       inputStyle={inputStyle.input}
                       onChangeText={text => this.setState({ quantity: text })}
                       value={quantity}
+                      selectTextOnFocus
                       onFocus={() => this.handleFocusChange('quantity')}
                     />
                     <Input
@@ -268,6 +275,7 @@ export default class AddItemCard extends React.Component {
                       chosenID={pantryID}
                       onPickerChange={this.onPantryChange}
                     />
+
                     <View style={{
                       flex: 1, padding: 10, height: 120, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around',
                     }}
@@ -294,6 +302,7 @@ AddItemCard.defaultProps = {
   onBackdropPress: () => {},
   editMode: false,
   navigation: null,
+  onCancel: () => {},
 };
 
 AddItemCard.propTypes = {
@@ -301,20 +310,24 @@ AddItemCard.propTypes = {
   editMode: PropTypes.bool,
   visible: PropTypes.bool.isRequired,
   onSave: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
   navigation: PropTypes.object,
 };
 
 const inputStyle = {
   container: {
+    flex: 1,
     borderColor: colors.lighterLogoBack,
   },
   input: {
     color: colors.logoBack,
     fontFamily: fonts.text,
+    fontSize: 18,
   },
   label: {
     color: colors.logo,
     fontFamily: fonts.text,
+    fontSize: 18,
   },
 };
 const styles = StyleSheet.create({

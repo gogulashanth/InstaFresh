@@ -57,7 +57,7 @@ export class PantryAddButton extends React.Component {
 
 export class AddButton extends React.Component {
   render() {
-    const { handleManualAddClick } = this.props;
+    const { onManualAddPress, onAutoScanPress, onBarcodeScanPress } = this.props;
     return (
       <Menu renderer={renderers.Popover} rendererProps={{ placement: 'bottom', anchorStyle: styles.anchorStyle }}>
         <MenuTrigger customStyles={triggerStyles}>
@@ -68,9 +68,9 @@ export class AddButton extends React.Component {
           />
         </MenuTrigger>
         <MenuOptions customStyles={optionStyles}>
-          <MenuOption onSelect={handleManualAddClick} value={1} text="Manual Add" />
-          <MenuOption value={2} text="AutoScan" />
-          <MenuOption value={2} text="Barcode Scan" />
+          <MenuOption onSelect={onManualAddPress} value={1} text="Manual Add" />
+          <MenuOption onSelect={onAutoScanPress} value={2} text="AutoScan" />
+          <MenuOption value={2} onSelect={onBarcodeScanPress} text="Barcode Scan" />
         </MenuOptions>
       </Menu>
     );

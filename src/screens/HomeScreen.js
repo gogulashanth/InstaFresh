@@ -6,18 +6,21 @@ import {
   StyleSheet, View, Text, FlatList,
 } from 'react-native';
 import colors from 'res/colors';
-import ItemSummary from 'library/components/ItemSummary';
 import AddItemCard from 'library/components/AddItemCard';
-import { SearchBar, ListItem, ThemeProvider } from 'react-native-elements';
+import { SearchBar } from 'react-native-elements';
 import dataInstance from 'model/Data';
-import { AddButton, HeaderLogo, MenuButton } from 'library/components/HeaderItems';
-import palette from 'res/palette';
-import themes from 'res/themes';
+import { AddButton, MenuButton } from 'library/components/HeaderItems';
+import CustomListItem from 'library/components/CustomListItem';
+import InfoBox from 'library/components/InfoBox';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: 'Home',
-    headerRight: <AddButton handleManualAddClick={navigation.getParam('handleManualAdd')} />,
+    headerRight: <AddButton
+      onManualAddPress={navigation.getParam('handleManualAdd')}
+      onBarcodeScanPress={navigation.getParam('onBarcodeScanPress')}
+      onAutoScanPress={navigation.getParam('onAutoScanPress')}
+    />,
     headerLeft: <MenuButton onPress={navigation.getParam('handleMenuButtonClick')} />,
   });
 
@@ -42,12 +45,23 @@ export default class HomeScreen extends React.Component {
     navigation.setParams({
       handleManualAdd: this.handleManualAddClick,
       handleMenuButtonClick: this.handleMenuButtonClick,
+      onBarcodeScanPress: this.onBarcodeScanPress,
+      onAutoScanPress: this.onAutoScanPress,
     });
   }
 
   componentWillUnmount() {
     dataInstance.unregisterListener(this.onDataUpdate);
   }
+
+  onAutoScanPress =(() => {
+    // TODO: Implement ML autoscan
+  });
+
+  onBarcodeScanPress = (() => {
+    const { navigation } = this.props;
+    navigation.navigate('Barcode');
+  });
 
   onDataUpdate = (() => {
     const d = dataInstance.getItemsArray();
@@ -57,7 +71,7 @@ export default class HomeScreen extends React.Component {
   onPressItem(id) {
     const { navigation } = this.props;
     // updater functions are preferred for transactional updates
-    navigation.navigate('Item', { itemID: id, title: dataInstance.getItem(id).name });
+    navigation.push('Item', { itemID: id, title: dataInstance.getItem(id).name });
   }
 
   keyExtractor = ((item, index) => item.id);
@@ -72,10 +86,11 @@ export default class HomeScreen extends React.Component {
   });
 
   _listEmptyComponent = () => (
-    // TODO: create empty comp.
-    <View>
-      <Text>Hello</Text>
-    </View>
+    <InfoBox
+      imageSource={require('res/images/alert_icon.png')}
+      title="You don't have any items stored in your pantries."
+      subtitle="Add an item by pressing the add button"
+    />
   )
 
   updateSearch = ((search) => {
@@ -121,13 +136,12 @@ export default class HomeScreen extends React.Component {
     }
 
     return (
-      <ListItem
+      <CustomListItem
         leftAvatar={{ source: { uri: dataItem.imageURI }, size: 'medium' }}
         title={`${dataItem.name} - ${dataItem.quantity}`}
         subtitle={expiryComp}
-        subsubTitle={dataInstance._data[dataItem.pantryID].name}
-        subsubStyle={{ color: colors.text }}
-        chevron
+        subsubtitle={dataInstance._data[dataItem.pantryID].name}
+        subsubtitleStyle={{ color: colors.text }}
         containerStyle={{ marginTop: 5 }}
         subtitleStyle={style}
         onPress={() => this.onPressItem(dataItem.id)}
@@ -158,7 +172,7 @@ export default class HomeScreen extends React.Component {
           data={filteredData}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
-          ListEmptyComponent={this._listEmptyComponent}
+          ListEmptyComponent={(this._listEmptyComponent)}
         />
       </View>
     );

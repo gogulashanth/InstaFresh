@@ -14,11 +14,12 @@ export default class NutritionInfo extends React.Component {
   }
 
   render() {
+    const { nutrition } = this.props;
     return (
       <View style={[styles.background, this.props.style]}>
         <Text style={styles.heading}>Nutrition Facts</Text>
         <Divider style={{ backgroundColor: this.dividerColor, height: 1 }} />
-        <NutritionItem name="Serving Size" percent="1 Apple" style={{ fontWeight: 'bold', fontSize: 13 * widthConversion }} />
+        <NutritionItem name="Serving Size" percent={`{nutrition.amount} {nutrition.unit.toLowerCase()}`} style={{ fontWeight: 'bold', fontSize: 13 * widthConversion }} />
         <Divider style={{ backgroundColor: this.dividerColor, height: 6 }} />
         <NutritionItem name="Calories" percent="60" style={{ fontWeight: 'bold', fontSize: 21 * widthConversion }} />
         <Divider style={{ backgroundColor: this.dividerColor, height: 3 }} />
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     paddingLeft: 2,
     paddingRight: 2,
-    maxWidth: 350* widthConversion,
+    maxWidth: 350 * widthConversion,
   },
   heading: {
     fontFamily: 'Helvetica',

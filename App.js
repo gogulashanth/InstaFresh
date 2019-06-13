@@ -20,7 +20,8 @@ import DisclaimerScreen from 'screens/DisclaimerScreen';
 import RecipesScreen from 'screens/RecipesScreen';
 import SettingsScreen from 'screens/SettingsScreen';
 import InstaScoreScreen from 'screens/InstaScoreScreen';
-import ItemSearchScreen from 'screens/ItemSearchScreen';
+import BarcodeScannerScreen from 'screens/BarcodeScannerScreen';
+import RecipeDetailScreen from 'screens/RecipeDetailScreen';
 import firebase from 'react-native-firebase';
 
 const defaultStackNavigationOptions = {
@@ -35,7 +36,7 @@ const defaultStackNavigationOptions = {
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
   Item: ItemScreen,
-  ItemSearch: ItemSearchScreen,
+  Barcode: BarcodeScannerScreen,
 }, {
   defaultNavigationOptions: defaultStackNavigationOptions,
 });
@@ -66,6 +67,7 @@ const InstaScoreStack = createStackNavigator({
 
 const RecipesStack = createStackNavigator({
   Recipes: RecipesScreen,
+  RecipeDetail: RecipeDetailScreen,
 }, {
   defaultNavigationOptions: defaultStackNavigationOptions,
 });

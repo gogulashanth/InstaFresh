@@ -9,7 +9,7 @@ import colors from 'res/colors';
 import fonts from 'res/fonts';
 import fontSize from 'res/fontSize';
 import { Icon, Text } from 'react-native-elements';
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 export default class InstaMenu extends React.Component {
   constructor(props) {
@@ -18,15 +18,15 @@ export default class InstaMenu extends React.Component {
   }
 
   navigateToScreen = route => () => {
-    const navigateAction = NavigationActions.navigate({
+    let navigateAction = NavigationActions.navigate({
       routeName: route,
     });
+    
     this.props.navigation.dispatch(navigateAction);
   }
 
   render() {
     const selectedIndex = this.props.navigation.state.index;
-  
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.logoBack }}>
         <View style={[styles.menuContainer]}>

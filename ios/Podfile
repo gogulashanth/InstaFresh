@@ -10,6 +10,7 @@ target 'sappad' do
   pod 'Firebase/Firestore', '~> 5.20.2'
   pod 'Firebase/Auth', '~> 5.20.2'
 
+
 end
 
 target 'sappad-tvOS' do

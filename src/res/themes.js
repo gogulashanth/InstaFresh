@@ -1,19 +1,25 @@
 import fontSize from 'res/fontSize';
 import colors from 'res/colors';
+import fonts from 'res/fonts';
 
 const themes = {
   dark: {
     Text: {
+      style: {
+        fontFamily: fonts.text,
+      },
       h4Style: {
         color: colors.text,
         fontSize: fontSize.h4,
+        fontFamily: fonts.text,
       },
       h3Style: {
         color: colors.text,
         fontSize: fontSize.h3,
+        fontFamily: fonts.text,
       },
     },
-    ListItem: {
+    CustomListItem: {
       leftAvatar: {
         rounded: true,
         size: 45,
@@ -28,9 +34,6 @@ const themes = {
       subtitleStyle: {
         color: colors.text,
         paddingBottom: 2,
-      },
-      rightTitleStyle: {
-        color: colors.text,
       },
     },
     Button: {
@@ -55,6 +58,7 @@ const themes = {
         color: colors.text,
         fontSize: fontSize.h4,
       },
+      keyboardAppearance: 'dark',
     },
   },
   light: {
