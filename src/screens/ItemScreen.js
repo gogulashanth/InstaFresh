@@ -10,7 +10,7 @@ import { Button as RNEButton, Icon, Text } from 'react-native-elements';
 import NutritionInfo from 'library/components/NutritionInfo';
 import { widthConversion } from 'res/fontSize';
 import AddItemCard from 'library/components/AddItemCard';
-
+import ItemUseCard from 'library/components/ItemUseCard';
 
 export default class ItemScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -29,6 +29,10 @@ export default class ItemScreen extends React.Component {
   constructor(props) {
     super(props);
     this.editModal = React.createRef();
+    this.itemUseCard = React.createRef();
+    this.wastedItemUseCard = React.createRef();
+    this.consumedItemUseCard = React.createRef();
+
     const { navigation } = this.props;
 
     const itemID = navigation.getParam('itemID');
@@ -70,6 +74,17 @@ export default class ItemScreen extends React.Component {
           editMode
           navigation={navigation}
         />
+        <ItemUseCard
+          ref={this.consumedItemUseCard}
+          title="How much did you consume?"
+          subtitle="Move the slider to adjust"
+          
+        />
+        <ItemUseCard
+          ref={this.wastedItemUseCard}
+          title="How much did you waste?"
+          subtitle="Move the slider to adjust"
+        />
         <View style={{ flex: 1, padding: 12, flexDirection: 'column' }}>
           <View style={{ flex: 0.8, flexDirection: 'row', justifyContent: 'center' }}>
             <Image source={{ uri: item.imageURI }} style={{ flex: 1, borderRadius: 10 }} />
@@ -86,8 +101,8 @@ export default class ItemScreen extends React.Component {
             <NutritionInfo />
           </View>
           <View style={styles.buttonContainer}>
-            <RNEButton title="Wasted" buttonStyle={{ ...styles.buttonStyle,backgroundColor: colors.red }} onPress={() => {}} />
-            <RNEButton title="Consumed" buttonStyle={styles.buttonStyle} onPress={() => {}} />
+            <RNEButton title="Wasted" buttonStyle={{ ...styles.buttonStyle, backgroundColor: colors.red }} onPress={() => this.wastedItemUseCard.current.show()} />
+            <RNEButton title="Consumed" buttonStyle={styles.buttonStyle} onPress={() => this.consumedItemUseCard.current.show()} />
           </View>
         </View>
       </SafeAreaView>
@@ -156,6 +171,6 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     width: 130,
-    borderRadius:20,
+    borderRadius: 20,
   },
 });

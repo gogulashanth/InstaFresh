@@ -7,6 +7,7 @@ const themes = {
     Text: {
       style: {
         fontFamily: fonts.text,
+        color: colors.text,
       },
       h4Style: {
         color: colors.text,

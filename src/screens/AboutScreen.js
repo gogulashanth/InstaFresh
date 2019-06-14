@@ -11,18 +11,20 @@ import { AddButton, HeaderLogo, MenuButton } from 'library/components/HeaderItem
 
 export default class AboutScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    headerTitle: <HeaderLogo />,
-    headerRight: <AddButton handleManualAddClick={navigation.getParam('handleManualAdd')} />,
+    headerTitle: 'About',
     headerLeft: <MenuButton onPress={navigation.getParam('handleMenuButtonClick')} />,
 
   });
 
   constructor(props) {
     super(props);
-    this.addItemCardRef = React.createRef();
-    // this.onPressItem = this.onPressItem.bind(this);
     this.state = {
-      selected: (new Map(): Map<string, boolean>), search: '', data: [], filteredData: [], imageOpacity: new Animated.Value(0), text1Opacity: new Animated.Value(0), text2Opacity: new Animated.Value(0), text3Opacity: new Animated.Value(0), text4Opacity: new Animated.Value(0), text5Opacity: new Animated.Value(0),
+      imageOpacity: new Animated.Value(0),
+      text1Opacity: new Animated.Value(0),
+      text2Opacity: new Animated.Value(0),
+      text3Opacity: new Animated.Value(0),
+      text4Opacity: new Animated.Value(0),
+      text5Opacity: new Animated.Value(0),
     };
   }
 
@@ -33,7 +35,6 @@ export default class AboutScreen extends React.Component {
     } = this.state;
 
     navigation.setParams({
-      handleManualAdd: this.handleManualAddClick,
       handleMenuButtonClick: this.handleMenuButtonClick,
     });
 
@@ -84,20 +85,45 @@ export default class AboutScreen extends React.Component {
 
   render() {
     const { search, filteredData } = this.state;
+    const {
+      imageOpacity, text3Opacity, text4Opacity, text1Opacity, text5Opacity, text2Opacity,
+    } = this.state;
+
     return (
       <View style={[styles.container, { flexDirection: 'column', alignItems: 'center' }]}>
-        <Animated.Text style={[styles.Facts, { opacity: this.state.text1Opacity }]}>Each year, food waste in Canada creates some 56.6 million tonnes of carbon dioxide-equivalent emissions. </Animated.Text>
+        <Animated.Text style={[styles.Facts, { opacity: text1Opacity }]}>
+          Each year, food waste in Canada creates some 56.6 million tonnes of carbon dioxide-equivalent emissions. 
+        </Animated.Text>
         <View style={[styles.container, { flexDirection: 'row' }]}>
-          <Animated.Text style={[styles.Facts, { opacity: this.state.text2Opacity }]}>63% of the food Canadians thrown away could have been eaten.</Animated.Text>
-          <Animated.Text style={[styles.Facts, { opacity: this.state.text3Opacity }]}>Wasted food costs the average Canadian household $1,100 a year!</Animated.Text>
+          <Animated.Text style={[styles.Facts, { opacity: text2Opacity }]}>
+            63% of the food Canadians thrown away could have been eaten.
+          </Animated.Text>
+          <Animated.Text style={[styles.Facts, { opacity: text3Opacity }]}>
+            Wasted food costs the average Canadian household $1,100 a year!
+          </Animated.Text>
         </View>
         <View style={[styles.container, { flexDirection: 'row' }]}>
-          <Animated.Text style={[styles.Facts, { opacity: this.state.text4Opacity }]}> Over 1/3 of all food produced globally goes to waste. </Animated.Text>
-          <Animated.Image resizeMode="contain" style={{ width: 150, height: 150, opacity: this.state.imageOpacity }} source={require('res/images/instafresh_logo_text_bottom.png')} />
-          <Animated.Text style={[styles.Facts, { opacity: this.state.text5Opacity }]}> We waste 1,000,000 cups of milk EVERY DAY! </Animated.Text>
+          <Animated.Text style={[styles.Facts, { opacity: text4Opacity }]}> 
+            Over 1/3 of all food produced globally goes to waste. 
+          </Animated.Text>
+          <Animated.Image 
+            resizeMode="contain" 
+            style={{ width: 150, height: 150, opacity: imageOpacity }} 
+            source={require('res/images/instafresh_logo_text_bottom.png')} 
+          />
+          <Animated.Text style={[styles.Facts, { opacity: text5Opacity }]}> 
+            We waste 1,000,000 cups of milk EVERY DAY! 
+          </Animated.Text>
         </View>
         <View style={[styles.container, { flex: 2.5, flexDirection: 'row', alignItems: 'center' }]}>
-          <Animated.Text style={styles.About}> InstaFresh is a CSR (Corporate Social Responsibility) centred mobile application that was created to enable users to reduce their carbon footprint. InstaFresh was explicitly designed to reduce food waste and help users save money on the unintentional loss of food. We welcome and encourage feedback that would help us improve user experience with InstaFresh. </Animated.Text>
+          <Animated.Text style={styles.About}> 
+            InstaFresh is a CSR (Corporate Social Responsibility) centred 
+            mobile application that was created to enable users to reduce 
+            their carbon footprint. InstaFresh was explicitly designed to 
+            reduce food waste and help users save money on the unintentional 
+            loss of food. We welcome and encourage feedback that would help 
+            us improve user experience with InstaFresh. 
+          </Animated.Text>
         </View>
 
       </View>
