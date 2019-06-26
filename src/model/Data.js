@@ -12,7 +12,9 @@ const noop = () => {}; // do nothing.
 class Data {
   constructor() {
     AsyncStorage.removeItem('@instaFreshData');
+    AsyncStorage.removeItem('@instaScoreData');
     this._data = {};
+    this._instaScoreData = {};
     this.dataListener = [];
     this.itemsArray = [];
     this.itemsObject = {};
@@ -59,7 +61,7 @@ class Data {
           pantry.items = itemsObj;
           parsedValue[pantries[i]] = new Pantry(pantry.name, pantry.imageURI, pantry.items, pantry.id);
         }
-
+        this._instaScoreData = JSON.parse(await AsyncStorage.getItem('@instaScoreData'));
         this._data = parsedValue;
         await this._save();
       // eslint-disable-next-line no-else-return
@@ -71,16 +73,17 @@ class Data {
 
         const img = 'https://images-prod.healthline.com/hlcmsresource/images/topic_centers/Do_Apples_Affect_Diabetes_and_Blood_Sugar_Levels-732x549-thumbnail.jpg';
         const pantry = new Pantry('Fridge', img, {});
-        const item = new Item('Apple', dat, img, 'na', '2', pantry.id);
+        const item = new Item('Apple', dat, img, undefined, '2', pantry.id);
         pantry.items[item.id] = item;
-        // pantry.addItem(new Item('Apple', dat, img, 'na', '2', pantry.id));
 
         const startingData = { [pantry.id]: pantry };
-
         const stringifiedData = JSON.stringify(startingData);
+
+        const instaScoreData = { consumed: 0, wasted: 0 };
 
         try {
           await AsyncStorage.setItem('@instaFreshData', stringifiedData);
+          await AsyncStorage.setItem('@instaScoreData', JSON.stringify(instaScoreData));
           await this.loadData();
         } catch (e) {
           // saving error
@@ -101,6 +104,19 @@ class Data {
   }
 
   _save = (async () => {
+    const saves = [];
+
+    saves.push(this._saveInstaFreshData());
+    saves.push(this._saveInstaScore());
+
+    await Promise.all(saves);
+
+    for (let i = 0; i < this.dataListener.length; i++) {
+      this.dataListener[i]();
+    }
+  });
+
+  _saveInstaFreshData = (async () => {
     const dataToSave = JSON.stringify(this._data);
     try {
       await AsyncStorage.setItem('@instaFreshData', dataToSave);
@@ -108,11 +124,67 @@ class Data {
       // saving error
       console.log('Error encountered in _save in Data.js');
     }
+  });
 
-    for (let i = 0; i < this.dataListener.length; i++) {
-      this.dataListener[i]();
+  _saveInstaScore = (async () => {
+    const instaScoreDataToSave = JSON.stringify(this._instaScoreData);
+    try {
+      await AsyncStorage.setItem('@instaScoreData', instaScoreDataToSave);
+    } catch (error) {
+      console.log('Error encountered in _saveInstaScore in Data.js');
     }
-    // this.dataListener();
+  });
+
+  getInstaScore = (() => {
+    const { consumed } = this._instaScoreData;
+    const { wasted } = this._instaScoreData;
+
+    if (consumed + wasted === 0) {
+      return 100;
+    } else {
+      return Math.round(consumed / (wasted + consumed) * 100);
+    }
+  });
+
+  addConsumed = ((id, amount) => {
+    // TODO: normalize amount
+    this._instaScoreData.consumed = this._instaScoreData.consumed + amount;
+
+    const item = this.getItem(id);
+
+    const {
+      name,
+      expiryDate,
+      imageURI,
+      nutrition,
+      quantity,
+      pantryID,
+    } = item;
+
+    const editedItem = new Item(name, expiryDate, imageURI, nutrition, quantity - amount, pantryID, id);
+    this.editItem(id, editedItem);
+  });
+
+  addWasted = ((id, amount) => {
+    // TODO: normalize amount
+    this._instaScoreData.wasted = this._instaScoreData.wasted + amount;
+    const item = this.getItem(id);
+
+    const {
+      name,
+      expiryDate,
+      imageURI,
+      nutrition,
+      quantity,
+      pantryID,
+    } = item;
+
+    const editedItem = new Item(name, expiryDate, imageURI, nutrition, quantity - amount, pantryID, id);
+    this.editItem(id, editedItem);
+  });
+
+  resetInstaScore = (() => {
+    this._instaScoreData = { consumed: 0, wasted: 0 };
   });
 
   addPantry = ((pantry) => {
@@ -154,7 +226,7 @@ class Data {
     return returnItem;
   });
 
-  getPantry = ((pantryID) => this._data[pantryID])
+  getPantry = (pantryID => this._data[pantryID])
 
   getItem = ((itemID) => {
     const items = this.getItemsObject();

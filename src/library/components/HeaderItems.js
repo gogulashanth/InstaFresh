@@ -1,14 +1,14 @@
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/prefer-stateless-function */
 import {
- Menu, MenuOptions, MenuOption, MenuTrigger, renderers 
+  Menu, MenuOptions, MenuOption, MenuTrigger, renderers,
 } from 'react-native-popup-menu';
 import React from 'react';
 import {
- StyleSheet, View, Text, Image, FlatList, TouchableOpacity
+  StyleSheet, View, Image, FlatList, TouchableOpacity,
 } from 'react-native';
 import colors from 'res/colors';
-import { Icon } from 'react-native-elements';
+import { Icon, Text } from 'react-native-elements';
 
 
 export class HeaderLogo extends React.Component {
@@ -68,15 +68,48 @@ export class AddButton extends React.Component {
           />
         </MenuTrigger>
         <MenuOptions customStyles={optionStyles}>
-          <MenuOption onSelect={onManualAddPress} value={1} text="Manual Add" />
-          <MenuOption onSelect={onAutoScanPress} value={2} text="AutoScan" />
-          <MenuOption value={2} onSelect={onBarcodeScanPress} text="Barcode Scan" />
+          <MenuOption onSelect={onManualAddPress} value={1}>
+            <MenuOptionWithIcon text="Manual Add" iconName="ios-add-circle-outline" />
+          </MenuOption>
+          <MenuOption onSelect={onBarcodeScanPress} value={2}>
+            <MenuOptionWithIcon text="Barcode Scan" iconName="ios-barcode" />
+          </MenuOption>
+          <MenuOption onSelect={onAutoScanPress} value={3}>
+            <MenuOptionWithIcon text="AutoScan" iconName="ios-qr-scanner" />
+          </MenuOption>
+          
         </MenuOptions>
       </Menu>
     );
   }
 }
 
+class MenuOptionWithIcon extends React.PureComponent {
+  render() {
+    return (
+      <View style={menuOptionStyles.container}>
+        <Icon
+          name={this.props.iconName}
+          type="ionicon"
+          color={colors.logo}
+        />
+        <Text style={menuOptionStyles.text}>{this.props.text}</Text>
+      </View>
+    );
+  }
+}
+
+const menuOptionStyles = StyleSheet.create({
+  container: {
+    flex: 0,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  text: {
+    paddingLeft: 10,
+  },
+});
 const triggerStyles = {
   triggerWrapper: {
     padding: 10,
@@ -86,27 +119,26 @@ const triggerStyles = {
 
 const optionStyles = {
   optionsContainer: {
-    backgroundColor: colors.lighterLogoBack,
+    backgroundColor: colors.darkerLogoBack,
     margin: 0,
     flex: 1,
-    flexBasis: 'auto',
-    width: 120,
     borderRadius: 10,
     alignItems: 'center',
+    // borderColor: colors.logo,
+    // borderWidth: 2,
   },
   optionWrapper: {
     marginTop: 1,
     marginBottom: 1,
-    backgroundColor: colors.lighterLogoBack,
-  },
-  optionText: {
-    color: colors.text,
+    borderRadius: 10,
+    backgroundColor: colors.darkerLogoBack,
   },
 };
 
 let styles = StyleSheet.create({
   anchorStyle: {
-    backgroundColor: colors.lighterLogoBack,
+    backgroundColor: colors.darkerLogoBack,
+    left: '40%',
   },
   iconStyleLeft: {
     paddingRight: 40,

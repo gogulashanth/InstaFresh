@@ -55,6 +55,7 @@
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		83E3E777DAE54AD4A18441A7 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D45263864C44233A4A95DED /* libRNGestureHandler.a */; };
 		879B746E19BB4F8F9D0998CB /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 020CD09E81B147B082167410 /* Zocial.ttf */; };
+		893A93A3364E4E30A97F93EF /* libTfliteReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD25939FBE9B49B3854EF6C2 /* libTfliteReactNative.a */; };
 		905BBE5DA20C4576B136CFCC /* libRNGestureHandler-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D43433A411BE44F9A0FA1DC3 /* libRNGestureHandler-tvOS.a */; };
 		9425971C765146DEB8B30BFF /* libRNBlur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A51977668274413F96EC4C2B /* libRNBlur.a */; };
 		9455BD4ED84D465FBF095C8A /* libRCTBEEPickerManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 233559D39E824522A130C23E /* libRCTBEEPickerManager.a */; };
@@ -412,6 +413,13 @@
 			remoteGlobalIDString = ED296FEE214C9CF800B7C4FE;
 			remoteInfo = "jsiexecutor-tvOS";
 		};
+		4BF7F0BD22B888D1003BE674 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 74BB0DA1FAAD4880BF8BED18 /* TfliteReactNative.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = TfliteReactNative;
+		};
 		4BFC06CE22B0AE38000D6B58 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4BFC06A222B0AE38000D6B58 /* RNCamera.xcodeproj */;
@@ -503,6 +511,7 @@
 		692F8A216CB0485F85D8871D /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		6D4CEE0647D74F7E8F2AAE7B /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		6FC6E9F49DF84F289213A5B1 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
+		74BB0DA1FAAD4880BF8BED18 /* TfliteReactNative.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = TfliteReactNative.xcodeproj; path = "../node_modules/tflite-react-native/ios/TfliteReactNative.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		7A355F6DCFA34B85BB232A41 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -533,6 +542,7 @@
 		F5033C94B0E6477FBF3FF5C3 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		F7ADDCE7543C43D5934D7FA3 /* RNCWebView.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCWebView.xcodeproj; path = "../node_modules/react-native-webview/ios/RNCWebView.xcodeproj"; sourceTree = "<group>"; };
 		F8C64A097C61436BA877D8D0 /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
+		FD25939FBE9B49B3854EF6C2 /* libTfliteReactNative.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libTfliteReactNative.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -573,6 +583,7 @@
 				4BFC06D922B0AE5C000D6B58 /* libRNCamera.a in Frameworks */,
 				43A71B77DC694D2AADE69BA7 /* libRNFirebase.a in Frameworks */,
 				4B88409122B2E2DA006ABF6B /* libRNCWebView.a in Frameworks */,
+				893A93A3364E4E30A97F93EF /* libTfliteReactNative.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -774,6 +785,7 @@
 				5C72152BBEA54E87BC991C86 /* libRNSVG-tvOS.a */,
 				CE6B1DE732794787A2C902FF /* libRNFirebase.a */,
 				4ED290F3B30346E881D6BC50 /* libRNCWebView.a */,
+				FD25939FBE9B49B3854EF6C2 /* libTfliteReactNative.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -862,6 +874,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		4BF7F0BA22B888D1003BE674 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4BF7F0BE22B888D1003BE674 /* libTfliteReactNative.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		4BFC06A322B0AE38000D6B58 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -914,6 +934,7 @@
 				ADC1F29F6A584B9EB893CD05 /* RNSVG.xcodeproj */,
 				F8C64A097C61436BA877D8D0 /* RNFirebase.xcodeproj */,
 				F7ADDCE7543C43D5934D7FA3 /* RNCWebView.xcodeproj */,
+				74BB0DA1FAAD4880BF8BED18 /* TfliteReactNative.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1188,6 +1209,10 @@
 				{
 					ProductGroup = 4B3AE0EA2294EFAD00E04157 /* Products */;
 					ProjectRef = 8C9307573ABF40D1A36D6235 /* RNVectorIcons.xcodeproj */;
+				},
+				{
+					ProductGroup = 4BF7F0BA22B888D1003BE674 /* Products */;
+					ProjectRef = 74BB0DA1FAAD4880BF8BED18 /* TfliteReactNative.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1523,6 +1548,13 @@
 			remoteRef = 4B8B44D922948BBB003CD345 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		4BF7F0BE22B888D1003BE674 /* libTfliteReactNative.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libTfliteReactNative.a;
+			remoteRef = 4BF7F0BD22B888D1003BE674 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		4BFC06CF22B0AE38000D6B58 /* libRNCamera.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1830,12 +1862,14 @@
 					"$(SRCROOT)/../node_modules/@react-native-firebase/storage/ios/RNFBStorage",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
+					"$(SRCROOT)/../node_modules/tflite-react-native/ios",
 				);
 				INFOPLIST_FILE = sappadTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1867,12 +1901,14 @@
 					"$(SRCROOT)/../node_modules/@react-native-firebase/storage/ios/RNFBStorage",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
+					"$(SRCROOT)/../node_modules/tflite-react-native/ios",
 				);
 				INFOPLIST_FILE = sappadTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1906,6 +1942,7 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
+					"$(SRCROOT)/../node_modules/tflite-react-native/ios",
 				);
 				INFOPLIST_FILE = sappad/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1939,6 +1976,7 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
+					"$(SRCROOT)/../node_modules/tflite-react-native/ios",
 				);
 				INFOPLIST_FILE = sappad/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1979,11 +2017,13 @@
 					"$(SRCROOT)/../node_modules/@react-native-firebase/storage/ios/RNFBStorage",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
+					"$(SRCROOT)/../node_modules/tflite-react-native/ios",
 				);
 				INFOPLIST_FILE = "sappad-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -2025,11 +2065,13 @@
 					"$(SRCROOT)/../node_modules/@react-native-firebase/storage/ios/RNFBStorage",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
+					"$(SRCROOT)/../node_modules/tflite-react-native/ios",
 				);
 				INFOPLIST_FILE = "sappad-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -2070,11 +2112,13 @@
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
+					"$(SRCROOT)/../node_modules/tflite-react-native/ios",
 				);
 				INFOPLIST_FILE = "sappad-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -2115,11 +2159,13 @@
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
+					"$(SRCROOT)/../node_modules/tflite-react-native/ios",
 				);
 				INFOPLIST_FILE = "sappad-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (

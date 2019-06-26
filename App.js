@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { StatusBar } from 'react-native';
 import { MenuProvider } from 'react-native-popup-menu';
 import HomeScreen from 'screens/HomeScreen';
 import InstaMenu from 'library/components/InstaMenu';
@@ -22,6 +23,7 @@ import SettingsScreen from 'screens/SettingsScreen';
 import InstaScoreScreen from 'screens/InstaScoreScreen';
 import BarcodeScannerScreen from 'screens/BarcodeScannerScreen';
 import RecipeDetailScreen from 'screens/RecipeDetailScreen';
+import AutoScanScreen from 'screens/AutoScanScreen';
 import firebase from 'react-native-firebase';
 
 const defaultStackNavigationOptions = {
@@ -37,6 +39,7 @@ const HomeStack = createStackNavigator({
   Home: HomeScreen,
   Item: ItemScreen,
   Barcode: BarcodeScannerScreen,
+  AutoScan: AutoScanScreen,
 }, {
   defaultNavigationOptions: defaultStackNavigationOptions,
 });
@@ -113,7 +116,7 @@ const AppNavigator = createDrawerNavigator({
   Pantries: PantriesStack,
   Recipes: RecipesStack,
   InstaScore: InstaScoreStack,
-  Settings: SettingsStack,
+  Settings: SettingsStack, // TODO: future update (not in use right now)
   Disclaimer: DisclaimerStack,
   Help: HelpStack,
   About: AboutStack,
@@ -125,6 +128,7 @@ const AppCont = createAppContainer(AppNavigator);
 
 class App extends React.PureComponent {
   componentDidMount() {
+    StatusBar.setBarStyle('light-content');
     firebase.auth().signInAnonymously();
   }
 

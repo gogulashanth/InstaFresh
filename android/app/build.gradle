@@ -138,6 +138,7 @@ android {
 }
 
 dependencies {
+    implementation project(':tflite-react-native')
     implementation project(':react-native-webview')
     implementation project(':react-native-fetch-blob')
     implementation project(':react-native-fs')

@@ -58,7 +58,6 @@ export default class ItemSearchInput extends React.Component {
         onBlur={() => this.setState({ dropDownVisible: false })}
         placeholder="Enter the name of the item"
         value={query}
-        selectTextOnFocus
         keyExtractor={(item, index) => item.id}
         onChangeText={this.onChangeText}
         onEndEditing={() => this.onItemSelect(query)}

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  View, StyleSheet, Image, Button, SafeAreaView,
+  View, StyleSheet, Image, Button, SafeAreaView, ImageBackground,
 } from 'react-native';
 import colors from 'res/colors';
 import themes from 'res/themes';
@@ -11,6 +11,7 @@ import NutritionInfo from 'library/components/NutritionInfo';
 import { widthConversion } from 'res/fontSize';
 import AddItemCard from 'library/components/AddItemCard';
 import ItemUseCard from 'library/components/ItemUseCard';
+import Item from 'model/Item';
 
 export default class ItemScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -46,7 +47,21 @@ export default class ItemScreen extends React.Component {
   componentWillMount() {
     const { navigation } = this.props;
     navigation.setParams({ handleEditPress: this.handleEditPress });
+    dataInstance.registerListener(this._handleDataUpdate);
   }
+
+  componentWillUnmount() {
+    dataInstance.unregisterListener(this._handleDataUpdate);
+  }
+
+  _handleDataUpdate = (() => {
+    const { item } = this.state;
+    const newItem = dataInstance.getItem(item.id);
+    if(newItem !== undefined) {
+      const pantry = dataInstance.getPantry(item.pantryID);
+      this.setState({ item: newItem, pantry });
+    }
+  });
 
   handleEditPress = (() => {
     const { item } = this.state;
@@ -56,9 +71,16 @@ export default class ItemScreen extends React.Component {
   handleEditItem = ((editedItem) => {
     const { item } = this.state;
     dataInstance.editItem(item.id, editedItem);
-    const newItem = dataInstance.getItem(item.id);
-    const pantry = dataInstance.getPantry(item.pantryID);
-    this.setState({ item: newItem, pantry });
+  });
+
+  handleConsumed = ((amt) => {
+    const { item } = this.state;
+    dataInstance.addConsumed(item.id, amt);
+  });
+
+  handleWasted = ((amt) => {
+    const { item } = this.state;
+    dataInstance.addWasted(item.id, amt);
   });
 
   render() {
@@ -78,12 +100,15 @@ export default class ItemScreen extends React.Component {
           ref={this.consumedItemUseCard}
           title="How much did you consume?"
           subtitle="Move the slider to adjust"
-          
+          maxValue={item.quantity}
+          onSave={amt => dataInstance.addConsumed(item.id, amt)}
         />
         <ItemUseCard
           ref={this.wastedItemUseCard}
           title="How much did you waste?"
           subtitle="Move the slider to adjust"
+          maxValue={item.quantity}
+          onSave={amt => dataInstance.addWasted(item.id, amt)}
         />
         <View style={{ flex: 1, padding: 12, flexDirection: 'column' }}>
           <View style={{ flex: 0.8, flexDirection: 'row', justifyContent: 'center' }}>
@@ -91,14 +116,14 @@ export default class ItemScreen extends React.Component {
 
 
             <View style={styles.containerText}>
-              <ItemDescription iconName="list" iconType="entypo" name="Quantity" value={item.quantity} />
+              <ItemDescription iconName="list" iconType="entypo" name="Quantity" value={(Math.round(item.quantity * 10) / 10).toString()} />
               <ItemDescription iconName="ios-archive" iconType="ionicon" name="Pantry" value={pantry.name} />
               <ItemDescription iconName="calendar" iconType="entypo" name="Expiry Date" value={item.expiryDate.toLocaleDateString('en-US', this.dateFormat)} />
             </View>
           </View>
 
           <View style={styles.nutrition}>
-            <NutritionInfo />
+              <NutritionInfo nutrition={item.nutrition} />
           </View>
           <View style={styles.buttonContainer}>
             <RNEButton title="Wasted" buttonStyle={{ ...styles.buttonStyle, backgroundColor: colors.red }} onPress={() => this.wastedItemUseCard.current.show()} />
@@ -130,7 +155,7 @@ class ItemDescription extends React.Component {
         }}
         >
           <Text h3>{this.props.name}</Text>
-          <Text h4>{this.props.value}</Text>
+          <Text h4 style={{opacity: 0.5}}>{this.props.value}</Text>
         </View>
       </View>
     );

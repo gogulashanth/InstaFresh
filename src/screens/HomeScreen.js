@@ -29,7 +29,7 @@ export default class HomeScreen extends React.Component {
     this.addItemCardRef = React.createRef();
     this.onPressItem = this.onPressItem.bind(this);
     this.state = {
-      selected: (new Map(): Map<string, boolean>), search: '', data: [], filteredData: [],
+      selected: (new Map(): Map<string, boolean>), search: '', data: [], filteredData: []
     };
   }
 
@@ -55,7 +55,8 @@ export default class HomeScreen extends React.Component {
   }
 
   onAutoScanPress =(() => {
-    // TODO: Implement ML autoscan
+    const { navigation } = this.props;
+    navigation.navigate('AutoScan');
   });
 
   onBarcodeScanPress = (() => {
@@ -87,9 +88,17 @@ export default class HomeScreen extends React.Component {
 
   _listEmptyComponent = () => (
     <InfoBox
-      imageSource={require('res/images/alert_icon.png')}
+      imageSource={require('res/images/ionicons_ios-archive.png')}
       title="You don't have any items stored in your pantries."
       subtitle="Add an item by pressing the add button"
+    />
+  )
+
+  _listEmptySearchComponent = () => (
+    <InfoBox
+      imageSource={require('res/images/ionicons_ios-search.png')}
+      title="No items/pantries found"
+      subtitle="Check the spelling and try again."
     />
   )
 
@@ -104,11 +113,17 @@ export default class HomeScreen extends React.Component {
 
   filterItems = ((text) => {
     const { data } = this.state;
+    const originalCount = data.length;
     const newData = data.filter((item) => {
       const itemData = `${item.name.toUpperCase()} ${dataInstance._data[item.pantryID].name.toUpperCase()}`;
       return itemData.indexOf(text.toUpperCase()) > -1;
     });
     this.setState({ filteredData: newData });
+    // if(newData.length === 0 && newData.length !== originalCount) {
+    //   this.setState({ filteredData: newData, emptySearch: true });
+    // }else {
+    //   this.setState({ filteredData: newData });
+    // }
   });
 
   renderItem = ((item) => {
@@ -138,7 +153,7 @@ export default class HomeScreen extends React.Component {
     return (
       <CustomListItem
         leftAvatar={{ source: { uri: dataItem.imageURI }, size: 'medium' }}
-        title={`${dataItem.name} - ${dataItem.quantity}`}
+        title={`${dataItem.name} - ${Math.round(dataItem.quantity * 10) / 10}`}
         subtitle={expiryComp}
         subsubtitle={dataInstance._data[dataItem.pantryID].name}
         subsubtitleStyle={{ color: colors.text }}
@@ -152,6 +167,7 @@ export default class HomeScreen extends React.Component {
   render() {
     const { search, filteredData } = this.state;
     const { navigation } = this.props;
+    const emptyItem = (filteredData.length === 0 && search !== '') ? this._listEmptySearchComponent : this._listEmptyComponent;
     return (
       <View style={styles.container}>
         <AddItemCard
@@ -172,7 +188,7 @@ export default class HomeScreen extends React.Component {
           data={filteredData}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
-          ListEmptyComponent={(this._listEmptyComponent)}
+          ListEmptyComponent={emptyItem}
         />
       </View>
     );

@@ -30,21 +30,18 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 3,
-    fontSize: 17,
     color: colors.text,
     textAlign: 'center',
     alignSelf: 'center',
   },
   subtitle: {
     flex: 1,
-    fontSize: 12,
     opacity: 0.5,
     color: colors.text,
     textAlign: 'left',
   },
   subsubtitle: {
     flex: 1,
-    fontSize: 12,
     opacity: 0.5,
     color: colors.text,
     textAlign: 'left',
@@ -97,14 +94,14 @@ class RecipeListItem extends React.Component {
             style={styles.image}
           />
           <View style={{ ...styles.textContainer, ...textContainerStyle }}>
-            <Text numberOfLines={2} ellipsizeMode="tail" style={{ ...styles.title, ...titleStyle }}>
+            <Text h3 numberOfLines={2} ellipsizeMode="tail" h3Style={{ ...styles.title, ...titleStyle }}>
               {title}
             </Text>
-            <Text numberOfLines={1} ellipsizeMode="tail"style={{ ...styles.subtitle, ...subsubtitleStyle }}>
+            <Text h4 numberOfLines={1} ellipsizeMode="tail" h4Style={{ ...styles.subtitle, ...subsubtitleStyle }}>
               {subtitle}
             </Text>
             {(subsubtitle !== undefined) && (
-              <Text numberOfLines={1} ellipsizeMode="tail" style={{ ...styles.subsubtitle, ...subsubtitleStyle }}>
+              <Text h4 numberOfLines={1} ellipsizeMode="tail" h4Style={{ ...styles.subsubtitle, ...subsubtitleStyle }}>
                 {subsubtitle}
               </Text>
             )}

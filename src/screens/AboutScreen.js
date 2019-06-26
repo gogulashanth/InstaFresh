@@ -28,15 +28,22 @@ export default class AboutScreen extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const { navigation } = this.props;
+    navigation.setParams({
+      handleMenuButtonClick: this._handleMenuButtonClick,
+    });
+    this._startAnimation();
+  }
+
+  componentWillUnmount() {
+    this.animation.stop();
+  }
+
+  _startAnimation = (() => {
     const {
       imageOpacity, text3Opacity, text4Opacity, text1Opacity, text5Opacity, text2Opacity,
     } = this.state;
-
-    navigation.setParams({
-      handleMenuButtonClick: this.handleMenuButtonClick,
-    });
 
     this.animation = Animated.sequence([
       Animated.timing( // Animate over time
@@ -45,6 +52,7 @@ export default class AboutScreen extends React.Component {
           toValue: 1, // Animate to opacity: 1 (opaque)
           easing: Easing.ease,
           duration: 2000, // Make it take a while
+          useNativeDriver: true,
         },
       ),
       Animated.loop(Animated.sequence([
@@ -56,32 +64,32 @@ export default class AboutScreen extends React.Component {
       ])),
     ]);
     this.animation.start();
-  }
-
-  componentWillUnmount() {
-    this.animation.stop();
-  }
-
-  createAnimation = ((obj) => {
-    Animated.sequence([
-      Animated.timing( // Animate over time
-        obj, // The animated value to drive
-        {
-          toValue: 1, // Animate to opacity: 1 (opaque)
-          duration: 1000, // Make it take a while
-        },
-      ),
-      Animated.delay(2000),
-      Animated.timing(
-        obj, // The animated value to drive
-        {
-          toValue: 0, // Animate to opacity: 1 (opaque)
-          duration: 1000, // Make it take a while
-        },
-      ),
-    ]);
   });
 
+  createAnimation = (obj => (Animated.sequence([
+    Animated.timing( // Animate over time
+      obj, // The animated value to drive
+      {
+        toValue: 1, // Animate to opacity: 1 (opaque)
+        duration: 1000, // Make it take a while
+        useNativeDriver: true,
+      },
+    ),
+    Animated.delay(2000),
+    Animated.timing(
+      obj, // The animated value to drive
+      {
+        toValue: 0, // Animate to opacity: 1 (opaque)
+        duration: 1000, // Make it take a while
+        useNativeDriver: true,
+      },
+    ),
+  ])));
+
+  _handleMenuButtonClick = (() => {
+    const { navigation } = this.props;
+    navigation.toggleDrawer();
+  });
 
   render() {
     const { search, filteredData } = this.state;
@@ -92,7 +100,7 @@ export default class AboutScreen extends React.Component {
     return (
       <View style={[styles.container, { flexDirection: 'column', alignItems: 'center' }]}>
         <Animated.Text style={[styles.Facts, { opacity: text1Opacity }]}>
-          Each year, food waste in Canada creates some 56.6 million tonnes of carbon dioxide-equivalent emissions. 
+          Each year, food waste in Canada creates some 56.6 million tonnes of carbon dioxide-equivalent emissions.
         </Animated.Text>
         <View style={[styles.container, { flexDirection: 'row' }]}>
           <Animated.Text style={[styles.Facts, { opacity: text2Opacity }]}>
@@ -103,26 +111,28 @@ export default class AboutScreen extends React.Component {
           </Animated.Text>
         </View>
         <View style={[styles.container, { flexDirection: 'row' }]}>
-          <Animated.Text style={[styles.Facts, { opacity: text4Opacity }]}> 
-            Over 1/3 of all food produced globally goes to waste. 
+          <Animated.Text style={[styles.Facts, { opacity: text4Opacity }]}>
+            Over 1/3 of all food produced globally goes to waste.
           </Animated.Text>
-          <Animated.Image 
-            resizeMode="contain" 
-            style={{ width: 150, height: 150, opacity: imageOpacity }} 
-            source={require('res/images/instafresh_logo_text_bottom.png')} 
+          <Animated.Image
+            resizeMode="contain"
+            style={{
+              flex: 1, opacity: imageOpacity, width: 120, height: 120,
+            }}
+            source={require('res/images/instafresh_logo_text_bottom.png')}
           />
-          <Animated.Text style={[styles.Facts, { opacity: text5Opacity }]}> 
-            We waste 1,000,000 cups of milk EVERY DAY! 
+          <Animated.Text style={[styles.Facts, { opacity: text5Opacity }]}>
+            We waste 1,000,000 cups of milk EVERY DAY!
           </Animated.Text>
         </View>
-        <View style={[styles.container, { flex: 2.5, flexDirection: 'row', alignItems: 'center' }]}>
-          <Animated.Text style={styles.About}> 
-            InstaFresh is a CSR (Corporate Social Responsibility) centred 
-            mobile application that was created to enable users to reduce 
-            their carbon footprint. InstaFresh was explicitly designed to 
-            reduce food waste and help users save money on the unintentional 
-            loss of food. We welcome and encourage feedback that would help 
-            us improve user experience with InstaFresh. 
+        <View style={[styles.container, { flex: 2, flexDirection: 'row', alignItems: 'center' }]}>
+          <Animated.Text style={styles.About}>
+            InstaFresh is a CSR (Corporate Social Responsibility) centred
+            mobile application that was created to enable users to reduce
+            their carbon footprint. InstaFresh was explicitly designed to
+            reduce food waste and help users save money on the unintentional
+            loss of food. We welcome and encourage feedback that would help
+            us improve user experience with InstaFresh.
           </Animated.Text>
         </View>
 
@@ -139,18 +149,18 @@ const styles = StyleSheet.create({
   },
   Facts: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 13,
     fontFamily: 'Noteworthy',
-    color: '#a89bb2',
+    color: colors.text,
     textAlign: 'center',
     lineHeight: 26,
   },
   About: {
     flex: 1,
     padding: 10,
-    fontSize: 18,
+    fontSize: 15,
     fontFamily: 'Rockwell',
-    color: '#F2E4FF',
+    color: colors.text,
     textAlign: 'center',
   },
 });

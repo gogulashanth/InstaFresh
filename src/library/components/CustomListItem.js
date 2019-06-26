@@ -76,6 +76,7 @@ class CustomListItem extends React.Component {
       subsubtitle,
       onPress,
       leftAvatar,
+      swipeLeft,
     } = this.props;
 
     return (
@@ -85,14 +86,14 @@ class CustomListItem extends React.Component {
   
           
           <View style={{ ...styles.textContainer, ...textContainerStyle }}>
-            <Text numberOfLines={1} ellipsizeMode="tail" style={{ ...styles.title, ...titleStyle }}>
+            <Text h3 numberOfLines={1} ellipsizeMode="tail" style={{ ...styles.title, ...titleStyle }}>
               {title}
             </Text>
-            <Text numberOfLines={1} ellipsizeMode="tail" style={{ ...styles.subtitle, ...subtitleStyle }}>
+            <Text h4 numberOfLines={1} ellipsizeMode="tail" h4Style={{ ...styles.subtitle, ...subtitleStyle }}>
               {subtitle}
             </Text>
             {(subsubtitle !== undefined) && (
-              <Text numberOfLines={1} ellipsizeMode="tail" style={{ ...styles.subsubtitle, ...subsubtitleStyle }}>
+              <Text h4 numberOfLines={1} ellipsizeMode="tail" h4Style={{ ...styles.subsubtitle, ...subsubtitleStyle }}>
                 {subsubtitle}
               </Text>
             )}

@@ -1,12 +1,24 @@
 import React from 'react';
 import {
-  Image, View, FlatList,
+  Image, View, FlatList, StyleSheet,
 } from 'react-native';
+import { Text } from 'react-native-elements';
 import colors from 'res/colors';
 import RecipeListItem from 'library/components/RecipeListItem';
 import Item from 'model/Item';
 import { MenuButton } from 'library/components/HeaderItems';
 import api from 'model/API';
+import {
+  BallIndicator,
+  BarIndicator,
+  DotIndicator,
+  MaterialIndicator,
+  PacmanIndicator,
+  PulseIndicator,
+  SkypeIndicator,
+  UIActivityIndicator,
+  WaveIndicator,
+} from 'react-native-indicators';
 
 export default class RecipesScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -16,7 +28,7 @@ export default class RecipesScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { data: [] };
+    this.state = { data: [], loading: false };
   }
 
   componentWillMount() {
@@ -37,8 +49,9 @@ export default class RecipesScreen extends React.Component {
   }
 
   screenWillFocus = (() => {
+    this.setState({ loading: true });
     api.getRecipesList().then((recipeList) => {
-      this.setState({ data: recipeList });
+      this.setState({ data: recipeList, loading: false });
     });
   });
 
@@ -67,13 +80,20 @@ export default class RecipesScreen extends React.Component {
   });
 
   render() {
-    const { data } = this.state;
+    const { data, loading } = this.state;
     return (
       <View style={{
         flex: 1, backgroundColor: colors.darkerLogoBack, flexDirection: 'column', paddingTop: 30,
       }}
       >
+        {loading && (
+        <View style={styles.loadingContainer}>
+          <DotIndicator color={colors.logo} size={10} />
+          <Text h4 style={{ padding: 20 }}>Loading new recipes...</Text>
+        </View>
+        )}
         <FlatList
+          style={{ topPadding: 40 }}
           columnWrapperStyle={{ alignItems: 'center', justifyContent: 'space-between' }}
           numColumns={2}
           data={data}
@@ -92,3 +112,12 @@ export default class RecipesScreen extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    padding: 0,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+});

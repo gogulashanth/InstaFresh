@@ -2,6 +2,8 @@ import firebase from 'react-native-firebase';
 import Item from 'model/Item';
 import dataInstance from 'model/Data';
 import Recipe from 'model/Recipe';
+import LinkPreview from 'react-native-link-preview';
+import { Image } from 'react-native';
 
 const pexelsKey = '563492ad6f917000010000013c5f864ef37a45fca74670cc2533e863';
 const edamamKeys = {
@@ -67,33 +69,105 @@ class API {
     }
   }
 
+
   getRecipesList = (async (settings) => {
     // TODO: Implement settings
     const itemsArray = dataInstance.getItemsArray();
+    const MIN_RECIPES = 8;
     // sort array by expiry date
     let ingredients = '';
     itemsArray.sort((a, b) => a.expiryDate - b.expiryDate);
     for (let i = 0; i < itemsArray.length; i++) {
       if (i === 0) {
         ingredients = `${itemsArray[i].name}`;
-      }else {
+      } else {
         ingredients = `${ingredients},${itemsArray[i].name}`;
       }
     }
 
-    const response = await fetch(`http://www.recipepuppy.com/api/?i=${ingredients}`, {
-      method: 'GET',
-    });
-    const responseJson = await response.json();
-    const recipes = responseJson.results;
+    let pageIndex = 1;
     const recipesList = [];
 
-    for (let i = 0; i < recipes.length; i++) {
-      recipesList.push(new Recipe(recipes[i].title.replace(/[^a-zA-Z ]/g, ''), recipes[i].href, recipes[i].thumbnail, recipes[i].ingredients.split(', ')));
+    while (recipesList.length < MIN_RECIPES) {
+      let recipes = [];
+
+      try {
+        const response = await fetch(`http://www.recipepuppy.com/api/?i=${ingredients}&p=${pageIndex}`, {
+          method: 'GET',
+        });
+        const responseJson = await response.json();
+        recipes = responseJson.results;
+      } catch (error) {
+        pageIndex += 1;
+      }
+
+      let imagesList = [];
+
+      for (let i = 0; i < recipes.length; i++) {
+        imagesList.push(this.getImageFromURL(recipes[i].href));
+      }
+
+      imagesList = await Promise.all(imagesList);
+
+      for (let i = 0; i < recipes.length; i++) {
+        if (imagesList[i] !== -1) {
+          recipesList.push(new Recipe(recipes[i].title.replace(/[^a-zA-Z ]/g, ''), recipes[i].href, imagesList[i], recipes[i].ingredients.split(', ')));
+        }
+      }
+      pageIndex += 1;
     }
+
+    // const response = await fetch(`http://www.recipepuppy.com/api/?i=${ingredients}`, {
+    //   method: 'GET',
+    // });
+    // const responseJson = await response.json();
+    // const recipes = responseJson.results;
+    // const recipesList = [];
+    // let imagesList = [];
+
+    // for (let i = 0; i < recipes.length; i++) {
+    //   imagesList.push(this.getImageFromURL(recipes[i].href));
+    // }
+
+    // imagesList = await Promise.all(imagesList);
+
+    // for (let i = 0; i < recipes.length; i++) {
+    //   recipesList.push(new Recipe(recipes[i].title.replace(/[^a-zA-Z ]/g, ''), recipes[i].href, imagesList[i], recipes[i].ingredients.split(', ')));
+    // }
 
     return recipesList;
   });
+
+  getImageFromURL = (async (url) => {
+    try {
+      const data = await LinkPreview.getPreview(
+        url,
+        // {
+        //   imagesPropertyType: 'og', // fetches only open-graph images
+        // },
+      );
+      if (data.images.length !== 0) {
+        const imgSize = await this.getImageSize(data.images[0]);
+        if (imgSize.height > 300 || imgSize.width > 300) {
+          return data.images[0];
+        } else {
+          return -1;
+        }
+
+        // return data.images[0];
+      } else {
+        // return 'http://ppc.tools/wp-content/themes/ppctools/img/no-thumbnail.jpg';
+        return -1;
+      }
+    } catch (err) {
+      console.log('error');
+      return -1;
+    }
+  });
+
+  getImageSize = uri => new Promise((resolve) => {
+    Image.getSize(uri, (width, height) => resolve({ width, height }));
+  })
 
   // TODO: Refactor func to use async
   getProductList(query, numItems = 10, callback) {

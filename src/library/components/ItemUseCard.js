@@ -26,7 +26,7 @@ export default class ItemUseCard extends React.Component {
   }
 
   show() {
-    this.setState({ visible: true });
+    this.setState({ visible: true, amount: 0 });
   }
 
   hide() {
@@ -43,6 +43,7 @@ export default class ItemUseCard extends React.Component {
       onBackdropPress,
       minValue,
       maxValue,
+      onSave,
     } = this.props;
 
     const {
@@ -59,7 +60,7 @@ export default class ItemUseCard extends React.Component {
         onBackdropPress={() => this.setState({ visible: false })}
         height={windowHeight - 100}
         overlayStyle={{ padding: 0, overflow: 'hidden' }}
-        windowBackgroundColor='rgba(0, 0, 0, .8)'
+        windowBackgroundColor="rgba(0, 0, 0, .7)"
       >
         <View style={{ ...styles.container, ...containerStyle }}>
           <Text h3 style={{ ...styles.title, ...titleStyle }}>
@@ -77,13 +78,20 @@ export default class ItemUseCard extends React.Component {
             value={0}
             minimumValue={minValue}
             maximumValue={maxValue}
-            onValueChange={nextValue => this.setState({ amount: Math.round(nextValue) })}
+            onValueChange={nextValue => this.setState({ amount: Math.round(nextValue * 10) / 10 })}
             trackStyle={{ backgroundColor: colors.logo }}
           />
 
           <View style={styles.buttonContainer}>
             <Button title="Cancel" buttonStyle={{ ...styles.buttonStyle, ...{ backgroundColor: colors.red } }} onPress={() => this.setState({ visible: false })} />
-            <Button title="Save" buttonStyle={{ ...styles.buttonStyle }} onPress={() => {}} />
+            <Button
+              title="Save"
+              buttonStyle={{ ...styles.buttonStyle }}
+              onPress={() => {
+                this.setState({ visible: false });
+                onSave(amount);
+              }}
+            />
           </View>
         </View>
       </Overlay>

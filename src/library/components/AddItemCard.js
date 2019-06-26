@@ -180,7 +180,7 @@ export default class AddItemCard extends React.Component {
   render() {
     const { onBackdropPress, editMode } = this.props;
     const {
-      quantity, name, imageURI, visibleOption, pantryPickerData, pantryID,
+      quantity, imageURI, visibleOption, pantryPickerData, pantryID,
     } = this.state;
 
     let nameComponent = (
@@ -260,8 +260,7 @@ export default class AddItemCard extends React.Component {
                       labelStyle={inputStyle.label}
                       inputStyle={inputStyle.input}
                       onChangeText={text => this.setState({ quantity: text })}
-                      value={quantity}
-                      selectTextOnFocus
+                      value={quantity.toString()}
                       onFocus={() => this.handleFocusChange('quantity')}
                     />
                     <Input

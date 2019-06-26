@@ -40,7 +40,7 @@ export default class InstaMenu extends React.Component {
           <MenuItem index={1} selectedIndex={selectedIndex} name="Pantries" iconName="ios-archive" onPress={this.navigateToScreen('Pantries')} />
           <MenuItem index={2} selectedIndex={selectedIndex} name="Recipes" iconName="ios-book" onPress={this.navigateToScreen('Recipes')} />
           <MenuItem index={3} selectedIndex={selectedIndex} name="InstaScore" iconName="ios-stats" onPress={this.navigateToScreen('InstaScore')} />
-          <MenuItem index={4} selectedIndex={selectedIndex} name="Settings" iconName="ios-cog" onPress={this.navigateToScreen('Settings')} />
+          {/* <MenuItem index={4} selectedIndex={selectedIndex} name="Settings" iconName="ios-cog" onPress={this.navigateToScreen('Settings')} /> */}
           <View style={styles.bottomRow}>
             <MenuItemIcon index={5} selectedIndex={selectedIndex} iconName="ios-alert" onPress={this.navigateToScreen('Disclaimer')} />
             <MenuItemIcon index={6} selectedIndex={selectedIndex} iconName="ios-help-circle" onPress={this.navigateToScreen('Help')} />

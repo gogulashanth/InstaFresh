@@ -9,6 +9,11 @@ const themes = {
         fontFamily: fonts.text,
         color: colors.text,
       },
+      h2Style: {
+        color: colors.text,
+        fontSize: fontSize.h2,
+        fontFamily: fonts.text,
+      },
       h4Style: {
         color: colors.text,
         fontSize: fontSize.h4,
@@ -45,11 +50,15 @@ const themes = {
       },
       titleStyle: {
         color: 'white',
+        fontSize: fontSize.h3,
       },
     },
     SearchBar: {
       containerStyle: {
         backgroundColor: colors.logoBack,
+        borderWidth: 0,
+        borderTopWidth: 0,
+        borderBottomWidth: 0,
       },
       inputContainerStyle: {
         backgroundColor: colors.darkerLogoBack,
