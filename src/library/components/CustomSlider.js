@@ -73,7 +73,7 @@ export default class CustomSlider extends Component {
   }
 
   render() {
-    const {value} = this.state;
+    const { value } = this.state;
     const unitValue = (value - this.props.minimumValue) / this.range;
 
 
@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: 'hidden',
     width: 120,
+    margin: 10,
   },
   pendingTrack: {
   },

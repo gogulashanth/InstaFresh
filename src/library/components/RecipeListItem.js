@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   title: {
-    flex: 3,
+    flex: 2.5,
     color: colors.text,
     textAlign: 'center',
     alignSelf: 'center',

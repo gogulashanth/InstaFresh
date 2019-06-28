@@ -82,9 +82,9 @@ class CustomListItem extends React.Component {
     return (
       <TouchableOpacity activeOpacity={0.8} style={{ ...{ flex: 1 } }} onPress={onPress}>
         <View style={{ ...styles.containerStyle, ...containerStyle }}>
+          {(leftAvatar !== undefined) && (
           <Avatar rounded {...leftAvatar} />
-  
-          
+          )}
           <View style={{ ...styles.textContainer, ...textContainerStyle }}>
             <Text h3 numberOfLines={1} ellipsizeMode="tail" style={{ ...styles.title, ...titleStyle }}>
               {title}

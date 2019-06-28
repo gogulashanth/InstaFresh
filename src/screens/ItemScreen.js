@@ -57,7 +57,7 @@ export default class ItemScreen extends React.Component {
   _handleDataUpdate = (() => {
     const { item } = this.state;
     const newItem = dataInstance.getItem(item.id);
-    if(newItem !== undefined) {
+    if (newItem !== undefined) {
       const pantry = dataInstance.getPantry(item.pantryID);
       this.setState({ item: newItem, pantry });
     }
@@ -71,16 +71,6 @@ export default class ItemScreen extends React.Component {
   handleEditItem = ((editedItem) => {
     const { item } = this.state;
     dataInstance.editItem(item.id, editedItem);
-  });
-
-  handleConsumed = ((amt) => {
-    const { item } = this.state;
-    dataInstance.addConsumed(item.id, amt);
-  });
-
-  handleWasted = ((amt) => {
-    const { item } = this.state;
-    dataInstance.addWasted(item.id, amt);
   });
 
   render() {
@@ -123,7 +113,7 @@ export default class ItemScreen extends React.Component {
           </View>
 
           <View style={styles.nutrition}>
-              <NutritionInfo nutrition={item.nutrition} />
+            <NutritionInfo nutrition={item.nutrition} />
           </View>
           <View style={styles.buttonContainer}>
             <RNEButton title="Wasted" buttonStyle={{ ...styles.buttonStyle, backgroundColor: colors.red }} onPress={() => this.wastedItemUseCard.current.show()} />
@@ -155,7 +145,7 @@ class ItemDescription extends React.Component {
         }}
         >
           <Text h3>{this.props.name}</Text>
-          <Text h4 style={{opacity: 0.5}}>{this.props.value}</Text>
+          <Text h4 style={{ opacity: 0.5 }}>{this.props.value}</Text>
         </View>
       </View>
     );

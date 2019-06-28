@@ -9,6 +9,7 @@ import { Button as RNEButton, Icon, ListItem } from 'react-native-elements';
 import NutritionInfo from 'library/components/NutritionInfo';
 import { widthConversion } from 'res/fontSize';
 import AddPantryCard from 'library/components/AddPantryCard';
+import CustomListItem from 'library/components/CustomListItem';
 
 export default class ItemScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -78,7 +79,6 @@ export default class ItemScreen extends React.Component {
       const d = Object.values(pantry.items);
       this.setState({ pantry, data: d });
     }
-    
   });
 
   renderItem = ((item) => {
@@ -104,7 +104,7 @@ export default class ItemScreen extends React.Component {
     }
 
     return (
-      <ListItem
+      <CustomListItem
         leftAvatar={{ source: { uri: dataItem.imageURI } }}
         title={`${dataItem.name} - ${dataItem.quantity}`}
         subtitle={expiryComp}
@@ -129,9 +129,10 @@ export default class ItemScreen extends React.Component {
           onSave={this.handleEditPantry}
           navigation={navigation}
         />
-        <View style={{ flex: 1, padding: 12, flexDirection: 'column' }}>
-          <Image source={{ uri: pantry.imageURI }} style={{ flex: 1, borderRadius: 10 }} />
+        <View style={{ flex: 1, flexDirection: 'column' }}>
+          <Image source={{ uri: pantry.imageURI }} style={{ flex: 1 }} />
           <FlatList
+            style={{ flex: 1 }}
             contentContainerStyle={{ marginTop: 10 }}
             data={data}
             keyExtractor={this.keyExtractor}

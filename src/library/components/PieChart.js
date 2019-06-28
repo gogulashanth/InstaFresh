@@ -41,6 +41,7 @@ export default class PieChart extends React.PureComponent {
 
     return (
       <Path
+        key={Math.random()}
         d={pathData}
         fill={arcData.data.color}
         stroke={arcData.data.color}

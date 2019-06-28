@@ -68,7 +68,7 @@ export default class AddPantryCard extends React.Component {
     // TODO: Add nutrition item info
     let pantry = null;
     if (id === AddPantryCard.defaultValues.id) {
-      pantry = new Pantry(name, imageURI, {});
+      pantry = new Pantry(name, imageURI);
     } else {
       pantry = new Pantry(name, imageURI, {}, id);
     }

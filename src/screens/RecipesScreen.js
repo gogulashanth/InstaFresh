@@ -19,12 +19,21 @@ import {
   UIActivityIndicator,
   WaveIndicator,
 } from 'react-native-indicators';
+import InfoBox from 'library/components/InfoBox';
 
 export default class RecipesScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: 'Recipes',
     headerLeft: <MenuButton onPress={navigation.getParam('handleMenuButtonClick')} />,
   });
+
+  _noRecipesComponent = () => (
+    <InfoBox
+      imageSource={require('res/images/book_icon.png')}
+      title="Sorry, no recipes available"
+      subtitle="Ensure you have internet connectivity or add more ingredients to your pantry"
+    />
+  );
 
   constructor(props) {
     super(props);
@@ -71,8 +80,8 @@ export default class RecipesScreen extends React.Component {
       <RecipeListItem
         imageURI={recipe.imageURI}
         title={recipe.name}
-        subtitle="300 calories per serving"
-        subsubtitle="vegetarian-friendly"
+        subtitle={recipe.calories === '' ? '300 calories per serving' : `${recipe.calories} calories per serving`}
+        subsubtitle={recipe.healthLabels === [] ? `${recipe.getNumCommonIngredients()} out of ${recipe.ingredients.length} ingredients available` : recipe.healthLabels[0]}
         onPress={() => this.handleRecipeClick(recipe)}
         containerStyle={{ margin: 15 }}
       />
@@ -99,7 +108,7 @@ export default class RecipesScreen extends React.Component {
           data={data}
           keyExtractor={(item, i) => i}
           renderItem={this.renderItem}
-          ListEmptyComponent={this._listEmptyComponent}
+          ListEmptyComponent={this._noRecipesComponent}
         />
         <Image
           resizeMode="contain"

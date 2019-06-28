@@ -23,6 +23,7 @@ class API {
     this.ref = firebase.firestore().collection('product_data_simplified');
     this.branded_data = firebase.firestore().collection('branded_product_data');
     this.previousQuery = '~!~';
+    this._loadingProductList = false;
   }
 
 
@@ -69,27 +70,29 @@ class API {
     }
   }
 
-
-  getRecipesList = (async (settings) => {
-    // TODO: Implement settings
-    const itemsArray = dataInstance.getItemsArray();
+  _getRecipesListFromRecipePuppy = (async (ingredientsArray) => {
     const MIN_RECIPES = 8;
-    // sort array by expiry date
-    let ingredients = '';
-    itemsArray.sort((a, b) => a.expiryDate - b.expiryDate);
-    for (let i = 0; i < itemsArray.length; i++) {
-      if (i === 0) {
-        ingredients = `${itemsArray[i].name}`;
-      } else {
-        ingredients = `${ingredients},${itemsArray[i].name}`;
-      }
-    }
 
     let pageIndex = 1;
     const recipesList = [];
 
-    while (recipesList.length < MIN_RECIPES) {
+    let ingredients = '';
+
+    for (let i = 0; i < ingredientsArray.length; i++) {
+      if (i === 0) {
+        ingredients = `${ingredientsArray[i]}`;
+      } else {
+        ingredients = `${ingredients},${ingredientsArray[i]}`;
+      }
+    }
+
+    while (recipesList.length <= MIN_RECIPES) {
+      if (pageIndex >= 5) {
+        break;
+      }
+
       let recipes = [];
+      console.log('Fetching data');
 
       try {
         const response = await fetch(`http://www.recipepuppy.com/api/?i=${ingredients}&p=${pageIndex}`, {
@@ -99,14 +102,14 @@ class API {
         recipes = responseJson.results;
       } catch (error) {
         pageIndex += 1;
+        continue;
       }
 
       let imagesList = [];
 
       for (let i = 0; i < recipes.length; i++) {
-        imagesList.push(this.getImageFromURL(recipes[i].href));
+        imagesList.push(this._promiseTimeout(2000, this.getImageFromURL(recipes[i].href)));
       }
-
       imagesList = await Promise.all(imagesList);
 
       for (let i = 0; i < recipes.length; i++) {
@@ -114,53 +117,99 @@ class API {
           recipesList.push(new Recipe(recipes[i].title.replace(/[^a-zA-Z ]/g, ''), recipes[i].href, imagesList[i], recipes[i].ingredients.split(', ')));
         }
       }
+
       pageIndex += 1;
     }
+    return recipesList;
+  });
 
-    // const response = await fetch(`http://www.recipepuppy.com/api/?i=${ingredients}`, {
-    //   method: 'GET',
-    // });
-    // const responseJson = await response.json();
-    // const recipes = responseJson.results;
-    // const recipesList = [];
-    // let imagesList = [];
+  _getRecipesListFromEdamam = (async (ingredients) => {
+    let recipes = [];
+    const randomNum = Math.round(Math.random() * (ingredients.length - 1));
+    const randomIng = ingredients[randomNum];
 
-    // for (let i = 0; i < recipes.length; i++) {
-    //   imagesList.push(this.getImageFromURL(recipes[i].href));
-    // }
+    console.log(`Fetching: https://api.edamam.com/search?q=${randomIng}&to=10&app_id=${edamamKeys.appID}&app_key=${edamamKeys.appKey}`);
 
-    // imagesList = await Promise.all(imagesList);
+    try {
+      const response = await fetch(`https://api.edamam.com/search?q=${randomIng}&to=10&app_id=${edamamKeys.appID}&app_key=${edamamKeys.appKey}`, {
+        method: 'GET',
+      });
+      const responseJson = await response.json();
+      recipes = responseJson.hits;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
 
-    // for (let i = 0; i < recipes.length; i++) {
-    //   recipesList.push(new Recipe(recipes[i].title.replace(/[^a-zA-Z ]/g, ''), recipes[i].href, imagesList[i], recipes[i].ingredients.split(', ')));
-    // }
+    const recipesList = [];
+    for (let i = 0; i < recipes.length; i++) {
+      const ing = recipes[i].recipe.ingredients.map(item => item.text);
+      
+      recipesList.push(
+        new Recipe(recipes[i].recipe.label.replace(/[^a-zA-Z ]/g, ''),
+          recipes[i].recipe.url,
+          recipes[i].recipe.image,
+          ing,
+          recipes[i].recipe.calories,
+          recipes[i].recipe.healthLabels),
+      );
+    }
 
     return recipesList;
   });
 
+
+  getRecipesList = (async (settings) => {
+    // TODO: Implement settings
+    const itemsArray = dataInstance.getItemsArray();
+    const MIN_RECIPES = 8;
+    const ingredientsArray = [];
+
+    // sort array by expiry date
+    itemsArray.sort((a, b) => a.expiryDate - b.expiryDate);
+
+    for (let i = 0; i < itemsArray.length; i++) {
+      ingredientsArray.push(itemsArray[i].name);
+    }
+
+    return this._getRecipesListFromEdamam(ingredientsArray);
+  });
+
+  _promiseTimeout = ((ms, promise) => {
+    // Create a promise that rejects in <ms> milliseconds
+    const timeout = new Promise((resolve, reject) => {
+      const id = setTimeout(() => {
+        clearTimeout(id);
+        resolve(-1);
+      }, ms);
+    });
+
+    // Returns a race between our timeout and the passed in promise
+    return Promise.race([
+      promise,
+      timeout,
+    ]);
+  });
+
   getImageFromURL = (async (url) => {
     try {
-      const data = await LinkPreview.getPreview(
-        url,
-        // {
-        //   imagesPropertyType: 'og', // fetches only open-graph images
-        // },
-      );
+      const data = await LinkPreview.getPreview(url);
+
       if (data.images.length !== 0) {
         const imgSize = await this.getImageSize(data.images[0]);
         if (imgSize.height > 300 || imgSize.width > 300) {
           return data.images[0];
         } else {
+          // return 'http://ppc.tools/wp-content/themes/ppctools/img/no-thumbnail.jpg';
           return -1;
         }
-
-        // return data.images[0];
       } else {
         // return 'http://ppc.tools/wp-content/themes/ppctools/img/no-thumbnail.jpg';
         return -1;
       }
     } catch (err) {
-      console.log('error');
+      // Probably network request failure
+      console.log(err);
       return -1;
     }
   });
@@ -169,36 +218,34 @@ class API {
     Image.getSize(uri, (width, height) => resolve({ width, height }));
   })
 
-  // TODO: Refactor func to use async
-  getProductList(query, numItems = 10, callback) {
+  async getProductList(query, numItems = 10) {
     if (query.length > 1) {
-      if (query.startsWith(this.previousQuery)) {
-        this.ref.where('lower_case_name', '>=', query.toLowerCase()).orderBy('lower_case_name', 'asc')
-          .limit(numItems)
-          .get({ source: 'cache' })
-          .then((snapshot) => {
-            if (this.previousQuery !== '~!~') {
-              callback(snapshot.docs.slice(0, numItems - 1));
-            }
-          });
-      } else {
-        this.ref.where('lower_case_name', '>=', query.toLowerCase()).orderBy('lower_case_name', 'asc')
-          .limit(numItems * 3)
-          .get()
-          .then((snapshot) => {
-            if (this.previousQuery !== '~!~') {
-              callback(snapshot.docs.slice(0, numItems - 1));
-            }
-          });
+      const samePrefix = query.startsWith(this.previousQuery);
+
+      let sourceOptions = {};
+      // Use local cache if query starts with same prefix
+      if (samePrefix) {
+        sourceOptions = { source: 'cache' };
+      }
+
+      if (!samePrefix) {
         this.previousQuery = query;
       }
-    } else {
-      // Return empty array if less than 2 characters
-      callback([]);
 
+      const snapshot = await this.ref.where('lower_case_name', '>=', query.toLowerCase().trim()).orderBy('lower_case_name', 'asc')
+        .limit(numItems)
+        .get(sourceOptions);
+
+      if (this.previousQuery !== '~!~') {
+        return snapshot.docs.slice(0, numItems - 1);
+      }
+    } else {
       // necessary to make sure subsequent async requests do not send data to callback
       this.previousQuery = '~!~';
     }
+
+    // Return empty array if less than 2 characters
+    return [];
   }
 }
 

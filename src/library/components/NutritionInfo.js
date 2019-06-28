@@ -1,9 +1,10 @@
 import React from 'react';
 import {
-  StyleSheet, Platform, View, Image, Dimensions
+  StyleSheet, Platform, View, Image, Dimensions,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { Divider, Text } from 'react-native-elements';
+import dataInstance from 'model/Data';
 
 const widthConversion = Dimensions.get('window').width * 0.0018;
 
@@ -11,6 +12,16 @@ export default class NutritionInfo extends React.Component {
   constructor(props) {
     super(props);
     this.dividerColor = '#011023';
+  }
+
+  _calcDaily(key) {
+    const { nutrition } = this.props;
+    return `${Math.round(nutrition[key] / dataInstance.getDailyValue(key) * 100 * 10) / 10}%`;
+  }
+
+  _calcNutr(key) {
+    const { nutrition } = this.props;
+    return `${nutrition['204']}${dataInstance.getNutritionUnit('204')}`;
   }
 
   render() {
@@ -21,36 +32,79 @@ export default class NutritionInfo extends React.Component {
           <Text style={styles.heading}>Nutrition Facts</Text>
           <Divider style={{ backgroundColor: this.dividerColor, height: 1 }} />
           <NutritionItem name="Serving Size" valueRight="1 Apple" style={{ fontWeight: 'bold', fontSize: 13 * widthConversion }} />
-          <Divider style={{ backgroundColor: this.dividerColor, height: 6 }} />
-          <NutritionItem name="Calories" valueRight="60" style={{ fontWeight: 'bold', fontSize: 21 * widthConversion }} />
+          {nutrition['208'] !== undefined && ([
+            <Divider key={1} style={{ backgroundColor: this.dividerColor, height: 6 }} />,
+            <NutritionItem key={2} name="Calories" valueRight={nutrition['208']} style={{ fontWeight: 'bold', fontSize: 21 * widthConversion }} />,
+          ])}
+
           <Divider style={{ backgroundColor: this.dividerColor, height: 3 }} />
           <NutritionItem valueRight="% Daily Value" style={{ fontWeight: 'bold', fontSize: 12 * widthConversion }} />
-          <Divider style={{ backgroundColor: this.dividerColor, height: 0.5 }} />
-          <NutritionItem name="Total Fat" valueLeft="1mg" valueRight="1%" style={{ fontWeight: 'bold' }} />
-          <Divider style={{ backgroundColor: this.dividerColor, height: 0.5 }} />
-          <NutritionItem name="Saturated fat" valueLeft="2mg" valueRight="2%" shift={10} />
-          <Divider style={{ backgroundColor: this.dividerColor, height: 0.5 }} />
-          <NutritionItem name="Trans fat" valueLeft="2mg" valueRight="2%" shift={10} />
-          <Divider style={{ backgroundColor: this.dividerColor, height: 0.5 }} />
-          <NutritionItem name="Cholesterol" valueLeft="0mg" valueRight="1%" style={{ fontWeight: 'bold' }} />
-          <Divider style={{ backgroundColor: this.dividerColor, height: 0.5 }} />
-          <NutritionItem name="Sodium" valueLeft="60mg" valueRight="3%" style={{ fontWeight: 'bold' }} />
-          <Divider style={{ backgroundColor: this.dividerColor, height: 0.5 }} />
-          <NutritionItem name="Total Carbohydrate" valueLeft="21g" valueRight="8%" style={{ fontWeight: 'bold' }} />
-          <Divider style={{ backgroundColor: this.dividerColor, height: 0.5 }} />
-          <NutritionItem name="Dietary Fibre" valueLeft="3g" valueRight="11%" shift={10} />
-          <Divider style={{ backgroundColor: this.dividerColor, height: 0.5 }} />
-          <NutritionItem name="Total Sugars" valueLeft="15g" valueRight="10%" shift={10} />
-          <Divider style={{ backgroundColor: this.dividerColor, height: 0.5 }} />
-          <NutritionItem name="Protein" valueLeft="3g" valueRight="3%" style={{ fontWeight: 'bold' }} />
-          <Divider style={{ backgroundColor: this.dividerColor, height: 6 }} />
-          <NutritionItem name="Vitamin A" valueLeft="3g" valueRight="3%" />
-          <Divider style={{ backgroundColor: this.dividerColor, height: 0.5 }} />
-          <NutritionItem name="Vitamin C" valueLeft="2g" valueRight="3%" />
-          <Divider style={{ backgroundColor: this.dividerColor, height: 0.5 }} />
-          <NutritionItem name="Calcium" valueLeft="3g" valueRight="3%" />
-          <Divider style={{ backgroundColor: this.dividerColor, height: 0.5 }} />
-          <NutritionItem name="Iron" valueLeft="3g" valueRight="3%" />
+
+          {nutrition['204'] !== undefined && ([
+            <Divider key={1} style={{ backgroundColor: this.dividerColor, height: 0.5 }} />,
+            <NutritionItem key={2} name="Total Fat" valueLeft={this._calcNutr('204')} valueRight={this._calcDaily('204')} style={{ fontWeight: 'bold' }} />,
+          ])}
+
+          {nutrition['606'] !== undefined && ([
+            <Divider key={1} style={{ backgroundColor: this.dividerColor, height: 0.5 }} />,
+            <NutritionItem key={2} name="Saturated fat" valueLeft={this._calcNutr('606')} valueRight={this._calcDaily('606')} shift={10} />,
+          ])}
+
+          {nutrition['605'] !== undefined && ([
+            <Divider key={1} style={{ backgroundColor: this.dividerColor, height: 0.5 }} />,
+            <NutritionItem key={2} name="Trans fat" valueLeft={this._calcNutr('605')} valueRight={this._calcDaily('605')} shift={10} />,
+          ])}
+
+          {nutrition['601'] !== undefined && ([
+            <Divider key={1} style={{ backgroundColor: this.dividerColor, height: 0.5 }} />,
+            <NutritionItem key={2} name="Cholesterol" valueLeft={this._calcNutr('601')} valueRight={this._calcDaily('601')} style={{ fontWeight: 'bold' }} />,
+          ])}
+
+          {nutrition['307'] !== undefined && ([
+            <Divider key={1} style={{ backgroundColor: this.dividerColor, height: 0.5 }} />,
+            <NutritionItem key={2} name="Sodium" valueLeft={this._calcNutr('307')} valueRight={this._calcDaily('307')} style={{ fontWeight: 'bold' }} />,
+          ])}
+
+          {nutrition['205'] !== undefined && ([
+            <Divider key={1} style={{ backgroundColor: this.dividerColor, height: 0.5 }} />,
+            <NutritionItem key={2} name="Total Carbohydrate" valueLeft={this._calcNutr('205')} valueRight={this._calcDaily('205')} style={{ fontWeight: 'bold' }} />,
+          ])}
+
+          {nutrition['291'] !== undefined && ([
+            <Divider key={1} style={{ backgroundColor: this.dividerColor, height: 0.5 }} />,
+            <NutritionItem key={2} name="Dietary Fibre" valueLeft={this._calcNutr('291')} valueRight={this._calcDaily('291')} shift={10} />,
+          ])}
+
+          {nutrition['269'] !== undefined && ([
+            <Divider key={1} style={{ backgroundColor: this.dividerColor, height: 0.5 }} />,
+            <NutritionItem key={2} name="Total Sugars" valueLeft={this._calcNutr('269')} valueRight="" shift={10} />,
+          ])}
+
+          {nutrition['203'] !== undefined && ([
+            <Divider key={1} style={{ backgroundColor: this.dividerColor, height: 0.5 }} />,
+            <NutritionItem key={2} name="Protein" valueLeft={this._calcNutr('203')} valueRight="" style={{ fontWeight: 'bold' }} />,
+          ])}
+
+          {nutrition['320'] !== undefined && ([
+            <Divider key={1} style={{ backgroundColor: this.dividerColor, height: 6 }} />,
+            <NutritionItem key={2} name="Vitamin A" valueLeft={this._calcNutr('320')} valueRight="3%" />,
+          ])}
+
+          {nutrition['401'] !== undefined && ([
+            <Divider key={1} style={{ backgroundColor: this.dividerColor, height: 0.5 }} />,
+            <NutritionItem key={2} name="Vitamin C" valueLeft={this._calcNutr('401')} valueRight={this._calcDaily('401')} />,
+          ])}
+
+          {nutrition['301'] !== undefined && ([
+            <Divider key={1} style={{ backgroundColor: this.dividerColor, height: 0.5 }} />,
+            <NutritionItem key={2} name="Calcium" valueLeft={this._calcNutr('301')} valueRight={this._calcDaily('301')} />,
+          ])}
+
+          {nutrition['303'] !== undefined && ([
+            <Divider key={1} style={{ backgroundColor: this.dividerColor, height: 0.5 }} />,
+            <NutritionItem key={2} name="Iron" valueLeft={this._calcNutr('303')} valueRight={this._calcDaily('303')} />,
+          ])}
+
           <Divider style={{ backgroundColor: this.dividerColor, height: 0.5 }} />
           <NutritionItem style={{ fontSize: 13 * widthConversion }} name="The % Daily Value tells you how much a nutrient in a serving of food contributes to a daily diet. 2000 calories a day is used for general nutrition advice." />
         </View>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  StyleSheet, View,
+  StyleSheet, View, TouchableOpacity,
 } from 'react-native';
 import { Button, Icon, Text } from 'react-native-elements';
 import PropTypes from 'prop-types';
@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    backgroundColor: colors.darkerLogoBack,
     alignItems: 'center',
     justifyContent: 'center',
     ...StyleSheet.absoluteFillObject,
@@ -54,6 +53,7 @@ const styles = StyleSheet.create({
   maskInner: {
     backgroundColor: 'transparent',
     flexDirection: 'column',
+    alignItems: 'center',
     justifyContent: 'flex-end',
   },
   maskFrame: {
@@ -154,14 +154,16 @@ export default class AutoScanScreen extends React.Component {
 
   _takeSnap = async () => {
     if (this.camera) {
+      this.setState({loading: true});
       const options = { pauseAfterCapture: true };
-      const data = await this.camera.takePictureAsync(options);
+      const data = await this.camera.current.takePictureAsync(options);
       const img = data.uri;
       // run ml model
     }
   };
 
   render() {
+    const { loading } = this.state;
     return (
       <RNCamera ref={this.camera} style={styles.preview}>
         <View style={[styles.container]}>
@@ -184,14 +186,19 @@ export default class AutoScanScreen extends React.Component {
                   },
                 ]}
               >
+                
+                
                 <Icon
                   name="ios-radio-button-on"
                   size={76}
                   type="ionicon"
                   color={colors.text}
                   underlayColor="transparent"
+                  Component={TouchableOpacity}
                   onPress={() => this._takeSnap()}
                 />
+                
+                
               </View>
               <View style={[styles.maskFrame, this._applyMaskFrameTransparency()]} />
             </View>
@@ -201,6 +208,7 @@ export default class AutoScanScreen extends React.Component {
           </View>
         </View>
       </RNCamera>
+      
     );
   }
 }
@@ -222,7 +230,7 @@ const defaultProps = {
   edgeHeight: 20,
   edgeColor: colors.logo,
   edgeBorderWidth: 4,
-  transparency: 0.8,
+  transparency: 0.6,
 };
 
 AutoScanScreen.propTypes = propTypes;

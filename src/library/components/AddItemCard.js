@@ -10,6 +10,17 @@ import {
   TextInput,
   KeyboardAvoidingView,
 } from 'react-native';
+import {
+  BallIndicator,
+  BarIndicator,
+  DotIndicator,
+  MaterialIndicator,
+  PacmanIndicator,
+  PulseIndicator,
+  SkypeIndicator,
+  UIActivityIndicator,
+  WaveIndicator,
+} from 'react-native-indicators';
 import colors from 'res/colors';
 import fonts from 'res/fonts';
 import { Overlay, Input, Button } from 'react-native-elements';
@@ -50,6 +61,7 @@ export default class AddItemCard extends React.Component {
       nutrition: Item.defaults.nutrition,
       visibleOption: visible,
       pantryPickerData: [],
+      loading: false,
     };
   }
 
@@ -131,6 +143,10 @@ export default class AddItemCard extends React.Component {
     navigation.popToTop();
   });
 
+  nameDropDownWillSelect = (() => {
+    this.setState({ loading: true });
+  });
+
   nameDropDownSelected = ((item) => {
     if (typeof item === 'object') {
       this.setState({
@@ -138,9 +154,10 @@ export default class AddItemCard extends React.Component {
         imageURI: item.imageURI,
         expiryDate: item.expiryDate,
         nutrition: item.nutrition,
+        loading: false,
       });
     } else if (typeof item === 'string') {
-      this.setState({ name: item });
+      this.setState({ name: item, loading: false });
     }
   });
 
@@ -180,7 +197,7 @@ export default class AddItemCard extends React.Component {
   render() {
     const { onBackdropPress, editMode } = this.props;
     const {
-      quantity, imageURI, visibleOption, pantryPickerData, pantryID,
+      quantity, imageURI, visibleOption, pantryPickerData, pantryID, loading,
     } = this.state;
 
     let nameComponent = (
@@ -192,7 +209,8 @@ export default class AddItemCard extends React.Component {
           labelStyle={inputStyle.label}
           onFocus={() => this.handleFocusChange('name')}
           inputTextStyle={inputStyle.input}
-          onSelect={this.nameDropDownSelected}
+          onSelect={item => this.nameDropDownSelected(item)}
+          onItemWillSelect={() => this.nameDropDownWillSelect()}
         />
       </View>
     );
@@ -222,75 +240,81 @@ export default class AddItemCard extends React.Component {
             height={this.windowHeight - 100}
             overlayStyle={{ padding: 0, overflow: 'hidden' }}
           >
-            <ScrollView
-              contentContainerStyle={{ flex: 0 }}
-              ref={this.scrollView}
-              scrollEnabled={false}
-              keyboardShouldPersistTaps="handled"
-            >
-              <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={-90}>
-                <View style={{ flex: 1, flexDirection: 'column' }}>
-
-                  <TouchableHighlight onPress={this.handleImagePress}>
-                    <Image
-                      source={{ uri: imageURI }}
-                      style={{ height: this.windowHeight - 470 }}
-                    />
-                  </TouchableHighlight>
-
-                  <View style={{ flex: 1, flexDirection: 'column', paddingTop: 10 }}>
-                    {nameComponent}
-                    <Input
-                      label="Best Before"
-                      inputComponent={DatePicker}
-                      inputContainerStyle={inputStyle.container}
-                      labelStyle={inputStyle.label}
-                      onDateChangeMethod={this.onDateChange}
-                      onFocus={() => this.handleFocusChange('bestBefore')}
-                      ref={this.datePicker}
-                    />
-                    <Input
-                      containerStyle={{ width: '100%' }}
-                      ref={this.quantity}
-                      label="Quantity"
-                      placeholder="Enter the quantity of the item"
-                      keyboardType="numeric"
-                      returnKeyType="done"
-                      inputContainerStyle={inputStyle.container}
-                      labelStyle={inputStyle.label}
-                      inputStyle={inputStyle.input}
-                      onChangeText={text => this.setState({ quantity: text })}
-                      value={quantity.toString()}
-                      onFocus={() => this.handleFocusChange('quantity')}
-                    />
-                    <Input
-                      label="Pantry"
-                      inputComponent={CustomPicker}
-                      inputContainerStyle={inputStyle.container}
-                      labelStyle={inputStyle.label}
-                      data={pantryPickerData}
-                      onFocus={() => this.handleFocusChange('pantry')}
-                      ref={this.pantryPicker}
-                      chosenID={pantryID}
-                      onPickerChange={this.onPantryChange}
-                    />
-
-                    <View style={{
-                      flex: 1, padding: 10, height: 120, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around',
-                    }}
-                    >
-                      <Button title="Cancel" buttonStyle={styles.buttonStyle} onPress={this.handleCancelButtonPress} />
-                      <Button title="Save" buttonStyle={styles.buttonStyle} onPress={this.handleSaveButtonPress} />
-                    </View>
-                    {deleteButton}
-                  </View>
+            <View style={{ flex: 1 }}>
+              {loading
+              && (
+                <View style={styles.activityIndicator}>
+                  <DotIndicator color={colors.logo} />
                 </View>
+              )}
 
-              </KeyboardAvoidingView>
-            </ScrollView>
+              <ScrollView
+                contentContainerStyle={{ flex: 0 }}
+                ref={this.scrollView}
+                scrollEnabled={false}
+                keyboardShouldPersistTaps="always"
+              >
+                <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={-90}>
+                  <View style={{ flex: 1, flexDirection: 'column' }}>
 
+                    <TouchableHighlight onPress={this.handleImagePress}>
+                      <Image
+                        source={{ uri: imageURI }}
+                        style={{ height: this.windowHeight - 470 }}
+                      />
+                    </TouchableHighlight>
+
+                    <View style={{ flex: 1, flexDirection: 'column', paddingTop: 10 }}>
+                      {nameComponent}
+                      <Input
+                        label="Best Before"
+                        inputComponent={DatePicker}
+                        inputContainerStyle={inputStyle.container}
+                        labelStyle={inputStyle.label}
+                        onDateChangeMethod={this.onDateChange}
+                        onFocus={() => this.handleFocusChange('bestBefore')}
+                        ref={this.datePicker}
+                      />
+                      <Input
+                        containerStyle={{ width: '100%' }}
+                        ref={this.quantity}
+                        label="Quantity"
+                        placeholder="Enter the quantity of the item"
+                        keyboardType="numeric"
+                        returnKeyType="done"
+                        inputContainerStyle={inputStyle.container}
+                        labelStyle={inputStyle.label}
+                        inputStyle={inputStyle.input}
+                        onChangeText={text => this.setState({ quantity: text })}
+                        value={quantity.toString()}
+                        onFocus={() => this.handleFocusChange('quantity')}
+                      />
+                      <Input
+                        label="Pantry"
+                        inputComponent={CustomPicker}
+                        inputContainerStyle={inputStyle.container}
+                        labelStyle={inputStyle.label}
+                        data={pantryPickerData}
+                        onFocus={() => this.handleFocusChange('pantry')}
+                        ref={this.pantryPicker}
+                        chosenID={pantryID}
+                        onPickerChange={this.onPantryChange}
+                      />
+
+                      <View style={{
+                        flex: 1, padding: 10, height: 120, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around',
+                      }}
+                      >
+                        <Button title="Cancel" buttonStyle={styles.buttonStyle} onPress={this.handleCancelButtonPress} />
+                        <Button title="Save" buttonStyle={styles.buttonStyle} onPress={this.handleSaveButtonPress} />
+                      </View>
+                      {deleteButton}
+                    </View>
+                  </View>
+                </KeyboardAvoidingView>
+              </ScrollView>
+            </View>
           </Overlay>
-
         </View>
       );
     }
@@ -332,5 +356,13 @@ const inputStyle = {
 const styles = StyleSheet.create({
   buttonStyle: {
     width: 100,
+  },
+  activityIndicator: {
+    ...StyleSheet.absoluteFill,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 1,
   },
 });
