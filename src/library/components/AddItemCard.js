@@ -159,6 +159,7 @@ export default class AddItemCard extends React.Component {
     } else if (typeof item === 'string') {
       this.setState({ name: item, loading: false });
     }
+    this.datePicker.current.input.focus();
   });
 
   show(item = '') {
@@ -287,6 +288,9 @@ export default class AddItemCard extends React.Component {
                         inputStyle={inputStyle.input}
                         onChangeText={text => this.setState({ quantity: text })}
                         value={quantity.toString()}
+                        onBlur={() => {
+                          this.pantryPicker.current.input.focus();
+                        }}
                         onFocus={() => this.handleFocusChange('quantity')}
                       />
                       <Input
@@ -305,7 +309,7 @@ export default class AddItemCard extends React.Component {
                         flex: 1, padding: 10, height: 120, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around',
                       }}
                       >
-                        <Button title="Cancel" buttonStyle={styles.buttonStyle} onPress={this.handleCancelButtonPress} />
+                        <Button title="Cancel" buttonStyle={{ ...styles.buttonStyle, ...{ backgroundColor: colors.red } }} onPress={this.handleCancelButtonPress} />
                         <Button title="Save" buttonStyle={styles.buttonStyle} onPress={this.handleSaveButtonPress} />
                       </View>
                       {deleteButton}
@@ -340,7 +344,7 @@ AddItemCard.propTypes = {
 const inputStyle = {
   container: {
     flex: 1,
-    borderColor: colors.lighterLogoBack,
+    borderColor: colors.logoBack,
   },
   input: {
     color: colors.logoBack,

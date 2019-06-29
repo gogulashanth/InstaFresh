@@ -31,7 +31,9 @@ const themes = {
         size: 45,
       },
       containerStyle: {
-        backgroundColor: colors.logoBack,
+        backgroundColor: colors.darkerLogoBack,
+        borderBottomWidth: 0.5,
+        borderColor: colors.textOp(0.3),
       },
       titleStyle: {
         color: colors.text,
@@ -69,27 +71,6 @@ const themes = {
         fontSize: fontSize.h4,
       },
       keyboardAppearance: 'dark',
-    },
-  },
-  light: {
-    Text: {
-      h4Style: {
-        color: colors.text,
-        fontSize: fontSize.h4,
-      },
-      h3Style: {
-        color: colors.text,
-        fontSize: fontSize.h3,
-      },
-    },
-    Button: {
-      buttonStyle: {
-        backgroundColor: colors.logoBack,
-        borderRadius: 18,
-      },
-      titleStyle: {
-        color: colors.text,
-      },
     },
   },
 };

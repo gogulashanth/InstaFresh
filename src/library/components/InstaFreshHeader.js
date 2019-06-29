@@ -180,7 +180,7 @@ let styles = StyleSheet.create({
     paddingBottom: 5,
   },
   anchorStyle: {
-    backgroundColor: colors.lighterLogoBack,
+    backgroundColor: colors.darkerLogoBack,
   },
 });
 
@@ -193,7 +193,7 @@ const triggerStyles = {
 
 const optionStyles = {
   optionsContainer: {
-    backgroundColor: colors.lighterLogoBack,
+    backgroundColor: colors.logoBack,
     margin: 0,
     flex:1,
     flexBasis: 'auto',
@@ -204,7 +204,7 @@ const optionStyles = {
   optionWrapper: {
     marginTop: 1,
     marginBottom: 1,
-    backgroundColor: colors.lighterLogoBack,
+    backgroundColor: colors.logoBack,
   },
   optionText: {
     color: colors.text,

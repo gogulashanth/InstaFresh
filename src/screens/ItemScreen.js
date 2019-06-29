@@ -116,8 +116,8 @@ export default class ItemScreen extends React.Component {
             <NutritionInfo nutrition={item.nutrition} />
           </View>
           <View style={styles.buttonContainer}>
-            <RNEButton title="Wasted" buttonStyle={{ ...styles.buttonStyle, backgroundColor: colors.red }} onPress={() => this.wastedItemUseCard.current.show()} />
-            <RNEButton title="Consumed" buttonStyle={styles.buttonStyle} onPress={() => this.consumedItemUseCard.current.show()} />
+            <RNEButton title="Wasted" disabled={item.quantity <= 0} buttonStyle={{ ...styles.buttonStyle, backgroundColor: colors.red }} onPress={() => this.wastedItemUseCard.current.show()} />
+            <RNEButton title="Consumed" disabled={item.quantity <= 0} buttonStyle={styles.buttonStyle} onPress={() => this.consumedItemUseCard.current.show()} />
           </View>
         </View>
       </SafeAreaView>

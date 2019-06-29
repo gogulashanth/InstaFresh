@@ -20,6 +20,7 @@ import {
   WaveIndicator,
 } from 'react-native-indicators';
 import InfoBox from 'library/components/InfoBox';
+import dataInstance from 'model/Data';
 
 export default class RecipesScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -58,10 +59,13 @@ export default class RecipesScreen extends React.Component {
   }
 
   screenWillFocus = (() => {
-    this.setState({ loading: true });
-    api.getRecipesList().then((recipeList) => {
-      this.setState({ data: recipeList, loading: false });
-    });
+    if (dataInstance.itemsUpdated) {
+      dataInstance.itemsUpdated = false;
+      this.setState({ loading: true });
+      api.getRecipesList().then((recipeList) => {
+        this.setState({ data: recipeList, loading: false });
+      });
+    }
   });
 
   handleMenuButtonClick = (() => {

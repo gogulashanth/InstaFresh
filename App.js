@@ -23,6 +23,7 @@ import SettingsScreen from 'screens/SettingsScreen';
 import InstaScoreScreen from 'screens/InstaScoreScreen';
 import BarcodeScannerScreen from 'screens/BarcodeScannerScreen';
 import RecipeDetailScreen from 'screens/RecipeDetailScreen';
+import LicenseDetailScreen from 'screens/LicenseDetailScreen';
 import AutoScanScreen from 'screens/AutoScanScreen';
 import firebase from 'react-native-firebase';
 
@@ -77,6 +78,7 @@ const RecipesStack = createStackNavigator({
 
 const DisclaimerStack = createStackNavigator({
   Disclaimer: DisclaimerScreen,
+  LicenseDetail: LicenseDetailScreen,
 }, {
   defaultNavigationOptions: defaultStackNavigationOptions,
 });

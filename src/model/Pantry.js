@@ -6,6 +6,7 @@ export default class Pantry {
     name: '',
     imageURI: defaultPantry.imageString,
     items: {},
+    id: '',
   }
 
   constructor(name = Pantry.defaults.name,

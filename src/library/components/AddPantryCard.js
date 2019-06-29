@@ -22,12 +22,6 @@ import PropTypes from 'prop-types';
 // TODO: Refactor class
 
 export default class AddPantryCard extends React.Component {
-  static defaultValues = {
-    imageURI: 'https://cnet4.cbsistatic.com/img/Gu0ly_clVsc-EHnRAea7i0GUhRI=/1600x900/2019/03/14/2609b0eb-1263-43e2-9380-c1f8cbced873/gettyimages-1089101352.jpg',
-    name: '',
-    id: '',
-  }
-
   constructor(props) {
     super(props);
     this.windowHeight = Dimensions.get('window').height;
@@ -43,8 +37,8 @@ export default class AddPantryCard extends React.Component {
     const { visible } = this.props;
 
     this.state = {
-      imageURI: AddPantryCard.defaultValues.imageURI,
-      name: AddPantryCard.defaultValues.name,
+      imageURI: Pantry.defaults.imageURI,
+      name: Pantry.defaults.name,
       visibleOption: visible,
     };
   }
@@ -67,7 +61,7 @@ export default class AddPantryCard extends React.Component {
 
     // TODO: Add nutrition item info
     let pantry = null;
-    if (id === AddPantryCard.defaultValues.id) {
+    if (id === Pantry.defaults.id) {
       pantry = new Pantry(name, imageURI);
     } else {
       pantry = new Pantry(name, imageURI, {}, id);
@@ -124,7 +118,7 @@ export default class AddPantryCard extends React.Component {
   show(pantry = '') {
     let {
       name, imageURI, id,
-    } = AddPantryCard.defaultValues;
+    } = Pantry.defaults;
 
     if (pantry !== '') {
       ({
@@ -180,7 +174,7 @@ export default class AddPantryCard extends React.Component {
                   <TouchableHighlight onPress={this.handleImagePress}>
                     <Image
                       source={{ uri: imageURI }}
-                      style={{ height: this.windowHeight - 470 }}
+                      style={{ height: this.windowHeight - 380 }}
                     />
                   </TouchableHighlight>
 
@@ -200,7 +194,7 @@ export default class AddPantryCard extends React.Component {
                       flex: 1, padding: 10, height: 120, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around',
                     }}
                     >
-                      <Button title="Cancel" buttonStyle={styles.buttonStyle} onPress={this.handleCancelButtonPress} />
+                      <Button title="Cancel" buttonStyle={{ ...styles.buttonStyle, ...{ backgroundColor: colors.red } }} onPress={this.handleCancelButtonPress} />
                       <Button title="Save" buttonStyle={styles.buttonStyle} onPress={this.handleSaveButtonPress} />
                     </View>
                     {deleteButton}
@@ -233,7 +227,7 @@ AddPantryCard.propTypes = {
 
 const inputStyle = {
   container: {
-    borderColor: colors.lighterLogoBack,
+    borderColor: colors.logoBack,
   },
   input: {
     color: colors.logoBack,

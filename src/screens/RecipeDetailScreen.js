@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  ActivityIndicator, View,
+  View,
 } from 'react-native';
 import colors from 'res/colors';
 import { MenuButton } from 'library/components/HeaderItems';

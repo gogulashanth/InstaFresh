@@ -157,7 +157,6 @@ export default class HomeScreen extends React.Component {
         subtitle={expiryComp}
         subsubtitle={dataInstance._data[dataItem.pantryID].name}
         subsubtitleStyle={{ color: colors.text }}
-        containerStyle={{ marginTop: 5 }}
         subtitleStyle={style}
         onPress={() => this.onPressItem(dataItem.id)}
       />

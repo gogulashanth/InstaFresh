@@ -90,7 +90,10 @@ export default class ItemSearchInput extends React.Component {
         inputContainerStyle={styles.inputContainer}
         listStyle={{ ...styles.list, ...{ maxHeight: this._listHeight } }}
         data={data}
-        onFocus={() => this.setState({ dropDownVisible: true })}
+        onFocus={() => {
+          this.setState({ dropDownVisible: true });
+          this.props.onFocus();
+        }}
         onBlur={() => this.setState({ dropDownVisible: false })}
         placeholder="Enter the name of the item"
         value={query}

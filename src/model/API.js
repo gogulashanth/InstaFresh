@@ -5,14 +5,8 @@ import Recipe from 'model/Recipe';
 import LinkPreview from 'react-native-link-preview';
 import { Image } from 'react-native';
 
-const pexelsKey = '563492ad6f917000010000013c5f864ef37a45fca74670cc2533e863';
-const edamamKeys = {
-  appID: '72bcd401',
-  appKey: '42efc71542c84f036dbfaef1b751c95b',
-};
-
 class API {
-  static product_data_fields = {
+  static productDataFields = {
     imageURI: 'imageURI',
     name: 'name',
     lower_case_name: 'lower_case_name',
@@ -24,20 +18,25 @@ class API {
     this.branded_data = firebase.firestore().collection('branded_product_data');
     this.previousQuery = '~!~';
     this._loadingProductList = false;
+
+    firebase.firestore().collection('admin').doc('api_keys').get()
+      .then((snapshot) => {
+        this.apiKeys = snapshot.data();
+      });
   }
 
 
   async getItemData(id) {
     const doc = await this.ref.doc(id).get();
     let img = '';
-    const imgField = API.product_data_fields.imageURI;
+    const imgField = API.productDataFields.imageURI;
     if (!(imgField in doc.data())) {
       // get imageURI
       // TODO: set authorization as a var
       const response = await fetch(`https://api.pexels.com/v1/search?query=${doc.get('name')}&per_page=1&page=1`, {
         method: 'GET',
         headers: {
-          Authorization: pexelsKey,
+          Authorization: this.apiKeys.pexels,
         },
       });
       const responseJson = await response.json();
@@ -128,10 +127,8 @@ class API {
     const randomNum = Math.round(Math.random() * (ingredients.length - 1));
     const randomIng = ingredients[randomNum];
 
-    console.log(`Fetching: https://api.edamam.com/search?q=${randomIng}&to=10&app_id=${edamamKeys.appID}&app_key=${edamamKeys.appKey}`);
-
     try {
-      const response = await fetch(`https://api.edamam.com/search?q=${randomIng}&to=10&app_id=${edamamKeys.appID}&app_key=${edamamKeys.appKey}`, {
+      const response = await fetch(`https://api.edamam.com/search?q=${randomIng}&to=10&app_id=${this.apiKeys.edamam.app_id}&app_key=${this.apiKeys.edamam.app_key}`, {
         method: 'GET',
       });
       const responseJson = await response.json();
@@ -144,7 +141,7 @@ class API {
     const recipesList = [];
     for (let i = 0; i < recipes.length; i++) {
       const ing = recipes[i].recipe.ingredients.map(item => item.text);
-      
+
       recipesList.push(
         new Recipe(recipes[i].recipe.label.replace(/[^a-zA-Z ]/g, ''),
           recipes[i].recipe.url,
@@ -162,7 +159,6 @@ class API {
   getRecipesList = (async (settings) => {
     // TODO: Implement settings
     const itemsArray = dataInstance.getItemsArray();
-    const MIN_RECIPES = 8;
     const ingredientsArray = [];
 
     // sort array by expiry date

@@ -11,6 +11,8 @@ import fontSize from 'res/fontSize';
 import { Icon, Text } from 'react-native-elements';
 import { NavigationActions, StackActions } from 'react-navigation';
 
+const backgroundColor = colors.logoBack;
+
 export default class InstaMenu extends React.Component {
   constructor(props) {
     super(props);
@@ -28,7 +30,7 @@ export default class InstaMenu extends React.Component {
   render() {
     const selectedIndex = this.props.navigation.state.index;
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: colors.logoBack }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: backgroundColor }}>
         <View style={[styles.menuContainer]}>
           <Image
             style={{
@@ -42,7 +44,7 @@ export default class InstaMenu extends React.Component {
           <MenuItem index={3} selectedIndex={selectedIndex} name="InstaScore" iconName="ios-stats" onPress={this.navigateToScreen('InstaScore')} />
           {/* <MenuItem index={4} selectedIndex={selectedIndex} name="Settings" iconName="ios-cog" onPress={this.navigateToScreen('Settings')} /> */}
           <View style={styles.bottomRow}>
-            {/* <MenuItemIcon index={5} selectedIndex={selectedIndex} iconName="ios-alert" onPress={this.navigateToScreen('Disclaimer')} /> */}
+            <MenuItemIcon index={5} selectedIndex={selectedIndex} iconName="ios-alert" onPress={this.navigateToScreen('Disclaimer')} />
             <MenuItemIcon index={6} selectedIndex={selectedIndex} iconName="ios-help-circle" onPress={this.navigateToScreen('Help')} />
             <MenuItemIcon index={7} selectedIndex={selectedIndex} iconName="ios-information-circle" onPress={this.navigateToScreen('About')} />
           </View>
@@ -62,7 +64,7 @@ class MenuItem extends React.Component {
       iconColor = colors.logo;
     }
     return (
-      <TouchableHighlight onPress={onPress} style={{ flex: 0, height: 50 }} underlayColor={colors.darkerLogoBack}>
+      <TouchableHighlight onPress={onPress} style={{ flex: 0, height: 50 }} underlayColor={colors.lighterLogoBack}>
         <View style={styles.container}>
           <Icon
             name={iconName}
@@ -113,7 +115,7 @@ let styles = StyleSheet.create({
     flex: 1,
   },
   menuContainer: {
-    backgroundColor: colors.logoBack,
+    backgroundColor,
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',

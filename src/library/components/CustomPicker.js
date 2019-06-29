@@ -2,6 +2,7 @@ import React from 'react';
 import {
   StyleSheet, Animated, View, Text, Picker, TouchableOpacity,
 } from 'react-native';
+import { Icon } from 'react-native-elements';
 import colors from 'res/colors';
 
 export default class CustomPicker extends React.Component {
@@ -27,6 +28,10 @@ export default class CustomPicker extends React.Component {
 
     this.setState({ chosenIndex: itemIndex });
     onPickerChange(data[itemIndex].id);
+  });
+
+  focus = (() => {
+    this.openPicker();
   });
 
   openPicker = (() => {
@@ -81,9 +86,31 @@ export default class CustomPicker extends React.Component {
           }
         }}
         >
-          <Text style={styles.text}>
-            {data[chosenIndex].name}
-          </Text>
+          <View style={styles.header}>
+            <Text style={styles.text}>
+              {data[chosenIndex].name}
+            </Text>
+            {!expanded
+              && (
+              <Icon
+                name="ios-arrow-dropdown-circle"
+                type="ionicon"
+                color={colors.logo}
+                size={18}
+              />
+              )
+            }
+            {expanded
+              && (
+              <Icon
+                name="ios-arrow-dropup-circle"
+                type="ionicon"
+                color={colors.logo}
+                size={18}
+              />
+              )
+            }
+          </View>
         </TouchableOpacity>
 
         <Animated.View style={{ opacity, flex:1 }}>
@@ -111,5 +138,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: colors.logoBack,
     marginTop: 5,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flex: 0,
   },
 });

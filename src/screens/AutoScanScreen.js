@@ -9,80 +9,55 @@ import colors from 'res/colors';
 import Tflite from 'tflite-react-native';
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+  },
   preview: {
     flex: 1,
   },
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...StyleSheet.absoluteFillObject,
-  },
-  finder: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  topLeftEdge: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-  },
-  topRightEdge: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-  },
-  bottomLeftEdge: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-  },
-  bottomRightEdge: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-  },
-  maskOuter: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-  },
-  maskInner: {
-    backgroundColor: 'transparent',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  maskFrame: {
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    flex: 1,
-  },
-  maskRow: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  maskCenter: {
-    display: 'flex',
+  bottomRow: {
+    padding: 10,
+    flex: 0,
     flexDirection: 'row',
-  },
-  activityOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    height: '100%',
-    width: '100%',
-    zIndex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'space-between',
+    flexBasis: 'auto',
+    width: '100%',
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
-  headingText: {
+  buttonStyle: {
+    backgroundColor: 'transparent',
+  },
+  topRow: {
     padding: 20,
+    flexDirection: 'row',
+    width: '100%',
+    flex: 0,
+    flexBasis: 'auto',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  topText: {
     textAlign: 'center',
+    padding: 10,
+    alignSelf: 'center',
+  },
+  snap: {
+    flexDirection: 'column',
+    flex: 0,
+    height: 120,
+    flexBasis: 'auto',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  snapRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    flex: 1,
   },
 });
 
@@ -97,55 +72,10 @@ export default class AutoScanScreen extends React.Component {
     super(props);
     this.camera = React.createRef();
     this.state = {
-      maskCenterViewHeight: 0,
       loading: false,
+      tookPicture: false,
     };
   }
-
-  _onMaskCenterViewLayoutUpdated = ({ nativeEvent }) => {
-    this.setState({
-      maskCenterViewHeight: nativeEvent.layout.height,
-    });
-  };
-
-  _applyMaskFrameTransparency = () => {
-    let transparency = 0.6;
-    if (
-      this.props.transparency
-      && Number(this.props.transparency)
-      && (this.props.transparency >= 0 || this.props.transparency <= 1)
-    ) {
-      transparency = this.props.transparency;
-    }
-    return { backgroundColor: `rgba(0,0,0,${transparency})` };
-  };
-
-  _renderEdge = (edgePosition) => {
-    const defaultStyle = {
-      width: this.props.edgeWidth,
-      height: this.props.edgeHeight,
-      borderColor: this.props.edgeColor,
-    };
-    const edgeBorderStyle = {
-      topRight: {
-        borderRightWidth: this.props.edgeBorderWidth,
-        borderTopWidth: this.props.edgeBorderWidth,
-      },
-      topLeft: {
-        borderLeftWidth: this.props.edgeBorderWidth,
-        borderTopWidth: this.props.edgeBorderWidth,
-      },
-      bottomRight: {
-        borderRightWidth: this.props.edgeBorderWidth,
-        borderBottomWidth: this.props.edgeBorderWidth,
-      },
-      bottomLeft: {
-        borderLeftWidth: this.props.edgeBorderWidth,
-        borderBottomWidth: this.props.edgeBorderWidth,
-      },
-    };
-    return <View style={[defaultStyle, styles[`${edgePosition}Edge`], edgeBorderStyle[edgePosition]]} />;
-  };
 
   onCancelButtonPress = (() => {
     const { navigation } = this.props;
@@ -154,84 +84,75 @@ export default class AutoScanScreen extends React.Component {
 
   _takeSnap = async () => {
     if (this.camera) {
-      this.setState({loading: true});
       const options = { pauseAfterCapture: true };
       const data = await this.camera.current.takePictureAsync(options);
       const img = data.uri;
+      this.setState({ tookPicture: true });
       // run ml model
     }
   };
 
   render() {
-    const { loading } = this.state;
+    const { tookPicture } = this.state;
     return (
       <RNCamera ref={this.camera} style={styles.preview}>
-        <View style={[styles.container]}>
+        <View style={styles.container}>
 
-          <View style={styles.maskOuter}>
-            <View style={[styles.maskRow, styles.maskFrame, this._applyMaskFrameTransparency()]}>
-              <Text style={styles.headingText} h3>Take a picture of the item/s you would like to add</Text>
-            </View>
-            <View
-              style={[{ height: this.props.height }, styles.maskCenter]}
-              onLayout={this._onMaskCenterViewLayoutUpdated}
-            >
-              <View style={[styles.maskFrame, this._applyMaskFrameTransparency()]} />
-              <View
-                style={[
-                  styles.maskInner,
-                  {
-                    width: this.props.width,
-                    height: this.props.height,
-                  },
-                ]}
-              >
-                
-                
+
+          {!tookPicture && (
+            <View style={styles.snap}>
+              <Text h4 h4Style={styles.topText}>Take a picture of the item you'd like to scan</Text>
+              <View style={{ ...styles.snapRow, ...{ } }}>
+                <View style={{ flex: 1 }}>
+                  <Button
+                    type="clear"
+                    title="Cancel"
+                    buttonStyle={styles.buttonStyle}
+                    containerStyle={{width: 80}}
+                    onPress={this.onCancelButtonPress}
+                  />
+                </View>
                 <Icon
                   name="ios-radio-button-on"
                   size={76}
                   type="ionicon"
                   color={colors.text}
+                  containerStyle={{ flex: 1 }}
                   underlayColor="transparent"
                   Component={TouchableOpacity}
                   onPress={() => this._takeSnap()}
                 />
-                
-                
+                <View style={{ flex: 1 }} />
               </View>
-              <View style={[styles.maskFrame, this._applyMaskFrameTransparency()]} />
+
             </View>
-            <View style={[styles.maskRow, styles.maskFrame, this._applyMaskFrameTransparency()]}>
-              <Button buttonStyle={{ backgroundColor: colors.red, width: 100 }} title="Cancel" onPress={this.onCancelButtonPress} />
+
+          )}
+
+          {tookPicture && (
+            <View style={styles.bottomRow}>
+              <Button
+                type="clear"
+                title="Retake"
+                buttonStyle={styles.buttonStyle}
+                onPress={() => {
+                  this.camera.current.resumePreview();
+                  this.setState({ tookPicture: false });
+                }}
+              />
+
+              <Button
+                type="clear"
+                title="Use Picture"
+                buttonStyle={styles.buttonStyle}
+                onPress={() => {}}
+              />
             </View>
-          </View>
+          )}
+
         </View>
       </RNCamera>
-      
+
     );
   }
 }
-
-const propTypes: PropTypes = {
-  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  edgeWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  edgeHeight: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  edgeColor: PropTypes.string,
-  edgeBorderWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  transparency: PropTypes.number,
-};
-
-const defaultProps = {
-  width: 280,
-  height: 400,
-  edgeWidth: 20,
-  edgeHeight: 20,
-  edgeColor: colors.logo,
-  edgeBorderWidth: 4,
-  transparency: 0.6,
-};
-
-AutoScanScreen.propTypes = propTypes;
-AutoScanScreen.defaultProps = defaultProps;

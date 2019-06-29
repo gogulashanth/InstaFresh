@@ -59,7 +59,7 @@ export default class ItemUseCard extends React.Component {
         isVisible={visible}
         onBackdropPress={() => this.setState({ visible: false })}
         height={windowHeight - 100}
-        overlayStyle={{ padding: 0, overflow: 'hidden' }}
+        overlayStyle={{ overflow: 'hidden' }}
         windowBackgroundColor="rgba(0, 0, 0, .7)"
       >
         <View style={{ ...styles.container, ...containerStyle }}>
