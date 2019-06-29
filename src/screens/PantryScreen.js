@@ -10,6 +10,8 @@ import NutritionInfo from 'library/components/NutritionInfo';
 import { widthConversion } from 'res/fontSize';
 import AddPantryCard from 'library/components/AddPantryCard';
 import CustomListItem from 'library/components/CustomListItem';
+import { CachedImage } from 'react-native-cached-image';
+import ThemedFlatList from 'library/components/ThemedFlatList';
 
 export default class ItemScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -130,10 +132,9 @@ export default class ItemScreen extends React.Component {
           navigation={navigation}
         />
         <View style={{ flex: 1, flexDirection: 'column' }}>
-          <Image source={{ uri: pantry.imageURI }} style={{ flex: 1 }} />
-          <FlatList
+          <CachedImage source={{ uri: pantry.imageURI }} style={{ flex: 1 }} />
+          <ThemedFlatList
             style={{ flex: 1 }}
-            contentContainerStyle={{ marginTop: 10 }}
             data={data}
             keyExtractor={this.keyExtractor}
             renderItem={this.renderItem}

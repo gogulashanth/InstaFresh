@@ -11,14 +11,13 @@ export default class DatePicker extends React.Component {
     this.minDate = new Date();
     this.closedHeight = 40;
     this.state = {
-      chosenDate: this.minDate, height: new Animated.Value(this.closedHeight), opacity: new Animated.Value(0), expanded: false,
+      height: new Animated.Value(this.closedHeight), opacity: new Animated.Value(0), expanded: false,
     };
     this.setDate = this.setDate.bind(this);
     this.dateFormat = { year: 'numeric', month: 'long', day: 'numeric' };
   }
 
   setDate(newDate) {
-    this.setState({ chosenDate: newDate });
     this.props.onDateChangeMethod(newDate);
   }
 
@@ -62,10 +61,11 @@ export default class DatePicker extends React.Component {
   });
 
   render() {
-    const { reference, style, onFocus } = this.props;
+    const { reference, style, onFocus, pickerDate } = this.props;
     const {
-      height, opacity, chosenDate, expanded,
+      height, opacity, expanded,
     } = this.state;
+
 
     return (
       <Animated.View style={{ flex: 1, height }}>
@@ -83,7 +83,7 @@ export default class DatePicker extends React.Component {
         >
           <View style={styles.header}>
             <Text style={styles.text}>
-              {chosenDate.toLocaleDateString('en-US', this.dateFormat)}
+              {pickerDate.toLocaleDateString('en-US', this.dateFormat)}
             </Text>
             {!expanded
                 && (
@@ -112,7 +112,7 @@ export default class DatePicker extends React.Component {
           <DatePickerIOS
             ref={reference}
             style={{ flex: 1 }}
-            date={chosenDate}
+            date={pickerDate}
             onDateChange={this.setDate}
             mode="date"
             minimumDate={this.minDate}

@@ -1,7 +1,8 @@
 import React from 'react';
 import {
- View, StyleSheet, FlatList 
+ View, StyleSheet,
 } from 'react-native';
+import ThemedFlatList from 'library/components/ThemedFlatList';
 import { MenuButton, PantryAddButton } from 'library/components/HeaderItems';
 import colors from 'res/colors';
 import PropTypes from 'prop-types';
@@ -121,8 +122,7 @@ export default class PantriesScreen extends React.Component {
           onChangeText={this.updateSearch}
           value={search}
         />
-        <FlatList
-          contentContainerStyle={{ marginTop: 10 }}
+        <ThemedFlatList
           data={filteredData}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}

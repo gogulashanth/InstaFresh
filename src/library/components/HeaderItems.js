@@ -5,7 +5,7 @@ import {
 } from 'react-native-popup-menu';
 import React from 'react';
 import {
-  StyleSheet, View, Image, FlatList, TouchableOpacity,
+  StyleSheet, View, Image, TouchableOpacity,
 } from 'react-native';
 import colors from 'res/colors';
 import { Icon, Text } from 'react-native-elements';

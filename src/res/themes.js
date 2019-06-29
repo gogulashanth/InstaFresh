@@ -25,6 +25,11 @@ const themes = {
         fontFamily: fonts.text,
       },
     },
+    ThemedFlatList: {
+      style: {
+        marginLeft: 5,
+      },
+    },
     CustomListItem: {
       leftAvatar: {
         rounded: true,
@@ -53,6 +58,9 @@ const themes = {
       titleStyle: {
         color: 'white',
         fontSize: fontSize.h3,
+      },
+      disabledStyle: {
+        backgroundColor: colors.logoOp(0.5),
       },
     },
     SearchBar: {

@@ -21,8 +21,10 @@ import {
   UIActivityIndicator,
   WaveIndicator,
 } from 'react-native-indicators';
-import colors from 'res/colors';
-import fonts from 'res/fonts';
+
+import colors from '../../res/colors';
+import fonts from '../../res/fonts';
+
 import { Overlay, Input, Button } from 'react-native-elements';
 import Item from 'model/Item';
 import dataInstance from 'model/Data';
@@ -41,6 +43,7 @@ export default class AddItemCard extends React.Component {
     this.datePicker = React.createRef();
     this.pantryPicker = React.createRef();
     this.windowHeight = Dimensions.get('window').height;
+    this.windowWidth = Dimensions.get('window').width;
 
     this.options = {
       title: 'Select Image',
@@ -90,7 +93,6 @@ export default class AddItemCard extends React.Component {
     } = this.state;
     const { onSave, editMode } = this.props;
 
-    // TODO: Add nutrition item info
     let item = null;
     if (!editMode) {
       item = new Item(name, expiryDate, imageURI, nutrition, quantity, pantryID);
@@ -159,12 +161,12 @@ export default class AddItemCard extends React.Component {
     } else if (typeof item === 'string') {
       this.setState({ name: item, loading: false });
     }
-    this.datePicker.current.input.focus();
+    // this.datePicker.current.input.focus();
   });
 
   show(item = '') {
     let {
-      name, imageURI, quantity, pantryID,
+      name, imageURI, quantity, pantryID, nutrition,
     } = Item.defaults;
     let id = '';
     let expiryDate = new Date();
@@ -172,7 +174,7 @@ export default class AddItemCard extends React.Component {
 
     if (item !== '') {
       ({
-        name, imageURI, quantity, expiryDate, id, pantryID,
+        name, imageURI, quantity, expiryDate, id, pantryID, nutrition,
       } = item);
     }
 
@@ -189,6 +191,7 @@ export default class AddItemCard extends React.Component {
       expiryDate,
       id,
       pantryID,
+      nutrition,
       pantryPickerData: pantriesData,
       visibleOption: true,
     });
@@ -198,7 +201,7 @@ export default class AddItemCard extends React.Component {
   render() {
     const { onBackdropPress, editMode } = this.props;
     const {
-      quantity, imageURI, visibleOption, pantryPickerData, pantryID, loading,
+      quantity, imageURI, visibleOption, pantryPickerData, pantryID, loading, expiryDate,
     } = this.state;
 
     let nameComponent = (
@@ -222,7 +225,7 @@ export default class AddItemCard extends React.Component {
       nameComponent = null;
       deleteButton = (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Button title="Delete" buttonStyle={{ ...styles.buttonStyle, backgroundColor: colors.red }} onPress={this.handleDeleteButtonPress} />
+          <Button title="Delete" icon={{ name: 'ios-trash', type: 'ionicon', color: colors.text }} buttonStyle={{ ...styles.buttonStyle, width: this.windowWidth - 110, backgroundColor: colors.red }} onPress={this.handleDeleteButtonPress} />
         </View>
       );
     }
@@ -272,7 +275,8 @@ export default class AddItemCard extends React.Component {
                         inputComponent={DatePicker}
                         inputContainerStyle={inputStyle.container}
                         labelStyle={inputStyle.label}
-                        onDateChangeMethod={this.onDateChange}
+                        pickerDate={expiryDate}
+                        onDateChangeMethod={newDate => this.onDateChange(newDate)}
                         onFocus={() => this.handleFocusChange('bestBefore')}
                         ref={this.datePicker}
                       />
@@ -286,10 +290,10 @@ export default class AddItemCard extends React.Component {
                         inputContainerStyle={inputStyle.container}
                         labelStyle={inputStyle.label}
                         inputStyle={inputStyle.input}
-                        onChangeText={text => this.setState({ quantity: text })}
+                        onChangeText={text => this.setState({ quantity: Number(text) })}
                         value={quantity.toString()}
                         onBlur={() => {
-                          this.pantryPicker.current.input.focus();
+                          // this.pantryPicker.current.input.focus();
                         }}
                         onFocus={() => this.handleFocusChange('quantity')}
                       />

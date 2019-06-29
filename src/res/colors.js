@@ -21,7 +21,7 @@ const colors2 = {
   text: '#FFFFFF',
   logo: '#3FAE33',
   logoBack: '#2D2D2D',
-  lighterLogoBack: '#2F2F2F',
+  lighterLogoBack: '#333333',
   darkerLogoBack: '#111111',
   red: '#CE0C0C',
   darkerText: '#f2f2f2',

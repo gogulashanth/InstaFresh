@@ -25,6 +25,7 @@ export default class AddPantryCard extends React.Component {
   constructor(props) {
     super(props);
     this.windowHeight = Dimensions.get('window').height;
+    this.windowWidth = Dimensions.get('window').width;
 
     this.options = {
       title: 'Select Image',
@@ -145,7 +146,12 @@ export default class AddPantryCard extends React.Component {
     if (editMode) {
       deleteButton = (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Button title="Delete" buttonStyle={{ ...styles.buttonStyle, backgroundColor: colors.red }} onPress={this.handleDeleteButtonPress} />
+          <Button 
+            title="Delete" 
+            icon={{ name: 'ios-trash', type: 'ionicon', color: colors.text }}
+            buttonStyle={{ ...styles.buttonStyle, width: this.windowWidth - 110, backgroundColor: colors.red }} 
+            onPress={this.handleDeleteButtonPress} 
+          />
         </View>
       );
     }
@@ -162,6 +168,7 @@ export default class AddPantryCard extends React.Component {
             onBackdropPress={onBackdropPress}
             onDismiss={this.handleDismiss}
             overlayStyle={{ padding: 0, overflow: 'hidden' }}
+            windowBackgroundColor="rgba(0, 0, 0, .7)"
           >
             <KeyboardAvoidingView behavior="position">
               <ScrollView
@@ -174,7 +181,7 @@ export default class AddPantryCard extends React.Component {
                   <TouchableHighlight onPress={this.handleImagePress}>
                     <Image
                       source={{ uri: imageURI }}
-                      style={{ height: this.windowHeight - 380 }}
+                      style={{ height: editMode ? this.windowHeight - 420 : this.windowHeight - 380 }}
                     />
                   </TouchableHighlight>
 

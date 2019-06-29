@@ -3,8 +3,9 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import {
-  StyleSheet, View, Text, FlatList,
+  StyleSheet, View, Text,
 } from 'react-native';
+import ThemedFlatList from 'library/components/ThemedFlatList';
 import colors from 'res/colors';
 import AddItemCard from 'library/components/AddItemCard';
 import { SearchBar } from 'react-native-elements';
@@ -182,12 +183,12 @@ export default class HomeScreen extends React.Component {
           onChangeText={this.updateSearch}
           value={search}
         />
-        <FlatList
-          contentContainerStyle={{ marginTop: 10 }}
+        <ThemedFlatList
           data={filteredData}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
           ListEmptyComponent={emptyItem}
+          style={{marginLeft: 5}}
         />
       </View>
     );

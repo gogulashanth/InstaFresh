@@ -54,3 +54,10 @@ buck-out/
 
 # Bundle artifact
 *.jsbundle
+
+# Haul bundler
+/assets
+stats.html
+index.ios.bundle
+index.ios.bundle.map
+haul-debug.log

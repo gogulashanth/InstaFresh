@@ -7,7 +7,7 @@ export default class Item {
     name: '',
     imageURI: defaultItem.imageString,
     nutrition: '',
-    quantity: '',
+    quantity: 0,
     pantryID: '',
   }
 

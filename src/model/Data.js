@@ -22,8 +22,8 @@ const INSTASCORE_SAMPLING_FREQ = 2;
 
 class Data {
   constructor() {
-    //AsyncStorage.removeItem('@instaFreshData');
-    //AsyncStorage.removeItem('@instaScoreData');
+    // AsyncStorage.removeItem('@instaFreshData');
+    // AsyncStorage.removeItem('@instaScoreData');
 
     this._data = {};
 
@@ -228,8 +228,8 @@ class Data {
 
         const img = 'https://images-prod.healthline.com/hlcmsresource/images/topic_centers/Do_Apples_Affect_Diabetes_and_Blood_Sugar_Levels-732x549-thumbnail.jpg';
         const pantry = new Pantry('Fridge');
-        //const item = new Item('Apple', dat, img, undefined, 2, pantry.id);
-        //pantry.items[item.id] = item;
+        // const item = new Item('Apple', dat, img, undefined, 2, pantry.id);
+        // pantry.items[item.id] = item;
 
         const startingData = { [pantry.id]: pantry };
         const stringifiedData = JSON.stringify(startingData);
@@ -289,7 +289,14 @@ class Data {
 
   editItem = ((itemID, itemData) => {
     const { pantryID } = this.getItem(itemID);
+    // if pantryID has changed, need to first remove item from pantry and put into new pantry
+    if (itemData.pantryID !== pantryID) {
+      this.deleteItem(itemID);
+      this.addItem(itemData);
+    } else {
     this._data[pantryID].items[itemID] = itemData;
+    }
+
     this._save();
     this.itemsUpdated = true;
   });
@@ -332,7 +339,7 @@ class Data {
   });
 
   getLowerCaseItemsNameArray = (() => {
-    let itemsArray = this.getItemsArray();
+    const itemsArray = this.getItemsArray();
     const itemNameArray = [];
 
     for (const item of itemsArray) {

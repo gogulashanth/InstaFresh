@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Image, View, StyleSheet, FlatList,
+  Image, View, StyleSheet,
 } from 'react-native';
 import { Text, Icon } from 'react-native-elements';
 import colors from 'res/colors';

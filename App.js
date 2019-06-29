@@ -129,8 +129,12 @@ const AppNavigator = createDrawerNavigator({
 const AppCont = createAppContainer(AppNavigator);
 
 class App extends React.PureComponent {
-  componentDidMount() {
+  componentWillMount() {
     StatusBar.setBarStyle('light-content');
+  }
+  
+  componentDidMount() {
+    
     firebase.auth().signInAnonymously();
   }
 

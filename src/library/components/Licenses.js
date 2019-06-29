@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {
-  FlatList, StyleSheet,
+  StyleSheet,
 } from 'react-native';
+import ThemedFlatList from 'library/components/ThemedFlatList';
 import CustomListItem from 'library/components/CustomListItem';
 
 
@@ -36,7 +37,7 @@ export default class Licenses extends Component {
     const { licenses } = this.props;
 
     return (
-      <FlatList
+      <ThemedFlatList
         style={styles.list}
         keyExtractor={({ key }) => key}
         data={licenses}

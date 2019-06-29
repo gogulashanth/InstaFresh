@@ -12,6 +12,7 @@ import { widthConversion } from 'res/fontSize';
 import AddItemCard from 'library/components/AddItemCard';
 import ItemUseCard from 'library/components/ItemUseCard';
 import Item from 'model/Item';
+import { CachedImage } from 'react-native-cached-image';
 
 export default class ItemScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -102,7 +103,7 @@ export default class ItemScreen extends React.Component {
         />
         <View style={{ flex: 1, padding: 12, flexDirection: 'column' }}>
           <View style={{ flex: 0.8, flexDirection: 'row', justifyContent: 'center' }}>
-            <Image source={{ uri: item.imageURI }} style={{ flex: 1, borderRadius: 10 }} />
+            <CachedImage source={{ uri: item.imageURI }} style={{ flex: 1, borderRadius: 10 }} />
 
 
             <View style={styles.containerText}>
@@ -116,7 +117,7 @@ export default class ItemScreen extends React.Component {
             <NutritionInfo nutrition={item.nutrition} />
           </View>
           <View style={styles.buttonContainer}>
-            <RNEButton title="Wasted" disabled={item.quantity <= 0} buttonStyle={{ ...styles.buttonStyle, backgroundColor: colors.red }} onPress={() => this.wastedItemUseCard.current.show()} />
+            <RNEButton title="Wasted" disabled={item.quantity <= 0} disabledStyle={{ backgroundColor: colors.redOp(0.5) }} buttonStyle={{ ...styles.buttonStyle, backgroundColor: colors.red }} onPress={() => this.wastedItemUseCard.current.show()} />
             <RNEButton title="Consumed" disabled={item.quantity <= 0} buttonStyle={styles.buttonStyle} onPress={() => this.consumedItemUseCard.current.show()} />
           </View>
         </View>

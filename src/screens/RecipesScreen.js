@@ -1,7 +1,8 @@
 import React from 'react';
 import {
-  Image, View, FlatList, StyleSheet,
+  Image, View, StyleSheet,
 } from 'react-native';
+import ThemedFlatList from 'library/components/ThemedFlatList';
 import { Text } from 'react-native-elements';
 import colors from 'res/colors';
 import RecipeListItem from 'library/components/RecipeListItem';
@@ -105,7 +106,7 @@ export default class RecipesScreen extends React.Component {
           <Text h4 style={{ padding: 20 }}>Loading new recipes...</Text>
         </View>
         )}
-        <FlatList
+        <ThemedFlatList
           style={{ topPadding: 40 }}
           columnWrapperStyle={{ alignItems: 'center', justifyContent: 'space-between' }}
           numColumns={2}
