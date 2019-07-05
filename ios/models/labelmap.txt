@@ -1,0 +1,62 @@
+Apple
+Beer
+Croissant
+Cucumber
+Radish
+Hot dog
+Waffle
+Pancake
+Pretzel
+Bagel
+Burrito
+Cheese
+Muffin
+Juice
+Cookie
+Zucchini
+Winter melon
+Guacamole
+French fries
+Egg
+Grape
+Milk
+Mushroom
+Potato
+Pasta
+Pumpkin
+Pear
+Pizza
+Sushi
+Strawberry
+Tomato
+Wine
+Squid
+Lemon
+Banana
+Hamburger
+Lobster
+Asparagus
+Ice cream
+Orange
+Peach
+Coconut
+Shellfish
+Cabbage
+Carrot
+Mango
+Pineapple
+Cake
+Candy
+Salad
+Broccoli
+Pastry
+Grapefruit
+Bell pepper
+Turkey
+Pomegranate
+Doughnut
+Watermelon
+Cantaloupe
+Sandwich
+Shrimp 
+Crab

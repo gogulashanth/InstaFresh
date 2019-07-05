@@ -22,7 +22,6 @@ import {
   WaveIndicator,
 } from 'react-native-indicators';
 
-import colors from '../../res/colors';
 import fonts from '../../res/fonts';
 
 import { Overlay, Input, Button } from 'react-native-elements';
@@ -33,6 +32,7 @@ import CustomPicker from 'library/components/CustomPicker';
 import ImagePicker from 'react-native-image-picker';
 import PropTypes from 'prop-types';
 import ItemSearchInput from 'library/components/ItemSearchInput';
+import colors from '../../res/colors';
 
 // TODO: Create a defaults file with images and options
 // TODO: Refactor class
@@ -87,11 +87,11 @@ export default class AddItemCard extends React.Component {
     onCancel();
   });
 
-  handleSaveButtonPress = (() => {
+  getItemObject = (() => {
     const {
       name, quantity, imageURI, pantryID, expiryDate, id, nutrition,
     } = this.state;
-    const { onSave, editMode } = this.props;
+    const { editMode } = this.props;
 
     let item = null;
     if (!editMode) {
@@ -99,7 +99,12 @@ export default class AddItemCard extends React.Component {
     } else {
       item = new Item(name, expiryDate, imageURI, nutrition, quantity, pantryID, id);
     }
+    return item;
+  });
 
+  handleSaveButtonPress = (() => {
+    const { onSave } = this.props;
+    const item = this.getItemObject();
     onSave(item);
     this.setState({ visibleOption: false });
   });
@@ -197,9 +202,13 @@ export default class AddItemCard extends React.Component {
     });
   }
 
+  hide() {
+    this.setState({ visibleOption: false });
+  }
+
 
   render() {
-    const { onBackdropPress, editMode } = this.props;
+    const { onBackdropPress, editMode, customButtons } = this.props;
     const {
       quantity, imageURI, visibleOption, pantryPickerData, pantryID, loading, expiryDate,
     } = this.state;
@@ -242,6 +251,7 @@ export default class AddItemCard extends React.Component {
             onBackdropPress={onBackdropPress}
             onDismiss={this.handleDismiss}
             height={this.windowHeight - 100}
+            windowBackgroundColor="rgba(0, 0, 0, .6)"
             overlayStyle={{ padding: 0, overflow: 'hidden' }}
           >
             <View style={{ flex: 1 }}>
@@ -313,8 +323,11 @@ export default class AddItemCard extends React.Component {
                         flex: 1, padding: 10, height: 120, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around',
                       }}
                       >
-                        <Button title="Cancel" buttonStyle={{ ...styles.buttonStyle, ...{ backgroundColor: colors.red } }} onPress={this.handleCancelButtonPress} />
-                        <Button title="Save" buttonStyle={styles.buttonStyle} onPress={this.handleSaveButtonPress} />
+                        {customButtons}
+                        {!customButtons && [
+                          <Button title="Cancel" buttonStyle={{ ...styles.buttonStyle, ...{ backgroundColor: colors.red } }} onPress={this.handleCancelButtonPress} />,
+                          <Button title="Save" buttonStyle={styles.buttonStyle} onPress={this.handleSaveButtonPress} />,
+                        ]}
                       </View>
                       {deleteButton}
                     </View>
@@ -333,6 +346,7 @@ AddItemCard.defaultProps = {
   onBackdropPress: () => {},
   editMode: false,
   navigation: null,
+  onSave: () => {},
   onCancel: () => {},
 };
 
@@ -340,7 +354,7 @@ AddItemCard.propTypes = {
   onBackdropPress: PropTypes.func,
   editMode: PropTypes.bool,
   visible: PropTypes.bool.isRequired,
-  onSave: PropTypes.func.isRequired,
+  onSave: PropTypes.func,
   onCancel: PropTypes.func,
   navigation: PropTypes.object,
 };

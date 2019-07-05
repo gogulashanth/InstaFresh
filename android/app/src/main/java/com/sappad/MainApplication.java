@@ -3,6 +3,7 @@ package com.sappad;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactlibrary.TfliteReactNativePackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
@@ -16,7 +17,6 @@ import com.beefe.picker.PickerViewPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.cmcewen.blurview.BlurViewPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -37,6 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new VectorIconsPackage(),
             new TfliteReactNativePackage(),
             new RNCWebViewPackage(),
             new RNFetchBlobPackage(),
@@ -49,8 +50,7 @@ public class MainApplication extends Application implements ReactApplication {
             new PickerViewPackage(),
             new AsyncStoragePackage(),
             new BlurViewPackage(),
-            new RNGestureHandlerPackage(),
-            new VectorIconsPackage()
+            new RNGestureHandlerPackage()
       );
     }
 
