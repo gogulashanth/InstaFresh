@@ -2,8 +2,10 @@
 /* eslint-disable no-restricted-syntax */
 
 import AsyncStorage from '@react-native-community/async-storage';
+import NotificationManager from 'model/NotificationService';
 import Item from 'model/Item';
 import Pantry from 'model/Pantry';
+import ImageManager from 'model/ImageManager';
 
 const reISO = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*))(?:Z|(\+|-)([\d|:]*))?$/;
 const reMsAjax = /^\/Date\((d|-|.*)\)[\/|\\]$/;
@@ -11,19 +13,22 @@ const noop = () => {}; // do nothing.
 
 // TODO: Future update: editable settings
 
+// notification interval in days
+const NOTIFICATION_INTERVAL = 2;
+
 // Duration for instascore history to persist (current: 30 days)
 const INSTASCORE_MAX_PERSIST = 30 * 24 * 3600;
 
 // Duration to store avg instascore (current: every week)
-// const INSTASCORE_SAMPLING_FREQ = 7 * 24 * 3600;
+const INSTASCORE_SAMPLING_FREQ = 7 * 24 * 3600;
 
-// debug
-const INSTASCORE_SAMPLING_FREQ = 2;
 
 class Data {
   constructor() {
+    // DEBUG
     // AsyncStorage.removeItem('@instaFreshData');
     // AsyncStorage.removeItem('@instaScoreData');
+    // NotificationManager.cancelAllNotifications();
 
     this._data = {};
 
@@ -224,12 +229,7 @@ class Data {
       // eslint-disable-next-line no-else-return
       } else {
         // need to create a default pantry
-        const dat = new Date();
-
-        const img = 'https://images-prod.healthline.com/hlcmsresource/images/topic_centers/Do_Apples_Affect_Diabetes_and_Blood_Sugar_Levels-732x549-thumbnail.jpg';
         const pantry = new Pantry('Fridge');
-        // const item = new Item('Apple', dat, img, undefined, 2, pantry.id);
-        // pantry.items[item.id] = item;
 
         const startingData = { [pantry.id]: pantry };
         const stringifiedData = JSON.stringify(startingData);
@@ -247,6 +247,7 @@ class Data {
       }
     } catch (e) {
       // error reading value
+      console.log(e);
     }
   });
 
@@ -274,30 +275,67 @@ class Data {
     this._save();
   });
 
+  downloadImageAndSave = (async (item) => {
+    const newUri = ImageManager.saveImageForItem(item.id, item.imageURI);
+    item.imageURI = newUri;
+    
+  });
+
   addItem = ((item) => {
+    // schedule notification
+    this._scheduleNotificationForItem(item);
+    
+    // add item
     this._data[item.pantryID].items[item.id] = item;
+    
+    // save
     this._save();
+
+    // * for recipes
     this.itemsUpdated = true;
+    
+    // download/move the uri and edit the item to reflect that
+    ImageManager.saveImageForItem(item.id, item.imageURI).then(localURI => {
+      
+    });
+
   });
 
   deleteItem = ((itemID) => {
+    // cancel notifications
+    NotificationManager.cancelNotification(itemID);
+
+    // delete item
     const { pantryID } = this.getItem(itemID);
     delete this._data[pantryID].items[itemID];
+
+    // save
     this._save();
+
+    // * for recipes
     this.itemsUpdated = true;
   });
 
   editItem = ((itemID, itemData) => {
-    const { pantryID } = this.getItem(itemID);
+    const { pantryID, expiryDate } = this.getItem(itemID);
+
+    if (itemData.expiryDate.getTime() !== expiryDate.getTime()) {
+      // Need to modify notification if expiry date changed
+      this._scheduleNotificationForItem(itemData);
+    }
+
     // if pantryID has changed, need to first remove item from pantry and put into new pantry
     if (itemData.pantryID !== pantryID) {
       this.deleteItem(itemID);
       this.addItem(itemData);
     } else {
-    this._data[pantryID].items[itemID] = itemData;
+      this._data[pantryID].items[itemID] = itemData;
     }
 
+    // save
     this._save();
+
+    // for recipes
     this.itemsUpdated = true;
   });
 
@@ -347,6 +385,32 @@ class Data {
     }
 
     return itemNameArray;
+  });
+
+  // MARK: Notification helpers
+  _scheduleNotificationForItem = ((item) => {
+    const numDaysLeft = item.getNumDaysLeft();
+    NotificationManager.cancelNotification(item.id);
+
+    // const date = new Date();
+    // date.setSeconds(date.getSeconds() + NOTIFICATION_INTERVAL);
+    // NotificationManager.scheduleNotification({
+    //   id: item.id,
+    //   date: date,
+    //   title: `Your ${item.name} are about to expire`,
+    //   message: `Your ${item.name} ${item.name[item.name.length - 1] === 's' ? 'go' : 'goes'} bad in ${numDaysLeft} days. Try to eat it to before then.`,
+    // });
+
+    if (numDaysLeft > NOTIFICATION_INTERVAL) {
+      const date = new Date();
+      date.setDate(item.expiryDate.getDate() - NOTIFICATION_INTERVAL);
+      NotificationManager.scheduleNotification({
+        id: item.id,
+        date,
+        title: `Your ${item.name} are about to expire`,
+        message: `Your ${item.name} ${item.name[item.name.length - 1] === 's' ? 'go' : 'goes'} bad in ${numDaysLeft} days. Try to eat it to before then.`,
+      });
+    }
   });
 
   // MARK: GENERAL-------------------------------------------

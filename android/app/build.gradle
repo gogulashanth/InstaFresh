@@ -138,6 +138,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-push-notification')
     implementation project(':react-native-vector-icons')
     implementation project(':tflite-react-native')
     implementation project(':react-native-webview')

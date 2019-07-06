@@ -27,4 +27,9 @@ export default class Item {
     this.quantity = quantity;
     this.pantryID = pantryID;
   }
+
+  getNumDaysLeft = (() => {
+    const currentDate = new Date();
+    return Math.round((this.expiryDate - currentDate) / (1000 * 60 * 60 * 24));
+  });
 }

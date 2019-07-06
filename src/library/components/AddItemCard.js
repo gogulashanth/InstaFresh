@@ -22,7 +22,6 @@ import {
   WaveIndicator,
 } from 'react-native-indicators';
 
-import fonts from '../../res/fonts';
 
 import { Overlay, Input, Button } from 'react-native-elements';
 import Item from 'model/Item';
@@ -32,6 +31,7 @@ import CustomPicker from 'library/components/CustomPicker';
 import ImagePicker from 'react-native-image-picker';
 import PropTypes from 'prop-types';
 import ItemSearchInput from 'library/components/ItemSearchInput';
+import fonts from '../../res/fonts';
 import colors from '../../res/colors';
 
 // TODO: Create a defaults file with images and options
@@ -150,8 +150,8 @@ export default class AddItemCard extends React.Component {
     navigation.popToTop();
   });
 
-  nameDropDownWillSelect = (() => {
-    this.setState({ loading: true });
+  nameDropDownWillSelect = ((name) => {
+    this.setState({ name, loading: true });
   });
 
   nameDropDownSelected = ((item) => {
@@ -210,7 +210,7 @@ export default class AddItemCard extends React.Component {
   render() {
     const { onBackdropPress, editMode, customButtons } = this.props;
     const {
-      quantity, imageURI, visibleOption, pantryPickerData, pantryID, loading, expiryDate,
+      name, quantity, imageURI, visibleOption, pantryPickerData, pantryID, loading, expiryDate,
     } = this.state;
 
     let nameComponent = (
@@ -223,7 +223,9 @@ export default class AddItemCard extends React.Component {
           onFocus={() => this.handleFocusChange('name')}
           inputTextStyle={inputStyle.input}
           onSelect={item => this.nameDropDownSelected(item)}
-          onItemWillSelect={() => this.nameDropDownWillSelect()}
+          onItemWillSelect={selectedName => this.nameDropDownWillSelect(selectedName)}
+          textValueDidChange={text => this.setState({ name: text })}
+          textValue={name}
         />
       </View>
     );

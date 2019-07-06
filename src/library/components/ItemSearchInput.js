@@ -37,21 +37,20 @@ export default class ItemSearchInput extends React.Component {
   }
 
   onItemSelect = (item) => {
-    const { onSelect, onItemWillSelect } = this.props;
-    onItemWillSelect();
+    const { onSelect, onItemWillSelect, textValueDidChange } = this.props;
     if (typeof item === 'object') {
-      this.setState({ query: item.get('name') });
+      onItemWillSelect(item.get('name'));
       this.input.current.blur();
       api.getItemData(item.id).then(itemData => onSelect(itemData));
     } else if (typeof (item) === 'string') {
-      onSelect(item);
+      textValueDidChange(item);
+      // onSelect(item);
     }
   }
 
   onChangeText = ((text) => {
-    const { query } = this.state;
-
-    this.setState({ query: text });
+    const { textValueDidChange } = this.props;
+    textValueDidChange(text);
 
     if (this.loading) {
       this.pendingRequests.push(text);
@@ -63,7 +62,7 @@ export default class ItemSearchInput extends React.Component {
     this.setState({ loading: true });
     this.loading = true;
 
-    api.getProductList(query).then((data) => {
+    api.getProductList(text).then((data) => {
       this.setState({ data, loading: false });
       this.loading = false;
       if (this.pendingRequests.length > 0) {
@@ -78,7 +77,7 @@ export default class ItemSearchInput extends React.Component {
     const {
       query, data, dropDownVisible, loading,
     } = this.state;
-    const { inputTextStyle, onSelect } = this.props;
+    const { inputTextStyle, onSelect, textValue } = this.props;
 
     return (
       <Autocomplete
@@ -96,10 +95,10 @@ export default class ItemSearchInput extends React.Component {
         }}
         onBlur={() => this.setState({ dropDownVisible: false })}
         placeholder="Enter the name of the item"
-        value={query}
+        value={textValue}
         keyExtractor={(item, index) => item.id}
-        onChangeText={this.onChangeText}
-        onEndEditing={() => this.onItemSelect(query)}
+        onChangeText={(text) => this.onChangeText(text)}
+        onEndEditing={() => this.onItemSelect(textValue)}
         renderItem={({ item, i }) => (
           <TouchableOpacity onPress={() => this.onItemSelect(item)}>
             <View style={styles.listItem}>

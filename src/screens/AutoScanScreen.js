@@ -185,7 +185,7 @@ export default class AutoScanScreen extends React.Component {
 
   _takeSnap = async () => {
     if (this.camera) {
-      const options = { pauseAfterCapture: true, width: this.width };
+      const options = { pauseAfterCapture: true, width: this.width, base64: true };
       this.setState({ loading: true });
       const data = await this.camera.current.takePictureAsync(options);
       const { uri } = data;
@@ -226,7 +226,7 @@ export default class AutoScanScreen extends React.Component {
   _onSkipPress = (() => {
     this.addItemCardRef.current.hide();
     const { currentIndex, items } = this.state;
-    if (currentIndex < items.length) {
+    if (currentIndex < items.length - 1) {
       this.addItemCardRef.current.show(items[currentIndex + 1]);
       this.setState({ currentIndex: currentIndex + 1 });
     } else {

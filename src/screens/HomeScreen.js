@@ -131,9 +131,8 @@ export default class HomeScreen extends React.Component {
     const { selected } = this.state;
 
     const dataItem = item.item;
-
-    const currentDate = new Date();
-    const numDaysLeft = Math.round((dataItem.expiryDate - currentDate) / (1000 * 60 * 60 * 24));
+    const numDaysLeft = dataItem.getNumDaysLeft();
+    
     let style = null;
     let expiryComp = null;
 
