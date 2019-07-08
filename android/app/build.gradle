@@ -138,6 +138,8 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-image-resizer')
+    implementation project(':@react-native-community_image-editor')
     implementation project(':react-native-push-notification')
     implementation project(':react-native-vector-icons')
     implementation project(':tflite-react-native')

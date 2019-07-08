@@ -12,8 +12,6 @@ import { AddButton, HeaderLogo, MenuButton } from 'library/components/HeaderItem
 export default class AboutScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     headerTitle: 'About',
-    headerLeft: <MenuButton onPress={navigation.getParam('handleMenuButtonClick')} />,
-
   });
 
   constructor(props) {
@@ -29,10 +27,6 @@ export default class AboutScreen extends React.Component {
   }
 
   componentWillMount() {
-    const { navigation } = this.props;
-    navigation.setParams({
-      handleMenuButtonClick: this._handleMenuButtonClick,
-    });
     this._startAnimation();
   }
 

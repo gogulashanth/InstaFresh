@@ -160,10 +160,10 @@ export default class AutoScanScreen extends React.Component {
       for (let i = 0; i < result.length; i++) {
         const item = result[i];
         const { rect } = item;
-        const PADDING = 10;
+        const PADDING = 20;
         const cropData = {
           offset: { x: rect.x * width - PADDING, y: rect.y * height - PADDING },
-          size: { width: rect.w * width + PADDING, height: rect.h * height + PADDING },
+          size: { width: rect.w * width + PADDING * 2, height: rect.h * height + PADDING * 2},
         };
         croppedImgsPromise.push(cropImage(uri, cropData));
       }

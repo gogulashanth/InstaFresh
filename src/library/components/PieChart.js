@@ -13,7 +13,7 @@ export default class PieChart extends React.PureComponent {
 
   constructor(props) {
     super(props);
-    this.arcGenerator = arc();
+    this.arcGenerator = arc().padAngle(0.05).cornerRadius(5);
 
     this.pieGenerator = pie();
     this.pieGenerator.value(d => d.value).sort(null);

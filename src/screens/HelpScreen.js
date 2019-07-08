@@ -85,10 +85,11 @@ export default class HelpScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
     backgroundColor: colors.darkerLogoBack,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 10,
+    justifyContent: 'flex-start',
+    paddingTop: 0,
   },
   helpContent: {
     padding: 20,

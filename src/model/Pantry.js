@@ -1,10 +1,9 @@
 import { ID } from 'model/helper';
-import defaultPantry from 'res/images/defaultPantry.json';
 
 export default class Pantry {
   static defaults = {
     name: '',
-    imageURI: defaultPantry.imageString,
+    imageURI: 'defaultPantry.png',
     items: {},
     id: '',
   }

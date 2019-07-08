@@ -49,7 +49,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Used for taking photos for items</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app does not require access to the microphone.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

@@ -30,8 +30,7 @@ export default class AddPantryCard extends React.Component {
     this.options = {
       title: 'Select Image',
       storageOptions: {
-        skipBackup: false,
-        path: 'images',
+        skipBackup: true,
       },
     };
 

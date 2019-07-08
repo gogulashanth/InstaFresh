@@ -6,7 +6,6 @@ import colors from 'res/colors';
 import palette from 'res/palette';
 import dataInstance from 'model/Data';
 import { Button as RNEButton, Icon, ListItem } from 'react-native-elements';
-import NutritionInfo from 'library/components/NutritionInfo';
 import { widthConversion } from 'res/fontSize';
 import AddPantryCard from 'library/components/AddPantryCard';
 import CustomListItem from 'library/components/CustomListItem';

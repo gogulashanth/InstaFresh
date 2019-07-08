@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
-import { Image, ImageEditor } from 'react-native';
+import { Image } from 'react-native';
+import ImageEditor from "@react-native-community/image-editor";
 
 export function getImageSize(uri) {
   return new Promise((resolve, reject) => {
@@ -10,12 +11,8 @@ export function getImageSize(uri) {
 }
 
 export function cropImage(uri, cropData) {
-  return new Promise((resolve, reject) => {
-    ImageEditor.cropImage(
-      uri,
-      cropData,
-      croppedURI => resolve(croppedURI),
-      () => reject('cannot crop image'),
-    );
-  });
+  return ImageEditor.cropImage(
+    uri,
+    cropData,
+  );
 }

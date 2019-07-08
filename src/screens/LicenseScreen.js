@@ -1,9 +1,12 @@
-import React, { Component } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import {
+  Image, View, Text, StyleSheet,
+} from 'react-native';
+import colors from 'res/colors';
+import { HeaderLogo, MenuButton } from 'library/components/HeaderItems';
+import React from 'react';
+import Licenses from 'library/components/Licenses';
 
-import Licenses from './Licenses';
-
-import Data from './data';
+import Data from 'res/licenses';
 
 function extractNameFromGithubUrl(url) {
   if (!url) {
@@ -20,9 +23,7 @@ function extractNameFromGithubUrl(url) {
 }
 
 function sortDataByKey(data, key) {
-  data.sort((a, b) => {
-    return a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0;
-  });
+  data.sort((a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0));
   return data;
 }
 
@@ -32,10 +33,12 @@ function capitalizeFirstLetter(string) {
 
 const licenses = Object.keys(Data).map((key) => {
   const { licenses, ...license } = Data[key];
-  const [name, version] = key.split('@');
+  const splitSlash = key.split('/');
+  const modKey = splitSlash.length > 1 ? splitSlash[1] : splitSlash[0];
+  const [name, version] = modKey.split('@');
 
   const reg = /((https?:\/\/)?(www\.)?github\.com\/)?(@|#!\/)?([A-Za-z0-9_]{1,15})(\/([-a-z]{1,20}))?/i;
-  let username =    extractNameFromGithubUrl(license.repository)
+  let username = extractNameFromGithubUrl(license.repository)
     || extractNameFromGithubUrl(license.licenseUrl);
 
   let userUrl;
@@ -59,3 +62,31 @@ const licenses = Object.keys(Data).map((key) => {
 });
 
 sortDataByKey(licenses, 'username');
+
+
+export default class LicenseScreen extends React.Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: 'Licenses',
+  });
+
+  render() {
+    const { navigation } = this.props;
+
+    return (
+      <View style={styles.container}>
+        <Licenses
+          licenses={licenses}
+          licenseClicked={item => navigation.push('UrlView', { title: item.name, url: item.licenseUrl })}
+        />
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.darkerLogoBack,
+    paddingTop: 2,
+  },
+});

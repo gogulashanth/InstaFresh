@@ -65,6 +65,7 @@ export default class CustomSlider extends Component {
     const { maximumValue, minimumValue } = this.props;
     const valueIncrement = (-gestureState.dy * this.range) / this.state.height;
     let nextValue = this.state.anchorValue + valueIncrement;
+    nextValue = Math.abs(nextValue - Math.round(nextValue)) < 0.2 ? Math.round(nextValue) : nextValue;
     nextValue = nextValue >= maximumValue ? maximumValue : nextValue;
     nextValue = nextValue <= minimumValue ? minimumValue : nextValue;
 

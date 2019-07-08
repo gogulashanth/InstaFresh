@@ -16,6 +16,7 @@ class API {
   constructor() {
     this.ref = firebase.firestore().collection('product_data_simplified');
     this.branded_data = firebase.firestore().collection('branded_product_data');
+    this.user_data = firebase.firestore().collection('user_product_data');
     this.previousQuery = '~!~';
     this._loadingProductList = false;
 
@@ -59,15 +60,110 @@ class API {
   }
 
   getItemByUPC = async (upc) => {
-    const docSnap = await this.branded_data.where('upc', '==', upc).get();
-    if (!docSnap.empty) {
-      const data = docSnap.docs[0];
-      // TODO: Get expiry date
-      return new Item(data.get('name'), undefined, undefined, data.get('nutrition'));
+    const brandedData = await this.getDataFromBrandedDB(upc);
+    if (brandedData !== null) {
+      return new Item(
+        brandedData.get('name'),
+        undefined,
+        undefined,
+        brandedData.get('nutrition'),
+        undefined,
+        undefined,
+        undefined,
+        upc,
+      );
+    } else {
+      const data = await this.getDataFromUserDB(upc);
+      if (data !== null) {
+        // const customDate = new Date();
+        const shelfLife = data.get('shelf_life');
+        const todayDate = new Date();
+        todayDate.setDate(todayDate.getDate() + Math.round(shelfLife));
+
+        return new Item(
+          data.get('name'),
+          todayDate,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          upc,
+        );
+      }
+    }
+
+    return new Item(undefined, undefined, undefined, undefined, undefined, undefined, undefined, upc);
+  }
+
+  getDataFromUserDB = async (upc) => {
+    const userDataDoc = await this.user_data.doc(upc).get();
+    if (userDataDoc.exists) {
+      return userDataDoc;
     } else {
       return null;
     }
   }
+
+  getDataFromBrandedDB = async (upc) => {
+    const docSnap = await this.branded_data.where('upc', '==', upc).get();
+    if (!docSnap.empty) {
+      const data = docSnap.docs[0];
+      return data;
+    } else {
+      return null;
+    }
+  }
+
+  calculateOptimumShelfLife = (prevShelfLife, newShelfLife, numShelfLife) => {
+    if (Math.abs(prevShelfLife - newShelfLife) > 10 && numShelfLife > 5) {
+      // ignore new shelf life (possibly a mistake)
+      return prevShelfLife;
+    } else {
+      // return accumulative average
+      return ((numShelfLife - 1) * prevShelfLife + newShelfLife) / numShelfLife;
+    }
+  }
+
+  // updates user item db. If not, adds it to db
+  saveToUserItemDB = async (item) => {
+    const itemInDB = await this.getDataFromUserDB(item.upc);
+    if (itemInDB !== null) {
+      // need to update shelf life
+      const shelfLife = this.calculateOptimumShelfLife(
+        itemInDB.get('shelf_life'),
+        item.getNumDaysLeft(),
+        itemInDB.get('num_shelf_life'),
+      );
+
+      await this.updateUserItemDB(item.upc, {
+        shelf_life: shelfLife,
+        num_shelf_life: itemInDB.get('num_shelf_life') + 1,
+        name: item.name,
+      });
+    } else {
+      // need to add to db
+      const shelfLife = (item.expiryDate.getTime() - (new Date()).getTime()) / (1000 * 60 * 60 * 24);
+      
+      await this.addToUserItemDB(item.upc, {
+        name: item.name,
+        shelf_life: shelfLife,
+        num_shelf_life: 1,
+      });
+    }
+  }
+
+  updateUserItemDB = async (upc, data) => {
+    await this.user_data.doc(upc).set(
+      data,
+      { merge: true },
+    );
+  }
+
+  addToUserItemDB = async (upc, data) => {
+    await this.user_data.doc(upc).set(data);
+  }
+
 
   _getRecipesListFromRecipePuppy = (async (ingredientsArray) => {
     const MIN_RECIPES = 8;

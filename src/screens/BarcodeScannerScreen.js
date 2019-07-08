@@ -97,6 +97,7 @@ export default class BarcodeScannerScreen extends React.Component {
   constructor(props) {
     super(props);
     this.addItemCardRef = React.createRef();
+    this.cameraRef = React.createRef();
     this.state = {
       top: new Animated.Value(10),
       maskCenterViewHeight: 0,
@@ -188,6 +189,7 @@ export default class BarcodeScannerScreen extends React.Component {
   };
 
   handleBarcodeRead = ((result) => {
+    this.cameraRef.current.pausePreview();
     if (this.animation) {
       this.animation.stop();
     }
@@ -210,6 +212,7 @@ export default class BarcodeScannerScreen extends React.Component {
   handleSaveItem = ((item) => {
     const { navigation } = this.props;
     dataInstance.addItem(item);
+    api.saveToUserItemDB(item);
     navigation.pop();
   });
 
@@ -221,8 +224,14 @@ export default class BarcodeScannerScreen extends React.Component {
   render() {
     const { loading } = this.state;
     return (
-      <RNCamera style={styles.preview} onBarCodeRead={this.handleBarcodeRead}>
-        <AddItemCard ref={this.addItemCardRef} visible={false} onSave={this.handleSaveItem} onCancel={this._animateLoop} />
+      <RNCamera ref={this.cameraRef} style={styles.preview} onBarCodeRead={this.handleBarcodeRead}>
+        <AddItemCard
+          ref={this.addItemCardRef}
+          visible={false}
+          onSave={this.handleSaveItem}
+          onCancel={this.onCancelButtonPress}
+          disableAutoComplete
+        />
         <View style={[styles.container]}>
           <View
             style={[
@@ -308,7 +317,7 @@ const defaultProps = {
   edgeHeight: 20,
   edgeColor: colors.logo,
   edgeBorderWidth: 4,
-  transparency: 0.6,
+  transparency: 0.8,
   showAnimatedLine: true,
   animatedLineColor: colors.logo,
   animatedLineHeight: 2,

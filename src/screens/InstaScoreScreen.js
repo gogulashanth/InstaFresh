@@ -128,7 +128,7 @@ export default class InstaScoreScreen extends React.Component {
     textColor = hexInterpolateHSL(red, logo, score / 100.0);
 
     return (
-      <Text h3 h3Style={{ color: textColor, textAlign: 'center' }}>{message}</Text>
+      <Text h3 h3Style={{ color: textColor, textAlign: 'center', opacity: 0.6 }}>{message}</Text>
     );
   });
 

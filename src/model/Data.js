@@ -29,6 +29,7 @@ class Data {
     // AsyncStorage.removeItem('@instaFreshData');
     // AsyncStorage.removeItem('@instaScoreData');
     // NotificationManager.cancelAllNotifications();
+    // ImageManager.deleteAllImages();
 
     this._data = {};
 
@@ -44,7 +45,6 @@ class Data {
       { id: 4, title: 'How to give suggestions/ feature requests?', content: { text: 'You can always message us through our Facebook page (InstaFresh App) or even post a comment on App Store with your desired requests. Hopefully we will be able to account for those in the future updates.', video: '' } },
       { id: 5, title: 'How is InstaFresh different from other food waste apps?', content: { text: 'User satisfaction is key to us. We have built this app due to the fact that we haven’t come across any user friendly, easy to use app that has no hidden costs AND that doesn’t get stuck. We believe InstaFresh will help users track their food waste through the InstaScore platform and make sure you keep increasing your score. But hey look out for future updates!!', video: '' } },
       { id: 6, title: 'How do I add an item', content: { text: 'There are three ways you can add an item in the pantries; press the ‘+’ sign on the top right corner which will display a drop down menu. Then, select the preferred method of input. In manual add, you have to enter the item name and expiry date manually and a . If you wish to use barcode scan, just point the camera towards the barcode on the product and if its available in the database, it’ll automatically display the best before date and the name of the product. The auto scan also works in a similar way however you’ll need to take a picture of the item and let the app do its magic (only limited items will be recognized)!', video: '' } },
-      { id: 7, title: '*Disclaimer', content: { text: 'InstaFresh is NOT responsible for the best before date it displays. Please make sure you double check the best before date before you click save. Therefore, what you enter is what we show.', video: '' } },
     ];
     this._dailyValues = {
       204: { value: 65, unit: 'g' },
@@ -237,8 +237,10 @@ class Data {
         const initialInstaScoreData = { consumed: 0, wasted: 0, history: [{ time: new Date(), average: 100, numItems: 1 }] };
 
         try {
-          await AsyncStorage.setItem('@instaFreshData', stringifiedData);
-          await AsyncStorage.setItem('@instaScoreData', JSON.stringify(initialInstaScoreData));
+          await Promise.all([
+            AsyncStorage.setItem('@instaFreshData', stringifiedData),
+            AsyncStorage.setItem('@instaScoreData', JSON.stringify(initialInstaScoreData)),
+          ]);
           await this.loadData();
         } catch (e) {
           // saving error
@@ -265,6 +267,10 @@ class Data {
   });
 
   deletePantry = ((id) => {
+    // need to delete all items first
+    for (const item in this._data[id]) {
+      this.deleteItem(item.id);
+    }
     delete this._data[id];
     this._save();
   });
@@ -275,30 +281,31 @@ class Data {
     this._save();
   });
 
-  downloadImageAndSave = (async (item) => {
-    const newUri = ImageManager.saveImageForItem(item.id, item.imageURI);
-    item.imageURI = newUri;
+  _downloadImageAndSave = (async (item) => {
     
+    const newUri = await ImageManager.saveImageForItem(item.id, item.imageURI);
+    const newItem = item.getCopy();
+    newItem.imageURI = newUri;
+    console.log(`Image saved at: ${newUri}`);
+    
+    this.editItem(item.id, newItem);
   });
 
   addItem = ((item) => {
     // schedule notification
     this._scheduleNotificationForItem(item);
-    
+
     // add item
     this._data[item.pantryID].items[item.id] = item;
-    
+
     // save
     this._save();
 
     // * for recipes
     this.itemsUpdated = true;
-    
-    // download/move the uri and edit the item to reflect that
-    ImageManager.saveImageForItem(item.id, item.imageURI).then(localURI => {
-      
-    });
 
+    // download/move the uri and edit the item to reflect that
+    this._downloadImageAndSave(item);
   });
 
   deleteItem = ((itemID) => {
@@ -306,8 +313,11 @@ class Data {
     NotificationManager.cancelNotification(itemID);
 
     // delete item
-    const { pantryID } = this.getItem(itemID);
+    const { pantryID, imageURI } = this.getItem(itemID);
     delete this._data[pantryID].items[itemID];
+
+    // delete the image
+    ImageManager.deleteImage(imageURI);
 
     // save
     this._save();

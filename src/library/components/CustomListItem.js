@@ -2,7 +2,6 @@ import React from 'react';
 import {
   StyleSheet, View, Platform, TouchableHighlight,TouchableOpacity, Dimensions,
 } from 'react-native';
-import { CachedImage } from 'react-native-cached-image';
 import {
   withTheme, Avatar, Text, Icon, Image,
 } from 'react-native-elements';
@@ -79,19 +78,34 @@ class CustomListItem extends React.Component {
       swipeLeft,
     } = this.props;
 
+    let textContainerSpecialStyle = null;
+    let titleSpecialStyle = null;
+
+    if (subtitle === undefined && subsubtitle === undefined) {
+      textContainerSpecialStyle = {
+        justifyContent: 'center',
+      };
+      titleSpecialStyle = {
+        flex: 0,
+      };
+    }
     return (
       <TouchableOpacity activeOpacity={0.8} style={{ ...{ flex: 1 } }} onPress={onPress}>
         <View style={{ ...styles.containerStyle, ...containerStyle }}>
           {(leftAvatar !== undefined) && (
           <Avatar rounded {...leftAvatar} />
           )}
-          <View style={{ ...styles.textContainer, ...textContainerStyle }}>
-            <Text h3 numberOfLines={1} ellipsizeMode="tail" style={{ ...styles.title, ...titleStyle }}>
+          <View style={{ ...styles.textContainer, ...textContainerStyle, ...textContainerSpecialStyle }}>
+            <Text h3 numberOfLines={1} ellipsizeMode="tail" style={{ ...styles.title, ...titleStyle, ...titleSpecialStyle }}>
               {title}
             </Text>
-            <Text h4 numberOfLines={1} ellipsizeMode="tail" h4Style={{ ...styles.subtitle, ...subtitleStyle }}>
-              {subtitle}
-            </Text>
+
+            {(subtitle !== undefined) && (
+              <Text h4 numberOfLines={1} ellipsizeMode="tail" h4Style={{ ...styles.subtitle, ...subtitleStyle }}>
+                {subtitle}
+              </Text>
+            )}
+            
             {(subsubtitle !== undefined) && (
               <Text h4 numberOfLines={1} ellipsizeMode="tail" h4Style={{ ...styles.subsubtitle, ...subsubtitleStyle }}>
                 {subsubtitle}

@@ -46,7 +46,7 @@ export default class InstaMenu extends React.Component {
           <View style={styles.bottomRow}>
             <MenuItemIcon index={5} selectedIndex={selectedIndex} iconName="ios-alert" onPress={this.navigateToScreen('Disclaimer')} />
             <MenuItemIcon index={6} selectedIndex={selectedIndex} iconName="ios-help-circle" onPress={this.navigateToScreen('Help')} />
-            <MenuItemIcon index={7} selectedIndex={selectedIndex} iconName="ios-information-circle" onPress={this.navigateToScreen('About')} />
+            <MenuItemIcon index={7} selectedIndex={selectedIndex} iconName="ios-information-circle" onPress={this.navigateToScreen('Info')} />
           </View>
         </View>
       </SafeAreaView>

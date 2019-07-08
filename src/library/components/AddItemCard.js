@@ -48,8 +48,7 @@ export default class AddItemCard extends React.Component {
     this.options = {
       title: 'Select Image',
       storageOptions: {
-        skipBackup: false,
-        path: 'images',
+        skipBackup: true,
       },
     };
 
@@ -63,6 +62,7 @@ export default class AddItemCard extends React.Component {
       quantity: Item.defaults.quantity,
       nutrition: Item.defaults.nutrition,
       visibleOption: visible,
+      upc: Item.defaults.upc,
       pantryPickerData: [],
       loading: false,
     };
@@ -89,15 +89,15 @@ export default class AddItemCard extends React.Component {
 
   getItemObject = (() => {
     const {
-      name, quantity, imageURI, pantryID, expiryDate, id, nutrition,
+      name, quantity, imageURI, pantryID, expiryDate, id, nutrition, upc,
     } = this.state;
     const { editMode } = this.props;
 
     let item = null;
     if (!editMode) {
-      item = new Item(name, expiryDate, imageURI, nutrition, quantity, pantryID);
+      item = new Item(name, expiryDate, imageURI, nutrition, quantity, pantryID, undefined, upc);
     } else {
-      item = new Item(name, expiryDate, imageURI, nutrition, quantity, pantryID, id);
+      item = new Item(name, expiryDate, imageURI, nutrition, quantity, pantryID, id, upc);
     }
     return item;
   });
@@ -171,7 +171,7 @@ export default class AddItemCard extends React.Component {
 
   show(item = '') {
     let {
-      name, imageURI, quantity, pantryID, nutrition,
+      name, imageURI, quantity, pantryID, nutrition, upc,
     } = Item.defaults;
     let id = '';
     let expiryDate = new Date();
@@ -179,7 +179,7 @@ export default class AddItemCard extends React.Component {
 
     if (item !== '') {
       ({
-        name, imageURI, quantity, expiryDate, id, pantryID, nutrition,
+        name, imageURI, quantity, expiryDate, id, pantryID, nutrition, upc,
       } = item);
     }
 
@@ -197,6 +197,7 @@ export default class AddItemCard extends React.Component {
       id,
       pantryID,
       nutrition,
+      upc,
       pantryPickerData: pantriesData,
       visibleOption: true,
     });
@@ -208,27 +209,45 @@ export default class AddItemCard extends React.Component {
 
 
   render() {
-    const { onBackdropPress, editMode, customButtons } = this.props;
+    const { onBackdropPress, editMode, customButtons, disableAutoComplete } = this.props;
     const {
       name, quantity, imageURI, visibleOption, pantryPickerData, pantryID, loading, expiryDate,
     } = this.state;
 
-    let nameComponent = (
-      <View style={{ flex: 1, zIndex: 1 }}>
+    let nameComponent = null;
+
+    if (disableAutoComplete) {
+      nameComponent = (
         <Input
           label="Name"
-          inputComponent={ItemSearchInput}
+          placeholder="Enter the name of the item"
           inputContainerStyle={inputStyle.container}
           labelStyle={inputStyle.label}
           onFocus={() => this.handleFocusChange('name')}
           inputTextStyle={inputStyle.input}
-          onSelect={item => this.nameDropDownSelected(item)}
-          onItemWillSelect={selectedName => this.nameDropDownWillSelect(selectedName)}
-          textValueDidChange={text => this.setState({ name: text })}
-          textValue={name}
+          onChangeText={text => this.setState({ name: text })}
+          value={name}
         />
-      </View>
-    );
+      );
+    } else {
+      nameComponent = (
+        <View style={{ flex: 1, zIndex: 1 }}>
+          <Input
+            label="Name"
+            inputComponent={ItemSearchInput}
+            inputContainerStyle={inputStyle.container}
+            labelStyle={inputStyle.label}
+            onFocus={() => this.handleFocusChange('name')}
+            inputTextStyle={inputStyle.input}
+            onSelect={item => this.nameDropDownSelected(item)}
+            onItemWillSelect={selectedName => this.nameDropDownWillSelect(selectedName)}
+            textValueDidChange={text => this.setState({ name: text })}
+            textValue={name}
+          />
+        </View>
+      );
+    }
+
 
     let deleteButton = null;
 
@@ -302,7 +321,7 @@ export default class AddItemCard extends React.Component {
                         inputContainerStyle={inputStyle.container}
                         labelStyle={inputStyle.label}
                         inputStyle={inputStyle.input}
-                        onChangeText={text => this.setState({ quantity: Number(text) })}
+                        onChangeText={text => this.setState({ quantity: text })}
                         value={quantity.toString()}
                         onBlur={() => {
                           // this.pantryPicker.current.input.focus();
@@ -322,13 +341,13 @@ export default class AddItemCard extends React.Component {
                       />
 
                       <View style={{
-                        flex: 1, padding: 10, height: 120, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around',
+                        flex: 1, padding: 18, height: 120, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
                       }}
                       >
                         {customButtons}
                         {!customButtons && [
-                          <Button title="Cancel" buttonStyle={{ ...styles.buttonStyle, ...{ backgroundColor: colors.red } }} onPress={this.handleCancelButtonPress} />,
-                          <Button title="Save" buttonStyle={styles.buttonStyle} onPress={this.handleSaveButtonPress} />,
+                          <Button key="cancelButton" title="Cancel" buttonStyle={{ ...styles.buttonStyle, ...{ backgroundColor: colors.red } }} onPress={this.handleCancelButtonPress} />,
+                          <Button key="saveButton" title="Save" buttonStyle={styles.buttonStyle} onPress={this.handleSaveButtonPress} />,
                         ]}
                       </View>
                       {deleteButton}
@@ -350,6 +369,7 @@ AddItemCard.defaultProps = {
   navigation: null,
   onSave: () => {},
   onCancel: () => {},
+  disableAutoComplete: false,
 };
 
 AddItemCard.propTypes = {
@@ -359,6 +379,7 @@ AddItemCard.propTypes = {
   onSave: PropTypes.func,
   onCancel: PropTypes.func,
   navigation: PropTypes.object,
+  disableAutoComplete: PropTypes.bool,
 };
 
 const inputStyle = {

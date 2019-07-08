@@ -103,8 +103,7 @@ export default class ItemScreen extends React.Component {
         />
         <View style={{ flex: 1, padding: 12, flexDirection: 'column' }}>
           <View style={{ flex: 0.8, flexDirection: 'row', justifyContent: 'center' }}>
-            <CachedImage source={{ uri: item.imageURI }} style={{ flex: 1, borderRadius: 10 }} />
-
+            <Image source={{ uri: item.imageURI }} style={{ flex: 1, borderRadius: 10 }} />
 
             <View style={styles.containerText}>
               <ItemDescription iconName="list" iconType="entypo" name="Quantity" value={(Math.round(item.quantity * 10) / 10).toString()} />

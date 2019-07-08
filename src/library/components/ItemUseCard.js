@@ -59,7 +59,7 @@ export default class ItemUseCard extends React.Component {
         isVisible={visible}
         onBackdropPress={() => this.setState({ visible: false })}
         height={windowHeight - 100}
-        overlayStyle={{ overflow: 'hidden' }}
+        overlayStyle={styles.overlayStyle}
         windowBackgroundColor="rgba(0, 0, 0, .7)"
       >
         <View style={{ ...styles.container, ...containerStyle }}>
@@ -69,7 +69,7 @@ export default class ItemUseCard extends React.Component {
           <Text h4 style={{ ...styles.subtitle, ...subtitleStyle }}>
             {subtitle}
           </Text>
-          <Text style={{ ...styles.subtitle }}>
+          <Text h2 style={{ ...styles.subtitle }}>
             {amount.toString()}
           </Text>
 
@@ -111,6 +111,10 @@ const styles = StyleSheet.create({
     borderColor: colors.logo,
     overflow: 'hidden',
     borderRadius: 20,
+  },
+  overlayStyle: {
+    borderWidth: 0,
+    backgroundColor: 'transparent',
   },
   title: {
     flex: 1,

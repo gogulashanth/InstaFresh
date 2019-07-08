@@ -21,7 +21,20 @@ export default class NutritionInfo extends React.Component {
 
   _calcNutr(key) {
     const { nutrition } = this.props;
-    return `${nutrition['204']}${dataInstance.getNutritionUnit('204')}`;
+    return `${Math.round(nutrition[key] * 100) / 10}${dataInstance.getNutritionUnit(key)}`;
+  }
+
+  _getServingSize() {
+    const { nutrition } = this.props;
+    const servingSizeKey = 'serving_size';
+    const servingUnitKey = 'serving_size_UOM';
+
+    if (!servingSizeKey in nutrition) {
+      return `${nutrition[servingSizeKey]} ${nutrition[servingUnitKey]}`;
+    } else {
+      return `per 100g`;
+    }
+    
   }
 
   render() {
@@ -31,7 +44,8 @@ export default class NutritionInfo extends React.Component {
         <View style={[styles.background, this.props.style]}>
           <Text style={styles.heading}>Nutrition Facts</Text>
           <Divider style={{ backgroundColor: this.dividerColor, height: 1 }} />
-          <NutritionItem name="Serving Size" valueRight="1 Apple" style={{ fontWeight: 'bold', fontSize: 13 * widthConversion }} />
+          <NutritionItem name="Serving Size" valueRight={this._getServingSize()} style={{ fontWeight: 'bold', fontSize: 13 * widthConversion }} />
+          
           {nutrition['208'] !== undefined && ([
             <Divider key={1} style={{ backgroundColor: this.dividerColor, height: 6 }} />,
             <NutritionItem key={2} name="Calories" valueRight={nutrition['208']} style={{ fontWeight: 'bold', fontSize: 21 * widthConversion }} />,

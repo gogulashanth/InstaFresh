@@ -16,14 +16,16 @@ import colors from 'res/colors';
 import { ThemeProvider } from 'react-native-elements';
 import themes from 'res/themes';
 import AboutScreen from 'screens/AboutScreen';
+import InfoScreen from 'screens/InfoScreen';
 import HelpScreen from 'screens/HelpScreen';
+import LicenseScreen from 'screens/LicenseScreen';
 import DisclaimerScreen from 'screens/DisclaimerScreen';
 import RecipesScreen from 'screens/RecipesScreen';
 import SettingsScreen from 'screens/SettingsScreen';
 import InstaScoreScreen from 'screens/InstaScoreScreen';
 import BarcodeScannerScreen from 'screens/BarcodeScannerScreen';
 import RecipeDetailScreen from 'screens/RecipeDetailScreen';
-import LicenseDetailScreen from 'screens/LicenseDetailScreen';
+import UrlViewScreen from 'screens/UrlViewScreen';
 import AutoScanScreen from 'screens/AutoScanScreen';
 import firebase from 'react-native-firebase';
 
@@ -45,8 +47,11 @@ const HomeStack = createStackNavigator({
   defaultNavigationOptions: defaultStackNavigationOptions,
 });
 
-const AboutStack = createStackNavigator({
+const InfoStack = createStackNavigator({
+  Info: InfoScreen,
   About: AboutScreen,
+  UrlView: UrlViewScreen,
+  License: LicenseScreen,
 }, {
   defaultNavigationOptions: defaultStackNavigationOptions,
 });
@@ -78,7 +83,6 @@ const RecipesStack = createStackNavigator({
 
 const DisclaimerStack = createStackNavigator({
   Disclaimer: DisclaimerScreen,
-  LicenseDetail: LicenseDetailScreen,
 }, {
   defaultNavigationOptions: defaultStackNavigationOptions,
 });
@@ -121,7 +125,7 @@ const AppNavigator = createDrawerNavigator({
   Settings: SettingsStack, // TODO: future update (not in use right now)
   Disclaimer: DisclaimerStack,
   Help: HelpStack,
-  About: AboutStack,
+  Info: InfoStack,
 }, {
   contentComponent: InstaMenu,
 });
