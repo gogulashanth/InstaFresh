@@ -1,6 +1,7 @@
 # Custom files
 #
 ios/GoogleService-Info.plist
+scripts/
 
 # OSX
 #
