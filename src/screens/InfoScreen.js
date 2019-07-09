@@ -3,13 +3,12 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import {
-  StyleSheet, View, Animated, Easing,
+  StyleSheet, View, Animated, Easing, Linking
 } from 'react-native';
 import colors from 'res/colors';
 import ThemedFlatList from 'library/components/ThemedFlatList';
 import { MenuButton } from 'library/components/HeaderItems';
 import CustomListItem from 'library/components/CustomListItem';
-
 
 export default class AboutScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -24,6 +23,7 @@ export default class AboutScreen extends React.Component {
       { key: '1', title: 'About App' },
       { key: '2', title: 'Privacy Policy' },
       { key: '3', title: 'Licenses' },
+      { key: '4', title: 'Feedback/Feature Request' },
     ];
   }
 
@@ -32,9 +32,6 @@ export default class AboutScreen extends React.Component {
     navigation.setParams({
       handleMenuButtonClick: this._handleMenuButtonClick,
     });
-  }
-
-  componentWillUnmount() {
   }
 
   _handleMenuButtonClick = (() => {
@@ -58,6 +55,10 @@ export default class AboutScreen extends React.Component {
         navigation.navigate('License');
         break;
 
+      case 'Feedback/Feature Request':
+        Linking.openURL('mailto:instafreshhelp@gmail.com?subject=App feedback/feature request');
+        break;
+
       default:
         break;
     }
@@ -70,7 +71,7 @@ export default class AboutScreen extends React.Component {
 
     switch (item.title) {
       case 'About App':
-        iconName = 'ios-help';
+        iconName = 'ios-help-circle';
         break;
 
       case 'Privacy Policy':
@@ -79,6 +80,10 @@ export default class AboutScreen extends React.Component {
 
       case 'Licenses':
         iconName = 'ios-filing';
+        break;
+
+      case 'Feedback/Feature Request':
+        iconName = 'ios-mail';
         break;
 
       default:

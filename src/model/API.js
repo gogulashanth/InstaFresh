@@ -19,6 +19,7 @@ class API {
     this.user_data = firebase.firestore().collection('user_product_data');
     this.previousQuery = '~!~';
     this._loadingProductList = false;
+    this._forceSearch = false;
 
     firebase.firestore().collection('admin').doc('api_keys').get()
       .then((snapshot) => {
@@ -32,8 +33,7 @@ class API {
     let img = '';
     const imgField = API.productDataFields.imageURI;
     if (!(imgField in doc.data())) {
-      // get imageURI
-      // TODO: set authorization as a var
+      // get a suitable image from the api
       const response = await fetch(`https://api.pexels.com/v1/search?query=${doc.get('name')}&per_page=1&page=1`, {
         method: 'GET',
         headers: {
@@ -55,16 +55,24 @@ class API {
       // Use the imageURI
       img = doc.data().imageURI;
     }
-    // TODO: setup shelf life calculation
-    return new Item(doc.get('name'), new Date(), img, doc.get('nutrition'));
+    return new Item(doc.get('name'), this._getExpiryDateFromData(doc), img, doc.get('nutrition'));
   }
+
+  _getExpiryDateFromData = ((data) => {
+    const shelfLife = data.get('shelf_life');
+    if (shelfLife !== undefined) {
+      return Item.getExpiryDateFromShelfLife(shelfLife);
+    } else {
+      return new Date();
+    }
+  });
 
   getItemByUPC = async (upc) => {
     const brandedData = await this.getDataFromBrandedDB(upc);
     if (brandedData !== null) {
       return new Item(
         brandedData.get('name'),
-        undefined,
+        this._getExpiryDateFromData(brandedData),
         undefined,
         brandedData.get('nutrition'),
         undefined,
@@ -74,11 +82,8 @@ class API {
       );
     } else {
       const data = await this.getDataFromUserDB(upc);
-      if (data !== null) {
-        // const customDate = new Date();
-        const shelfLife = data.get('shelf_life');
-        const todayDate = new Date();
-        todayDate.setDate(todayDate.getDate() + Math.round(shelfLife));
+      if (data !== null) {      
+        const todayDate = this._getExpiryDateFromData(data);
 
         return new Item(
           data.get('name'),
@@ -116,7 +121,7 @@ class API {
   }
 
   calculateOptimumShelfLife = (prevShelfLife, newShelfLife, numShelfLife) => {
-    if (Math.abs(prevShelfLife - newShelfLife) > 10 && numShelfLife > 5) {
+    if (Math.abs(prevShelfLife - newShelfLife) > 1000 && numShelfLife > 5) {
       // ignore new shelf life (possibly a mistake)
       return prevShelfLife;
     } else {
@@ -144,7 +149,7 @@ class API {
     } else {
       // need to add to db
       const shelfLife = (item.expiryDate.getTime() - (new Date()).getTime()) / (1000 * 60 * 60 * 24);
-      
+
       await this.addToUserItemDB(item.upc, {
         name: item.name,
         shelf_life: shelfLife,
@@ -258,7 +263,7 @@ class API {
     const ingredientsArray = [];
 
     // sort array by expiry date
-    itemsArray.sort((a, b) => a.expiryDate - b.expiryDate);
+    itemsArray.sort((a, b) => a.expiryDate.getTime() - b.expiryDate.getTime());
 
     for (let i = 0; i < itemsArray.length; i++) {
       ingredientsArray.push(itemsArray[i].name);
@@ -316,19 +321,35 @@ class API {
 
       let sourceOptions = {};
       // Use local cache if query starts with same prefix
-      if (samePrefix) {
+      if (samePrefix && !this._forceSearch) {
         sourceOptions = { source: 'cache' };
+      } else {
+        sourceOptions = { source: 'server' };
       }
 
       if (!samePrefix) {
         this.previousQuery = query;
       }
+      const greaterThanQuery = query.toLowerCase().trim();
 
-      const snapshot = await this.ref.where('lower_case_name', '>=', query.toLowerCase().trim()).orderBy('lower_case_name', 'asc')
+      const lessThanQuery = greaterThanQuery.substring(0, greaterThanQuery.length - 1) + String.fromCharCode(greaterThanQuery.charCodeAt(greaterThanQuery.length - 1) + 1);
+
+      console.log(sourceOptions);
+      
+      const snapshot = await this.ref
+        .where('lower_case_name', '>=', greaterThanQuery)
+        .where('lower_case_name', '<', lessThanQuery)
+        .orderBy('lower_case_name', 'asc')
         .limit(numItems)
         .get(sourceOptions);
 
-      if (this.previousQuery !== '~!~') {
+      if (snapshot.empty) {
+        this._forceSearch = true;
+      } else {
+        this._forceSearch = false;
+      }
+
+      if (this.previousQuery !== '~!~' && !snapshot.empty) {
         return snapshot.docs.slice(0, numItems - 1);
       }
     } else {

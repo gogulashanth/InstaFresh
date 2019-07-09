@@ -3,16 +3,12 @@ import {
   View, StyleSheet, Image, Button, SafeAreaView, ImageBackground,
 } from 'react-native';
 import colors from 'res/colors';
-import themes from 'res/themes';
-import palette from 'res/palette';
 import dataInstance from 'model/Data';
 import { Button as RNEButton, Icon, Text } from 'react-native-elements';
 import NutritionInfo from 'library/components/NutritionInfo';
 import { widthConversion } from 'res/fontSize';
 import AddItemCard from 'library/components/AddItemCard';
 import ItemUseCard from 'library/components/ItemUseCard';
-import Item from 'model/Item';
-import { CachedImage } from 'react-native-cached-image';
 
 export default class ItemScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {

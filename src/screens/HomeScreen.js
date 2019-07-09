@@ -37,8 +37,7 @@ export default class HomeScreen extends React.Component {
   async componentWillMount() {
     await dataInstance.loadData();
     dataInstance.registerListener(this.onDataUpdate);
-    const d = dataInstance.getItemsArray();
-    this.setState({ data: d, filteredData: d });
+    this.onDataUpdate();
   }
 
   componentDidMount() {
@@ -67,6 +66,7 @@ export default class HomeScreen extends React.Component {
 
   onDataUpdate = (() => {
     const d = dataInstance.getItemsArray();
+    d.sort((a, b) => a.expiryDate.getTime() - b.expiryDate.getTime());
     this.setState({ data: d, filteredData: d });
   });
 

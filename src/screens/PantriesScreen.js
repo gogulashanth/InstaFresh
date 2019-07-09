@@ -118,7 +118,7 @@ export default class PantriesScreen extends React.Component {
         <SearchBar
           platform="default"
           round
-          placeholder="Search for an item or pantry..."
+          placeholder="Search for a pantry..."
           onChangeText={this.updateSearch}
           value={search}
         />

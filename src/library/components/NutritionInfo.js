@@ -29,12 +29,12 @@ export default class NutritionInfo extends React.Component {
     const servingSizeKey = 'serving_size';
     const servingUnitKey = 'serving_size_UOM';
 
-    if (!servingSizeKey in nutrition) {
-      return `${nutrition[servingSizeKey]} ${nutrition[servingUnitKey]}`;
+    if (servingSizeKey in nutrition) {
+      const servingUnit = nutrition[servingUnitKey].replace(/ *\([^)]*\) */g, '');
+      return `${nutrition[servingSizeKey]} ${servingUnit}`;
     } else {
-      return `per 100g`;
+      return 'per 100g';
     }
-    
   }
 
   render() {
@@ -45,7 +45,7 @@ export default class NutritionInfo extends React.Component {
           <Text style={styles.heading}>Nutrition Facts</Text>
           <Divider style={{ backgroundColor: this.dividerColor, height: 1 }} />
           <NutritionItem name="Serving Size" valueRight={this._getServingSize()} style={{ fontWeight: 'bold', fontSize: 13 * widthConversion }} />
-          
+
           {nutrition['208'] !== undefined && ([
             <Divider key={1} style={{ backgroundColor: this.dividerColor, height: 6 }} />,
             <NutritionItem key={2} name="Calories" valueRight={nutrition['208']} style={{ fontWeight: 'bold', fontSize: 21 * widthConversion }} />,
@@ -176,10 +176,32 @@ class NutritionItem extends React.Component {
     return (
       <View style={styles.bothEnds}>
         <View style={{ flexDirection: 'row' }}>
-          <Text style={[styles.description, this.props.style, { paddingLeft: this.props.shift, paddingRight: 5 }]}>{this.props.name}</Text>
-          <Text style={[styles.description]}>{this.props.valueLeft}</Text>
+          <Text
+            style={[styles.description, this.props.style, { paddingLeft: this.props.shift, paddingRight: 5 }]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {this.props.name}
+          </Text>
+
+          <Text
+            style={[styles.description]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {this.props.valueLeft}
+          </Text>
+
         </View>
-        <Text style={[styles.description, this.props.style, { fontWeight: 'bold' }]}>{this.props.valueRight}</Text>
+
+        <Text
+          style={[styles.description, this.props.style, { fontWeight: 'bold' }]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {this.props.valueRight}
+        </Text>
+        
       </View>
     );
   }

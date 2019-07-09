@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Image, View, StyleSheet,
+  Image, View, StyleSheet, ScrollView,
 } from 'react-native';
 import { Text, Icon } from 'react-native-elements';
 import colors from 'res/colors';
@@ -35,7 +35,7 @@ export default class HelpScreen extends React.Component {
 
   _renderHeader = ((section, index, isActive) => (
     <View style={styles.helpTitle}>
-      <Text h4 h4Style={{ fontWeight: 'bold' }}>{section.title}</Text>
+      <Text h4 h4Style={{ fontWeight: 'bold', paddingRight: 10 }}>{section.title}</Text>
       {!isActive
         && (
         <Icon
@@ -69,7 +69,7 @@ export default class HelpScreen extends React.Component {
   render() {
     const { activeSection } = this.state;
     return (
-      <View style={styles.container}>
+      <ScrollView style={{ backgroundColor: colors.darkerLogoBack }} contentContainerStyle={styles.container}>
         <Accordion
           sections={this._data}
           activeSections={activeSection}
@@ -77,14 +77,14 @@ export default class HelpScreen extends React.Component {
           renderContent={this._renderContent}
           onChange={section => this.setState({ activeSection: section })}
         />
-      </View>
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0,
     flexDirection: 'column',
     backgroundColor: colors.darkerLogoBack,
     alignItems: 'center',
@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   helpContent: {
+    flex: 1,
     padding: 20,
     backgroundColor: colors.logoBack,
   },

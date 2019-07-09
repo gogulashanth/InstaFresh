@@ -42,9 +42,11 @@ class Data {
       { id: 1, title: 'Can I sync?', content: { text: 'Not yet, but don’t worry, future updates will definitely incorporate syncing with your other devices.', video: '' } },
       { id: 2, title: 'What is InstaScore?', content: { text: 'InstaScore basically tells you how much you’ve consumed out of how much you initially had. So a score of 80 means you’ve consumed 80% of all the food you owned.', video: '' } },
       { id: 3, title: 'My barcode scanner is showing a different best before date from the best before date given in product. Why?', content: { text: 'First off we’re sorry for the inconvenience that it caused you. This, could be for two reasons: 1.The best before date displayed could be from InstaFresh’s existing database which could essentially skew the best before date. 2.Another reason could be due to positioning of the camera or not waiting until capture the barcode.*', video: '' } },
-      { id: 4, title: 'How to give suggestions/ feature requests?', content: { text: 'You can always message us through our Facebook page (InstaFresh App) or even post a comment on App Store with your desired requests. Hopefully we will be able to account for those in the future updates.', video: '' } },
+      { id: 4, title: 'How to give suggestions/ feature requests?', content: { text: 'Click on the info button from the menu and click on feedback/feature request to email us with your suggestions.', video: '' } },
       { id: 5, title: 'How is InstaFresh different from other food waste apps?', content: { text: 'User satisfaction is key to us. We have built this app due to the fact that we haven’t come across any user friendly, easy to use app that has no hidden costs AND that doesn’t get stuck. We believe InstaFresh will help users track their food waste through the InstaScore platform and make sure you keep increasing your score. But hey look out for future updates!!', video: '' } },
       { id: 6, title: 'How do I add an item', content: { text: 'There are three ways you can add an item in the pantries; press the ‘+’ sign on the top right corner which will display a drop down menu. Then, select the preferred method of input. In manual add, you have to enter the item name and expiry date manually and a . If you wish to use barcode scan, just point the camera towards the barcode on the product and if its available in the database, it’ll automatically display the best before date and the name of the product. The auto scan also works in a similar way however you’ll need to take a picture of the item and let the app do its magic (only limited items will be recognized)!', video: '' } },
+      { id: 7, title: 'Why am I not seeing any recipes?', content: { text: 'The app picks a random ingredient from your pantry to display recipes. Also, due to the free nature of the app, it is restricted to 5 recipes per minute globally across all users. So try again later and/or make sure you have valid food items in your pantry.' } },
+      { id: 8, title: 'Why is the barcode scanner not identifying the expiry date?', content: { text: 'Barcodes contain no information related to expiry dates but the app uses a database to approximate shelf life. If it can\'t find the item in the database, it will save the information you entered to the database so that next time you scan the item, the name and expiry date will be automatically estimated.' }},
     ];
     this._dailyValues = {
       204: { value: 65, unit: 'g' },
@@ -291,6 +293,15 @@ class Data {
     this.editItem(item.id, newItem);
   });
 
+  _downloadImageAndSaveForPantry = (async (pantry) => {
+    const newUri = await ImageManager.saveImageForItem(pantry.id, pantry.imageURI);
+    const newPantry = pantry.getCopy();
+    newPantry.imageURI = newUri;
+    console.log(`Image saved at: ${newUri}`);
+    
+    this.editPantry(item.id, newItem);
+  });
+
   addItem = ((item) => {
     // schedule notification
     this._scheduleNotificationForItem(item);
@@ -382,7 +393,7 @@ class Data {
     for (const itemKey of itemKeys) {
       itemsArray = itemsArray.concat(itemsObject[itemKey]);
     }
-
+    
     return itemsArray;
   });
 

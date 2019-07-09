@@ -10,15 +10,7 @@ import Item from 'model/Item';
 import { MenuButton } from 'library/components/HeaderItems';
 import api from 'model/API';
 import {
-  BallIndicator,
-  BarIndicator,
   DotIndicator,
-  MaterialIndicator,
-  PacmanIndicator,
-  PulseIndicator,
-  SkypeIndicator,
-  UIActivityIndicator,
-  WaveIndicator,
 } from 'react-native-indicators';
 import InfoBox from 'library/components/InfoBox';
 import dataInstance from 'model/Data';
@@ -32,8 +24,8 @@ export default class RecipesScreen extends React.Component {
   _noRecipesComponent = () => (
     <InfoBox
       imageSource={require('res/images/book_icon.png')}
-      title="Sorry, no recipes available"
-      subtitle="Ensure you have internet connectivity or add more ingredients to your pantry"
+      title="Sorry, no recipes found"
+      subtitle="Please try again later or add more items to your pantry."
     />
   );
 
@@ -49,10 +41,6 @@ export default class RecipesScreen extends React.Component {
     });
 
     this.subs = [navigation.addListener('willFocus', this.screenWillFocus)];
-
-    api.getRecipesList().then((recipeList) => {
-      this.setState({ data: recipeList });
-    });
   }
 
   componentWillUnmount() {
@@ -60,7 +48,9 @@ export default class RecipesScreen extends React.Component {
   }
 
   screenWillFocus = (() => {
-    if (dataInstance.itemsUpdated) {
+    const { data } = this.state;
+
+    if (dataInstance.itemsUpdated || data.length === 0) {
       dataInstance.itemsUpdated = false;
       this.setState({ loading: true });
       api.getRecipesList().then((recipeList) => {

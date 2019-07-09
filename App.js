@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, SafeAreaView } from 'react-native';
 import { MenuProvider } from 'react-native-popup-menu';
 import HomeScreen from 'screens/HomeScreen';
 import InstaMenu from 'library/components/InstaMenu';
@@ -133,12 +133,8 @@ const AppNavigator = createDrawerNavigator({
 const AppCont = createAppContainer(AppNavigator);
 
 class App extends React.PureComponent {
-  componentWillMount() {
-    StatusBar.setBarStyle('light-content');
-  }
-  
+
   componentDidMount() {
-    
     firebase.auth().signInAnonymously();
   }
 
@@ -146,7 +142,9 @@ class App extends React.PureComponent {
     return (
       <ThemeProvider theme={themes.dark}>
         <MenuProvider>
+          
           <AppCont />
+          
         </MenuProvider>
       </ThemeProvider>
     );

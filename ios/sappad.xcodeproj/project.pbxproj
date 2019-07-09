@@ -28,7 +28,6 @@
 		311C67D2D59E4E179E74449F /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 034CB816E6B944939FB30F6A /* FontAwesome5_Solid.ttf */; };
 		41F67ACDCB6547038DD60198 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4410AEB87FBC4259896B4A58 /* FontAwesome5_Brands.ttf */; };
 		42BE704BD0E94BBF923385FE /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9283AF704316484C927AA4C3 /* Octicons.ttf */; };
-		43A71B77DC694D2AADE69BA7 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE6B1DE732794787A2C902FF /* libRNFirebase.a */; };
 		45477EA584634410A70413DE /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 341006D2CDFC4D958868C01F /* Foundation.ttf */; };
 		46D4817423D344F888DC6AFD /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 82F63538BC1747B4ADC055AF /* MaterialCommunityIcons.ttf */; };
 		4B3AE36B22A8DC9D00E04157 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B3AE36A22A8DC9D00E04157 /* GoogleService-Info.plist */; };
@@ -37,6 +36,7 @@
 		4B8EA02922CEBA8C00918590 /* labelmap.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4B8EA02722CEBA8C00918590 /* labelmap.txt */; };
 		4B8EA02A22CEBA8C00918590 /* detect.tflite in Resources */ = {isa = PBXBuildFile; fileRef = 4B8EA02822CEBA8C00918590 /* detect.tflite */; };
 		4BA33E6222CFFB3E005D82F0 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BA33E3522CFFB2D005D82F0 /* libRCTPushNotification.a */; };
+		4BC1707622D3FE6300891DEB /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B59B26D22AEB9F800ACACE3 /* libRNFirebase.a */; };
 		4BFC06D922B0AE5C000D6B58 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BFC06CF22B0AE38000D6B58 /* libRNCamera.a */; };
 		4F16649D808E44518371538D /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C834333CEFA6480C9FB64DF9 /* FontAwesome5_Regular.ttf */; };
 		6C843F9F45E64653AA709324 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B3414CA83BDA41D79F1488D7 /* Ionicons.ttf */; };
@@ -519,6 +519,7 @@
 		4B8EA02722CEBA8C00918590 /* labelmap.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = labelmap.txt; sourceTree = "<group>"; };
 		4B8EA02822CEBA8C00918590 /* detect.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = detect.tflite; sourceTree = "<group>"; };
 		4BA33E2222CFFB2D005D82F0 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
+		4BC170D022D5097C00891DEB /* sappad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = sappad.entitlements; path = sappad/sappad.entitlements; sourceTree = "<group>"; };
 		4BFC06A222B0AE38000D6B58 /* RNCamera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; };
 		4ED290F3B30346E881D6BC50 /* libRNCWebView.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCWebView.a; sourceTree = "<group>"; };
 		5C72152BBEA54E87BC991C86 /* libRNSVG-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNSVG-tvOS.a"; sourceTree = "<group>"; };
@@ -592,7 +593,7 @@
 				AD31CBD9DF4D3C906E47A824 /* Pods_sappad.framework in Frameworks */,
 				4BFC06D922B0AE5C000D6B58 /* libRNCamera.a in Frameworks */,
 				4BA33E6222CFFB3E005D82F0 /* libRCTPushNotification.a in Frameworks */,
-				43A71B77DC694D2AADE69BA7 /* libRNFirebase.a in Frameworks */,
+				4BC1707622D3FE6300891DEB /* libRNFirebase.a in Frameworks */,
 				4B88409122B2E2DA006ABF6B /* libRNCWebView.a in Frameworks */,
 				893A93A3364E4E30A97F93EF /* libTfliteReactNative.a in Frameworks */,
 				A1F7A30CF5BD48E3877D8FBB /* libRNVectorIcons.a in Frameworks */,
@@ -670,6 +671,7 @@
 		13B07FAE1A68108700A75B9A /* sappad */ = {
 			isa = PBXGroup;
 			children = (
+				4BC170D022D5097C00891DEB /* sappad.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -1051,6 +1053,11 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 6KP6A69YKA;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -1735,6 +1742,7 @@
 			baseConfigurationReference = 3BE44065E402CC4C97043F74 /* Pods-sappad.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = sappad/sappad.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -1778,6 +1786,7 @@
 			baseConfigurationReference = 6384BAC919DD4F61D4694326 /* Pods-sappad.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = sappad/sappad.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;

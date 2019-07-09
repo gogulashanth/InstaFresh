@@ -9,6 +9,7 @@ import {
   ScrollView,
   TextInput,
   KeyboardAvoidingView,
+  SafeAreaView,
 } from 'react-native';
 import {
   BallIndicator,
@@ -264,7 +265,7 @@ export default class AddItemCard extends React.Component {
       return null;
     } else {
       return (
-        <View>
+        <SafeAreaView>
           <Overlay
             borderRadius={20}
             animationType="slide"
@@ -357,7 +358,7 @@ export default class AddItemCard extends React.Component {
               </ScrollView>
             </View>
           </Overlay>
-        </View>
+        </SafeAreaView>
       );
     }
   }

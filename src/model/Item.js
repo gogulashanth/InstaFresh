@@ -27,7 +27,7 @@ export default class Item {
     this.expiryDate = expiryDate;
     this.imageURI = imageURI;
     this.nutrition = nutrition;
-    this.quantity = Number(quantity);
+    this.quantity = Math.round(Number(quantity) * 100) / 100;
     this.pantryID = pantryID;
     this.upc = upc;
   }
@@ -37,16 +37,22 @@ export default class Item {
     return Math.round((this.expiryDate - currentDate) / (1000 * 60 * 60 * 24));
   });
 
-  getCopy = (() => {
-    return new Item(
-      this.name,
-      this.expiryDate,
-      this.imageURI,
-      this.nutrition,
-      this.quantity,
-      this.pantryID,
-      this.id,
-      this.upc,
-    );
+  getCopy = (() => new Item(
+    this.name,
+    this.expiryDate,
+    this.imageURI,
+    this.nutrition,
+    this.quantity,
+    this.pantryID,
+    this.id,
+    this.upc,
+  ));
+
+  static getExpiryDateFromShelfLife = ((shelfLife) => {
+    const todayDate = new Date();
+    if (typeof shelfLife === 'number') {
+      todayDate.setDate(todayDate.getDate() + Math.round(shelfLife));
+    }
+    return todayDate;
   });
 }

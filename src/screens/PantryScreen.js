@@ -1,15 +1,14 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, Image, Button, SafeAreaView, FlatList,
+  View, Text, StyleSheet, Button, SafeAreaView, FlatList,
 } from 'react-native';
 import colors from 'res/colors';
 import palette from 'res/palette';
 import dataInstance from 'model/Data';
-import { Button as RNEButton, Icon, ListItem } from 'react-native-elements';
+import { Button as RNEButton, Image } from 'react-native-elements';
 import { widthConversion } from 'res/fontSize';
 import AddPantryCard from 'library/components/AddPantryCard';
 import CustomListItem from 'library/components/CustomListItem';
-import { CachedImage } from 'react-native-cached-image';
 import ThemedFlatList from 'library/components/ThemedFlatList';
 
 export default class ItemScreen extends React.Component {
@@ -78,6 +77,7 @@ export default class ItemScreen extends React.Component {
     if (typeof pantry !== 'undefined') {
       navigation.setParams({ title: pantry.name });
       const d = Object.values(pantry.items);
+      d.sort((a, b) => a.expiryDate.getTime() - b.expiryDate.getTime());
       this.setState({ pantry, data: d });
     }
   });
@@ -131,7 +131,7 @@ export default class ItemScreen extends React.Component {
           navigation={navigation}
         />
         <View style={{ flex: 1, flexDirection: 'column' }}>
-          <CachedImage source={{ uri: pantry.imageURI }} style={{ flex: 1 }} />
+          <Image source={{ uri: pantry.imageURI }} style={{ flex: 1 }} />
           <ThemedFlatList
             style={{ flex: 1 }}
             data={data}
