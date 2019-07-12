@@ -3,6 +3,8 @@ An app to track food expiry dates built with react-native
 
 You can download the app from app store. Android version is WIP. 
 
+App store link: https://apps.apple.com/us/app/instafresh/id1471944349
+
 ### File Structure
 
 #### src
