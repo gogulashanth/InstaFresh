@@ -13,9 +13,9 @@ const windowHeight = Dimensions.get('window').height;
 
 export default class InfoBox extends React.PureComponent {
   render() {
-    const { title, subtitle, imageSource } = this.props;
+    const { title, subtitle, imageSource, style = {} } = this.props;
     return (
-      <View style={styles.container}>
+      <View style={{...styles.container, ...style}}>
         <Image source={imageSource} style={styles.image} />
         <Text style={styles.title}>
           {title}

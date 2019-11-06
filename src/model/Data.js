@@ -270,7 +270,7 @@ class Data {
 
   deletePantry = ((id) => {
     // need to delete all items first
-    for (const item in this._data[id]) {
+    for (const item in this._data[id]["items"]) {
       this.deleteItem(item.id);
     }
     delete this._data[id];

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, Button, SafeAreaView, FlatList, Image,
+  View, Text, StyleSheet, Button, SafeAreaView, FlatList, Image, Dimensions
 } from 'react-native';
 import colors from 'res/colors';
 import palette from 'res/palette';
@@ -10,6 +10,7 @@ import { widthConversion } from 'res/fontSize';
 import AddPantryCard from 'library/components/AddPantryCard';
 import CustomListItem from 'library/components/CustomListItem';
 import ThemedFlatList from 'library/components/ThemedFlatList';
+import InfoBox from 'library/components/InfoBox';
 
 export default class ItemScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -117,6 +118,14 @@ export default class ItemScreen extends React.Component {
     );
   });
 
+  _listEmptyComponent = (name) => (
+    <InfoBox
+      imageSource={require('res/images/ionicons_ios-archive.png')}
+      title={`You dont have any items stored in your ${name}`}
+      style={{ height: Dimensions.get('window').height / 2.5 }}
+    />
+  )
+
   render() {
     const { pantry, data } = this.state;
     const { navigation } = this.props;
@@ -136,6 +145,7 @@ export default class ItemScreen extends React.Component {
             style={{ flex: 1 }}
             data={data}
             keyExtractor={this.keyExtractor}
+            ListEmptyComponent={this._listEmptyComponent(pantry.name)}
             renderItem={this.renderItem}
           />
         </View>
