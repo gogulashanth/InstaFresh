@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, Button, SafeAreaView, FlatList,
+  View, Text, StyleSheet, Button, SafeAreaView, FlatList, Image,
 } from 'react-native';
 import colors from 'res/colors';
 import palette from 'res/palette';
 import dataInstance from 'model/Data';
-import { Button as RNEButton, Image } from 'react-native-elements';
+import { Button as RNEButton } from 'react-native-elements';
 import { widthConversion } from 'res/fontSize';
 import AddPantryCard from 'library/components/AddPantryCard';
 import CustomListItem from 'library/components/CustomListItem';

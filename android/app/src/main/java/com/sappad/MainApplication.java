@@ -3,6 +3,8 @@ package com.sappad;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.masteratul.exceptionhandler.ReactNativeExceptionHandlerPackage;
+import com.bugsnag.BugsnagReactNative;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.reactnativecommunity.imageeditor.ImageEditorPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
@@ -40,6 +42,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativeExceptionHandlerPackage(),
+            BugsnagReactNative.getPackage(),
             new ImageResizerPackage(),
             new ImageEditorPackage(),
             new ReactNativePushNotificationPackage(),

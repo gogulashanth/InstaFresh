@@ -135,6 +135,7 @@ const AppCont = createAppContainer(AppNavigator);
 class App extends React.PureComponent {
 
   componentDidMount() {
+    
     firebase.auth().signInAnonymously();
   }
 

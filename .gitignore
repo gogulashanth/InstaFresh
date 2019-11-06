@@ -1,6 +1,8 @@
 # Custom files
 #
 ios/GoogleService-Info.plist
+ios/Pods/
+ios/Firebase/
 scripts/
 
 # OSX
